@@ -1,0 +1,42 @@
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "foxplot"
+readme = "README.md"
+authors = [
+    {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
+]
+maintainers = [
+    {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
+]
+dynamic = ['version', 'description']
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = [
+    "msgpack",
+]
+keywords = ["json", "time", "series", "plot"]
+
+[project.scripts]
+foxplot = "foxplot.cli:main"
+
+[project.urls]
+Source = "https://github.com/stephane-caron/foxplot"
+Tracker = "https://github.com/stephane-caron/foxplot/issues"
+Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
+
+[tool.black]
+line-length = 79
