@@ -235,4 +235,48 @@ def write_output(html: str) -> str:
         delete=False,
     ) as output_file:
         output_file.write(html)
-        webbrowser.open_new_tab(output_file.name)
+        filename = output_file.name
+    return filename
+
+
+def main() -> None:
+    """Entry point for command-line execution."""
+    args = parse_command_line_arguments()
+
+    index: str = args.index
+    if index is not None:
+        logging.info(f'Using "{index}" as index')
+    else:  # index is None:
+        logging.info("No index provided, counting items")
+
+    left_axis_fields: List[str] = args.left if args.left else []
+    right_axis_fields: List[str] = args.right if args.right else []
+    series_fields = left_axis_fields + right_axis_fields
+
+    read_from_stdin = args.file is None
+    file = (
+        sys.stdin
+        if read_from_stdin
+        else open(args.file, "r", encoding="utf-8")
+    )
+    series = read_series(
+        file,
+        index,
+        series_fields,
+        left_axis_fields,
+        right_axis_fields,
+    )
+    if not read_from_stdin:
+        file.close()
+
+    html = generate_html(
+        index if index is not None else "__index__",
+        args.title,
+        series,
+        left_axis_fields,
+        right_axis_fields,
+        args.left_axis_unit,
+        args.right_axis_unit,
+    )
+    filename = write_output(html)
+    webbrowser.open_new_tab(filename)
