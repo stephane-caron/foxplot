@@ -1,6 +1,6 @@
 # foxplot
 
-[![Build](https://img.shields.io/github/actions/workflow/status/stephane-caron/foxplot/main.yml?branch=main)](https://github.com/stephane-caron/foxplot/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/stephane-caron/foxplot/CI.yml?branch=main)](https://github.com/stephane-caron/foxplot/actions)
 
 Plot time-series data from [line-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON):
 
