@@ -84,8 +84,8 @@ def generate_html(
     uplot_min_css = resource_filename("foxplot", "uPlot/uPlot.min.css")
     uplot_iife_js = resource_filename("foxplot", "uPlot/uPlot.iife.js")
     uplot_mwheel_js = resource_filename("foxplot", "uPlot/uPlot.mousewheel.js")
-    if None in series["time"]:
-        raise ValueError("time series cannot contain None values")
+    if None in series[index]:
+        raise ValueError("index series cannot contain None values")
     html = f"""<!DOCTYPE html>
 <html lang="en">
     <head>
@@ -107,7 +107,7 @@ def generate_html(
             const {{ linear, stepped, bars, spline, spline2 }} = uPlot.paths;
 
             let data = [
-                {series["time"]},"""
+                {series[index]},"""
     for field in fields:
         html += f"""
                 {__escape_null(series[field])},"""
@@ -170,7 +170,7 @@ def generate_html(
     html += f"""
                     {{
                         value: (self, rawValue) => Number.parseFloat(rawValue -
-                        {series["time"][0]}).toPrecision(3),
+                        {series[index][0]}).toPrecision(3),
                     }},"""
     for field in fields:
         html += f"""
