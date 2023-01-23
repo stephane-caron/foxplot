@@ -40,3 +40,23 @@ Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
 
 [tool.black]
 line-length = 79
+
+[tool.ruff]
+line-length = 79
+select = [
+    # pyflakes
+    "F",
+    # pycodestyle
+    "E",
+    "W",
+    # isort
+    "I001",
+    # pydocstyle
+    "D"
+]
+ignore = [
+    "D401",  # good for methods but not for class docstrings
+]
+
+[tool.ruff.pydocstyle]
+convention = "google"
