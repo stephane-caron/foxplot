@@ -194,7 +194,8 @@ def read_series(
                 if old_field in left_axis_fields
                 else right_axis_fields
             )
-            axis_list.remove(old_field)
+            if old_field in axis_list:
+                axis_list.remove(old_field)
             del series[old_field]
             del found_once[old_field]
             for subfield in subfields:
