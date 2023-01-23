@@ -158,7 +158,11 @@ def read_series(
         series_fields.append(index)
     series: Dict[str, list] = {field: [] for field in series_fields}
     found_once = {field: False for field in series_fields}
-    for unpacked in decode_json(file=sys.stdin):
+    if index is None:
+        series["__index__"] = []
+        found_once["__index__"] = True
+    unpacked_index = 0
+    for unpacked in decode_json(file=file):
         expand_fields = []
         for field in series_fields:
             try:
