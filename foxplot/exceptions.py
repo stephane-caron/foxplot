@@ -17,12 +17,22 @@
 
 """Custom exceptions."""
 
+from typing import Sequence
 
-class FieldNeedsExpansion(Exception):
 
-    """
-    Exception used to expand a field with its sub-fields.
-    """
+class FoxplotException(Exception):
+    """Base class for Foxplot exceptions."""
 
-    def __init__(self, subfields):
+
+class FieldNeedsExpansion(FoxplotException):
+    """Exception used to expand a field with its sub-fields."""
+
+    subfields: Sequence
+
+    def __init__(self, subfields: Sequence):
+        """Initialize exception.
+
+        Args:
+            subfields: List of possible field expansions.
+        """
         self.subfields = subfields
