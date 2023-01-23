@@ -101,12 +101,16 @@ def get_fields(data: dict) -> List[str]:
     for key in data:
         if not isinstance(data[key], dict):
             fields.append(key)
-        fields.extend(f"{key}/{field}" for field in get_fields(data[key]))
+        fields.extend(path.join(key, field) for field in get_fields(data[key]))
     return fields
 
 
-def get_from_keys(collection: Union[dict, list], keys: List[Union[int, str]]):
-    """
+def get_from_keys(
+    collection: Union[Dict[str, Any], List[Any]],
+    keys: Sequence[str],
+):
+    """Get value from a nested dictionary.
+
     Get value `collection[key1][key2][...][keyN]` from a nested dictionary
     `collection` and keys `[key1, key2, ..., keyN]`.
 
