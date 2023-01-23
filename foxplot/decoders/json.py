@@ -15,17 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Decoder functions.
-"""
+"""Decoder functions."""
 
-from typing import Generator
 import json
+from typing import Generator
 
 
 def decode_json(file, chunk_size=100_000) -> Generator[dict, None, None]:
-    """
-    Decode dictionaries from a line-delimited JSON file.
+    """Decode dictionaries from a line-delimited JSON file.
 
     Args:
         file: File stream (for instance ``sys.stdin``).

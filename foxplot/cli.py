@@ -90,8 +90,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 
 def get_fields(data: dict) -> List[str]:
-    """
-    Get the list of fields available in a nested dictionary.
+    """Get the list of fields available in a nested dictionary.
 
     Returns:
         List of fields available in dictionary.

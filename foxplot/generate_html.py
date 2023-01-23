@@ -15,9 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Generate an HTML page containing the output plot.
-"""
+"""Generate an HTML page containing the output plot."""
 
 from math import isnan
 from typing import Any, Dict, Iterable, List
@@ -28,8 +26,7 @@ from .color_picker import ColorPicker
 
 
 def __escape_null(series: Iterable) -> str:
-    """
-    Escape undefined values in a series.
+    """Escape undefined values in a series.
 
     Args:
         series: Series to filter.

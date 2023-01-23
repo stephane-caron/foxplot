@@ -15,18 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Pick plot colors from a circular list.
-"""
+"""Pick plot colors from a circular list."""
 
 from typing import List
 
 
 class ColorPicker:
-
-    """
-    Pick from a circular list of color strings.
-    """
+    """Pick from a circular list of color strings."""
 
     COLORS: List[str] = [
         "red",
@@ -44,14 +39,11 @@ class ColorPicker:
     ]
 
     def __init__(self):
-        """
-        Initialize color picker.
-        """
+        """Initialize color picker."""
         self.reset()
 
     def get_next_color(self) -> str:
-        """
-        Get next color in the list.
+        """Get next color in the list.
 
         Returns:
             Color string.
@@ -61,7 +53,5 @@ class ColorPicker:
         return color
 
     def reset(self) -> None:
-        """
-        Reset picker to the first color.
-        """
+        """Reset picker to the first color."""
         self.__next_color = 0
