@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -53,6 +54,7 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
+    index: str,
     title: str,
     series: Dict[str, Any],
     left_axis_fields: List[str],
@@ -60,11 +62,16 @@ def generate_html(
     left_axis_unit: str = "",
     right_axis_unit: str = "",
 ) -> str:
-    """
-    Generate plot in an HTML page.
+    """Generate plot in an HTML page.
 
     Args:
-        title:
+        index: Series index.
+        title: Plot title.
+        series: Data to plot.
+        left_axis_fields: Fields to associate with the left axis.
+        right_axis_fields: Fields to associate with the right axis.
+        left_axis_unit: Left axis unit.
+        right_axis_unit: Right axis unit.
 
     Returns:
         HTML contents of the page.
