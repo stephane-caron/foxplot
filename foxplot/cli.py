@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,49 +16,71 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Command-line entry point for foxplot.
-"""
+"""Command-line entry point for foxplot."""
 
 import argparse
-import logging
 import sys
 import tempfile
+import typing
 import webbrowser
 from datetime import datetime
-from typing import Dict, List, Union
+from os import path
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from .color_picker import ColorPicker
 from .decoders.json import decode_json
 from .exceptions import FieldNeedsExpansion
 from .generate_html import generate_html
+from .spdlog import logging
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
-    """
-    Parse command-line arguments.
+    """Parse command-line arguments.
 
     Returns:
         Parsed command-line arguments.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("field", nargs="*", help="field to plot")
+    parser.add_argument("file", nargs="?", default=None)
+    parser.add_argument(
+        "-l",
+        "--left",
+        nargs="*",
+        help="fields to plot using the (default) left axis",
+    )
     parser.add_argument(
         "-lu",
         "--left-axis-unit",
         dest="left_axis_unit",
         default="",
-        help="unit label for the left axis (none by default)",
+        help="unit label for the left axis (default: empty)",
+    )
+    parser.add_argument(
+        "-i",
+        "--index",
+        default=None,
+        help="key to use as index for the time series (count items otherwise)",
+    )
+    parser.add_argument(
+        "-r",
+        "--right",
+        nargs="*",
+        help="fields to plot using the right axis",
     )
     parser.add_argument(
         "-ru",
         "--right-axis-unit",
         dest="right_axis_unit",
         default="",
-        help="unit label for the right axis (none by default)",
+        help="unit label for the right axis (default: empty)",
     )
     parser.add_argument(
         "-t",
+        "--time",
+        default="time",
+        help="same as --index, but assume the key is a Unix time in seconds",
+    )
+    parser.add_argument(
         "--title",
         default=f"Plot from {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}",
         dest="title",

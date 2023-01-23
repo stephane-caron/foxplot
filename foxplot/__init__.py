@@ -15,8 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Plot time-series data from line-delimited JSON.
-"""
+"""Plot time-series data from line-delimited JSON."""
 
 __version__ = "0.0.1"
