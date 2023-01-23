@@ -133,9 +133,24 @@ def get_from_keys(
     return subcollection  # found a value
 
 
-def main() -> None:
-    """
-    Entry point for command-line execution.
+def read_series(
+    file: typing.TextIO,
+    index: Optional[str],
+    series_fields: List[str],
+    left_axis_fields: List[str],
+    right_axis_fields: List[str],
+) -> Dict[str, list]:
+    """Process time series data.
+
+    Args:
+        file: File to read time series from.
+        index: Key to use as index.
+        series_fields: Fields to read from the series.
+        left_axis_fields: Fields to associate with the left axis.
+        right_axis_fields: Fields to associate with the left axis.
+
+    Returns:
+        Series data as a dictionary.
     """
     args = parse_command_line_arguments()
     series_fields = [] if "time" in args.field else ["time"]
