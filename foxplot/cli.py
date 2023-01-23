@@ -119,16 +119,18 @@ def get_from_keys(
         keys: Sequence of keys to the value.
     """
     key = keys[0]
-    if isinstance(collection, list):
-        key = int(key)
+    subcollection = (
+        collection[int(key)]
+        if isinstance(collection, list)
+        else collection[key]
+    )
     if len(keys) > 1:
-        return get_from_keys(collection[key], keys[1:])
-    value = collection[key]
-    if isinstance(value, dict):
-        raise FieldNeedsExpansion(value.keys())
-    if isinstance(value, list):
-        raise FieldNeedsExpansion(range(len(value)))
-    return value
+        return get_from_keys(subcollection, keys[1:])
+    if isinstance(subcollection, dict):
+        raise FieldNeedsExpansion(list(subcollection.keys()))
+    if isinstance(subcollection, list):
+        raise FieldNeedsExpansion(range(len(subcollection)))
+    return subcollection  # found a value
 
 
 def main() -> None:
