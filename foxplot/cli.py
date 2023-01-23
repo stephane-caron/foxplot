@@ -167,10 +167,17 @@ def read_series(
         for field in series_fields:
             try:
                 keys = field.split("/")
+                if len(keys[0]) < 1:
+                    raise FieldNeedsExpansion(list(unpacked.keys()))
                 value = get_from_keys(unpacked, keys)
                 found_once[field] = True
-            except KeyError:
+            except KeyError as key_error:
                 value = "null"
+                if field == index:
+                    raise ValueError(
+                        f'Index "{field}" undefined '
+                        f"in unpacked item number {unpacked_index}"
+                    ) from key_error
             except FieldNeedsExpansion as exn:
                 value = "null"
                 if len(exn.subfields) > 0:  # o/w wait for non-empty
