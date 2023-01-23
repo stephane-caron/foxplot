@@ -199,30 +199,35 @@ def read_series(
             del series[old_field]
             del found_once[old_field]
             for subfield in subfields:
-                new_field = f"{old_field}/{subfield}"
+                new_field = path.join(old_field, subfield)
                 series_fields.append(new_field)
                 series[new_field] = list(values_so_far)
                 found_once[new_field] = False
                 axis_list.append(new_field)
         if len(series_fields) > len(ColorPicker.COLORS):
-            series_fields.remove("time")
+            if index in series_fields:
+                series_fields.remove(index)
             raise ValueError(
                 "Too many fields (not enough colors!): "
-                " ".join(series_fields)
+                + (" ".join(series_fields))
             )
+    print(f"{series=}")
     for field in series_fields:
         if not found_once[field]:
             logging.warning("Field %s not found", field)
+    return series
 
-    html = generate_html(
-        args.title,
-        series,
-        left_axis_fields,
-        right_axis_fields,
-        args.left_axis_unit,
-        args.right_axis_unit,
-    )
 
+def write_output(html: str) -> str:
+    """Write output page.
+
+    Args:
+        html: HTML content.
+
+    Returns:
+        Name of the output file (a temporary file).
+    """
+    filename: str = ""
     with tempfile.NamedTemporaryFile(
         mode="w+",
         prefix=f"plot-{datetime.now().strftime('%Y%m%d-%H%M%S')}-",
