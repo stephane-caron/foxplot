@@ -152,17 +152,10 @@ def read_series(
     Returns:
         Series data as a dictionary.
     """
-    args = parse_command_line_arguments()
-    series_fields = [] if "time" in args.field else ["time"]
-    left_axis_fields = []
-    right_axis_fields = []
-    for field in args.field:
-        if field.startswith("R:"):
-            field = field[2:]
-            right_axis_fields.append(field)
-        else:  # left-axis field
-            left_axis_fields.append(field)
-        series_fields.append(field)
+    if len(series_fields) < 1:
+        series_fields = ["/"]  # special field to expand all
+    if index is not None and index not in series_fields:
+        series_fields.append(index)
     series: Dict[str, list] = {field: [] for field in series_fields}
     found_once = {field: False for field in series_fields}
     for unpacked in decode_json(file=sys.stdin):
