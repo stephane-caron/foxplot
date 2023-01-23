@@ -183,6 +183,9 @@ def read_series(
                 if len(exn.subfields) > 0:  # o/w wait for non-empty
                     expand_fields.append((field, exn.subfields))
             series[field].append(value)
+        if index is None:
+            series["__index__"].append(unpacked_index)
+            unpacked_index += 1
         for (old_field, subfields) in expand_fields:
             series_fields.remove(old_field)
             values_so_far = series[old_field]
