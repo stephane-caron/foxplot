@@ -6,8 +6,16 @@ Plot time-series data from [line-delimited JSON](https://en.wikipedia.org/wiki/J
 
 ## Usage
 
+### JSON files
+
 ```console
-rq -mJ < my_log.mpack | jq '{.my.filters.here}' | foxplot
+$ foxplot my_time_series.json
+```
+
+### MessagePack files
+
+```console
+rq -mJ < my_time_series.mpack | jq '{.my.filters.here}' | foxplot
 ```
 
 ## Acknowledgements
