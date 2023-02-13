@@ -18,6 +18,7 @@ $ foxplot my_time_series.json
 rq -mJ < my_time_series.mpack | jq '{.my.filters.here}' | foxplot
 ```
 
-## Acknowledgements
+## See also
 
 * [µPlot](https://github.com/leeoniya/uPlot)'s performance was a key enabler for this project.
+* [rq](https://github.com/dflemstr/rq/), a tool to manipulate streams of records in various formats.
