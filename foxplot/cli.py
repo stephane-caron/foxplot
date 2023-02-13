@@ -21,16 +21,13 @@
 import argparse
 import sys
 import tempfile
-import typing
 import webbrowser
 from datetime import datetime
 from os import path
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import List
 
-from .color_picker import ColorPicker
-from .decoders.json import decode_json
-from .exceptions import FieldNeedsExpansion
 from .generate_html import generate_html
+from .series import Series
 from .spdlog import logging
 
 
@@ -105,119 +102,6 @@ def get_fields(data: dict) -> List[str]:
     return fields
 
 
-def get_from_keys(
-    collection: Union[Dict[str, Any], List[Any]],
-    keys: Sequence[str],
-):
-    """Get value from a nested dictionary.
-
-    Get value `collection[key1][key2][...][keyN]` from a nested dictionary
-    `collection` and keys `[key1, key2, ..., keyN]`.
-
-    Args:
-        collection: Dictionary or list to get value from.
-        keys: Sequence of keys to the value.
-    """
-    key = keys[0]
-    subcollection = (
-        collection[int(key)]
-        if isinstance(collection, list)
-        else collection[key]
-    )
-    if len(keys) > 1:
-        return get_from_keys(subcollection, keys[1:])
-    if isinstance(subcollection, dict):
-        raise FieldNeedsExpansion(list(subcollection.keys()))
-    if isinstance(subcollection, list):
-        raise FieldNeedsExpansion(range(len(subcollection)))
-    return subcollection  # found a value
-
-
-def read_series(
-    file: typing.TextIO,
-    index: Optional[str],
-    series_fields: List[str],
-    left_axis_fields: List[str],
-    right_axis_fields: List[str],
-) -> Dict[str, list]:
-    """Process time series data.
-
-    Args:
-        file: File to read time series from.
-        index: Key to use as index.
-        series_fields: Fields to read from the series.
-        left_axis_fields: Fields to associate with the left axis.
-        right_axis_fields: Fields to associate with the left axis.
-
-    Returns:
-        Series data as a dictionary.
-    """
-    if len(series_fields) < 1:
-        series_fields = ["/"]  # special field to expand all
-    if index is not None and index not in series_fields:
-        series_fields.append(index)
-    series: Dict[str, list] = {field: [] for field in series_fields}
-    found_once = {field: False for field in series_fields}
-    if index is None:
-        series["__index__"] = []
-        found_once["__index__"] = True
-    unpacked_index = 0
-    for unpacked in decode_json(file=file):
-        expand_fields = []
-        for field in series_fields:
-            try:
-                keys = field.split("/")
-                if len(keys[0]) < 1:
-                    raise FieldNeedsExpansion(list(unpacked.keys()))
-                value = get_from_keys(unpacked, keys)
-                found_once[field] = True
-            except KeyError as key_error:
-                value = "null"
-                if field == index:
-                    raise ValueError(
-                        f'Index "{field}" undefined '
-                        f"in unpacked item number {unpacked_index}"
-                    ) from key_error
-            except FieldNeedsExpansion as exn:
-                value = "null"
-                if len(exn.subfields) > 0:  # o/w wait for non-empty
-                    expand_fields.append((field, exn.subfields))
-            series[field].append(value)
-        if index is None:
-            series["__index__"].append(unpacked_index)
-            unpacked_index += 1
-        for (old_field, subfields) in expand_fields:
-            series_fields.remove(old_field)
-            values_so_far = series[old_field]
-            axis_list = (
-                left_axis_fields
-                if old_field in left_axis_fields
-                else right_axis_fields
-            )
-            if old_field in axis_list:
-                axis_list.remove(old_field)
-            del series[old_field]
-            del found_once[old_field]
-            for subfield in subfields:
-                new_field = path.join(old_field, subfield)
-                series_fields.append(new_field)
-                series[new_field] = list(values_so_far)
-                found_once[new_field] = False
-                axis_list.append(new_field)
-        if len(series_fields) > len(ColorPicker.COLORS):
-            if index in series_fields:
-                series_fields.remove(index)
-            raise ValueError(
-                "Too many fields (not enough colors!): "
-                + (" ".join(series_fields))
-            )
-    print(f"{series=}")
-    for field in series_fields:
-        if not found_once[field]:
-            logging.warning("Field %s not found", field)
-    return series
-
-
 def write_output(html: str) -> str:
     """Write output page.
 
@@ -248,35 +132,22 @@ def main() -> None:
         logging.info(f'Using "{index}" as index')
     else:  # index is None:
         logging.info("No index provided, counting items")
+    left_axis_fields = args.left if args.left else []
+    right_axis_fields = args.right if args.right else []
+    series = Series(index, left_axis_fields, right_axis_fields)
 
-    left_axis_fields: List[str] = args.left if args.left else []
-    right_axis_fields: List[str] = args.right if args.right else []
-    series_fields = left_axis_fields + right_axis_fields
-
-    read_from_stdin = args.file is None
-    file = (
-        sys.stdin
-        if read_from_stdin
-        else open(args.file, "r", encoding="utf-8")
-    )
-    series = read_series(
-        file,
-        index,
-        series_fields,
-        left_axis_fields,
-        right_axis_fields,
-    )
-    if not read_from_stdin:
-        file.close()
+    if args.file is not None:
+        with open(args.file, "r", encoding="utf-8") as file:
+            series.read_from_file(file)
+    else:  # args.file is None:
+        series.read_from_file(sys.stdin)
 
     html = generate_html(
-        index if index is not None else "__index__",
-        args.title,
         series,
-        left_axis_fields,
-        right_axis_fields,
+        args.title,
         args.left_axis_unit,
         args.right_axis_unit,
     )
+
     filename = write_output(html)
     webbrowser.open_new_tab(filename)

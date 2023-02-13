@@ -19,11 +19,12 @@
 """Generate an HTML page containing the output plot."""
 
 from math import isnan
-from typing import Any, Dict, Iterable, List
+from typing import Iterable
 
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
+from .series import Series
 
 
 def __escape_null(series: Iterable) -> str:
@@ -54,37 +55,31 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
-    index: str,
+    series: Series,
     title: str,
-    series: Dict[str, Any],
-    left_axis_fields: List[str],
-    right_axis_fields: List[str],
     left_axis_unit: str = "",
     right_axis_unit: str = "",
 ) -> str:
     """Generate plot in an HTML page.
 
     Args:
-        index: Series index.
-        title: Plot title.
         series: Data to plot.
-        left_axis_fields: Fields to associate with the left axis.
-        right_axis_fields: Fields to associate with the right axis.
+        title: Plot title.
         left_axis_unit: Left axis unit.
         right_axis_unit: Right axis unit.
 
     Returns:
         HTML contents of the page.
     """
-    color_picker = ColorPicker()
-    left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
-    right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
-    fields = left_axis_fields + right_axis_fields  # keep CLI ordering
-    right_axis_set = set(right_axis_fields)  # for faster queries below
     uplot_min_css = resource_filename("foxplot", "uPlot/uPlot.min.css")
     uplot_iife_js = resource_filename("foxplot", "uPlot/uPlot.iife.js")
     uplot_mwheel_js = resource_filename("foxplot", "uPlot/uPlot.mousewheel.js")
-    if None in series[index]:
+
+    color_picker = ColorPicker()
+    left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
+    right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
+    right_axis_set = set(series.right_axis_fields)  # for faster queries below
+    if None in series.index_values:
         raise ValueError("index series cannot contain None values")
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -107,10 +102,10 @@ def generate_html(
             const {{ linear, stepped, bars, spline, spline2 }} = uPlot.paths;
 
             let data = [
-                {series[index]},"""
-    for field in fields:
+                {series.index_values},"""
+    for field in series.fields:
         html += f"""
-                {__escape_null(series[field])},"""
+                {__escape_null(series.field_values[field])},"""
     html += """
             ];
 
@@ -170,9 +165,9 @@ def generate_html(
     html += f"""
                     {{
                         value: (self, rawValue) => Number.parseFloat(rawValue -
-                        {series[index][0]}).toPrecision(3),
+                        {series.index_values[0]}).toPrecision(3),
                     }},"""
-    for field in fields:
+    for field in series.fields:
         html += f"""
                     {{
                         // initial toggled state (optional)
@@ -187,7 +182,7 @@ def generate_html(
                             Number.parseFloat(rawValue).toPrecision(2) +
                             "{right_axis_label}",
                         scale: "{right_axis_unit}","""
-        else:  # field in left_axis_fields
+        else:  # field in self.left_axis_fields
             html += f"""
                         value: (self, rawValue) =>
                             Number.parseFloat(rawValue).toPrecision(2) +
