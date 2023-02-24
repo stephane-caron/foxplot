@@ -91,7 +91,7 @@ class Series:
 
     def __unpack_value(self, unpacked: dict, field: str):
         try:
-            keys = field.split("/")
+            keys = field.lstrip("/").split("/")
             if len(keys[0]) < 1:
                 raise FieldNeedsExpansion(list(unpacked.keys()))
             value = get_from_keys(unpacked, keys)
