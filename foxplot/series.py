@@ -89,12 +89,7 @@ class Series:
         self.left_axis_fields = left_axis_fields
         self.right_axis_fields = right_axis_fields
 
-    def __unpack_value(
-        self,
-        unpacked: dict,
-        field: str,
-        expand_fields: List[Tuple[str, Sequence[str]]],
-    ):
+    def __unpack_value(self, unpacked: dict, field: str):
         try:
             keys = field.split("/")
             if len(keys[0]) < 1:
@@ -107,10 +102,6 @@ class Series:
                     f'Index "{field}" undefined '
                     f"in unpacked item {unpacked}"
                 ) from key_error
-        except FieldNeedsExpansion as exn:
-            value = "null"
-            if len(exn.subfields) > 0:  # o/w wait for non-empty
-                expand_fields.append((field, exn.subfields))
         return value
 
     def read_from_file(self, file: typing.TextIO) -> None:
@@ -139,12 +130,18 @@ class Series:
                 )
 
             for field in self.fields:
-                value = self.__unpack_value(unpacked, field, expand_fields)
-                self.field_values[field].append(value)
-                if value != "null":
-                    found_once[field] = True
+                try:
+                    value = self.__unpack_value(unpacked, field)
+                    self.field_values[field].append(value)
+                except FieldNeedsExpansion as exn:
+                    value = "null"
+                    if len(exn.subfields) > 0:  # o/w wait for non-empty
+                        expand_fields.append((field, exn.subfields))
+                        print(f"{expand_fields=}")
 
-            for (old_field, subfields) in expand_fields:
+            while expand_fields:
+                old_field, subfields = expand_fields.pop()
+                print(f"\t{old_field=}, {subfields=}")
                 self.fields.remove(old_field)
                 values_so_far = self.field_values[old_field]
                 axis_list = (
