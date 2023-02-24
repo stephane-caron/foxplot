@@ -164,6 +164,3 @@ class Series:
                 )
         print(f"{self.index_values=}")
         print(f"{self.field_values=}")
-        for field in self.fields:
-            if not found_once[field]:
-                logging.warning("Field %s not found", field)
