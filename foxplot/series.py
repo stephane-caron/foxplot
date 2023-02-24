@@ -133,7 +133,6 @@ class Series:
                     value = self.__unpack_value(unpacked, field)
                     self.field_values[field].append(value)
                 except FieldNeedsExpansion as exn:
-                    value = "null"
                     if len(exn.subfields) > 0:  # o/w wait for non-empty
                         expand_fields.append((field, exn.subfields))
                         print(f"{expand_fields=}")
@@ -155,6 +154,7 @@ class Series:
                     self.fields.append(new_field)
                     self.field_values[new_field] = ["null"] * nb_unpacked
                     axis_list.append(new_field)
+
             if len(self.fields) > len(ColorPicker.COLORS):
                 if self.index in self.fields:
                     self.fields.remove(self.index)
