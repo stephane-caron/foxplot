@@ -116,18 +116,17 @@ class Series:
         if len(self.fields) < 1:
             self.fields = ["/"]  # special field to expand all
         self.field_values = {field: [] for field in self.fields}
-        found_once = {field: False for field in self.fields}
-        unpacked_index = 0
+        nb_unpacked = 0
         for unpacked in decode_json(file=file):
             expand_fields: List[Tuple[str, Sequence[str]]] = []
 
             if self.index is None:
-                self.index_values.append(unpacked_index)
-                unpacked_index += 1
+                self.index_values.append(nb_unpacked)
             else:
                 self.index_values.append(
                     self.__unpack_value(unpacked, self.index, expand_fields)
                 )
+            nb_unpacked += 1
 
             for field in self.fields:
                 try:
