@@ -142,7 +142,6 @@ class Series:
                 old_field, subfields = expand_fields.pop()
                 print(f"\t{old_field=}, {subfields=}")
                 self.fields.remove(old_field)
-                values_so_far = self.field_values[old_field]
                 axis_list = (
                     self.left_axis_fields
                     if old_field in self.left_axis_fields
@@ -151,12 +150,10 @@ class Series:
                 if old_field in axis_list:
                     axis_list.remove(old_field)
                 del self.field_values[old_field]
-                del found_once[old_field]
                 for subfield in subfields:
                     new_field = os.path.join(old_field, subfield)
                     self.fields.append(new_field)
-                    self.field_values[new_field] = list(values_so_far)
-                    found_once[new_field] = False
+                    self.field_values[new_field] = ["null"] * nb_unpacked
                     axis_list.append(new_field)
             if len(self.fields) > len(ColorPicker.COLORS):
                 if self.index in self.fields:
