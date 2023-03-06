@@ -155,12 +155,13 @@ def generate_html(
                 },
                 plugins: [
                     wheelZoomPlugin({factor: 0.75})
-                ],
-                scales: {
-                    x: {
-                        time: true,
-                    },
-                },
+                ],"""
+    html += f"""
+                scales: {{
+                    x: {{
+                        time: {"true" if series.timestamped else "false"},
+                    }},
+                }},
                 series: ["""
     html += f"""
                     {{
