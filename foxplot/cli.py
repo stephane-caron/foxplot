@@ -135,7 +135,12 @@ def main() -> None:
         logging.info("No index provided, counting items")
     left_axis_fields = args.left if args.left else []
     right_axis_fields = args.right if args.right else []
-    series = Series(index, left_axis_fields, right_axis_fields)
+    series = Series(
+        index,
+        left_axis_fields,
+        right_axis_fields,
+        timestamped=args.timestamped,
+    )
 
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:

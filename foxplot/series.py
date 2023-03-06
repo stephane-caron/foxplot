@@ -24,7 +24,6 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from .color_picker import ColorPicker
 from .decoders.json import decode_json
 from .exceptions import FieldNeedsExpansion
-from .spdlog import logging
 
 
 def get_from_keys(
@@ -66,6 +65,7 @@ class Series:
         index: If set, read index values from input dictionaries.
         left_axis_fields: Fields to plot on the left axis.
         right_axis_fields: Fields to plot on the right axis.
+        timestamped: If true, assume index is a Unix timestamp.
     """
 
     fields: List[str]
@@ -74,12 +74,14 @@ class Series:
     index: Optional[str]
     left_axis_fields: List[str]
     right_axis_fields: List[str]
+    timestamped: bool
 
     def __init__(
         self,
         index: Optional[str],
         left_axis_fields: List[str],
         right_axis_fields: List[str],
+        timestamped: bool,
     ):
         """Initialize series data."""
         self.field_values = {}
@@ -88,6 +90,7 @@ class Series:
         self.index_values = []
         self.left_axis_fields = left_axis_fields
         self.right_axis_fields = right_axis_fields
+        self.timestamped = timestamped
 
     def __unpack_value(self, unpacked: dict, field: str):
         try:
