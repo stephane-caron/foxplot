@@ -73,9 +73,10 @@ def parse_command_line_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "-t",
-        "--time",
-        default="time",
-        help="same as --index, but assume the key is a Unix time in seconds",
+        "--timestamped",
+        action="store_true",
+        default=False,
+        help="flag indicating that the index is a Unix time in seconds",
     )
     parser.add_argument(
         "--title",
