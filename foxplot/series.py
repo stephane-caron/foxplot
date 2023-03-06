@@ -125,9 +125,9 @@ class Series:
 
             if self.index is None:
                 self.index_values.append(nb_unpacked)
-            else:
+            else:  # self.index is not None:
                 self.index_values.append(
-                    self.__unpack_value(unpacked, self.index, expand_fields)
+                    self.__unpack_value(unpacked, self.index)
                 )
             nb_unpacked += 1
 
