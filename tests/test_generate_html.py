@@ -17,9 +17,18 @@
 
 import unittest
 
-from foxplot import Series, generate_html
+from foxplot.generate_html import generate_html
+from foxplot.series import Series
 
 
 class TestGenerateHtml(unittest.TestCase):
     def test_generate_html(self):
-        generate_html(Series(), "Test")
+        generate_html(
+            Series(
+                index=None,
+                left_axis_fields=[],
+                right_axis_fields=[],
+                timestamped=False,
+            ),
+            "Test",
+        )
