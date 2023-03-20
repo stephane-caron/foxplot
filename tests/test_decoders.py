@@ -24,10 +24,6 @@ from foxplot.decoders import decode_json
 
 class TestDecoders(unittest.TestCase):
 
-    """
-    Test fixture for decoder functions.
-    """
-
     EXPECTED_DICTS = [
         {"a": 1, "b": 2},
         {"c": 3, "d": 4},
