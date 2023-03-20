@@ -15,4 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import unittest
 
+from foxplot import Series, generate_html
+
+
+class TestGenerateHtml(unittest.TestCase):
+    def test_generate_html(self):
+        generate_html(Series(), "Test")
