@@ -34,15 +34,18 @@ class SeriesValue:
         self.data = {}
         self.label = label
 
-    def _get(self, max_index: int):
-        return [self.data.get(index, None) for index in range(max_index)]
-
-    def _update(self, index: int, value: Any):
-        self.data[index] = value
-
     def __repr__(self):
         values = list(self.data.values())
         return f"Time series with values: {values}"
+
+    def _get(self, max_index: int):
+        return [self.data.get(index, None) for index in range(max_index)]
+
+    def _list_labels(self) -> List[str]:
+        return [self.label]
+
+    def _update(self, index: int, value: Any):
+        self.data[index] = value
 
 
 class NestedDict:
@@ -52,6 +55,33 @@ class NestedDict:
 
     def __init__(self, label: str):
         self.__label = label
+
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
+    def __repr__(self):
+        keys = ", ".join(
+            str(key)
+            for key in self.__dict__.keys()
+            if isinstance(key, int) or not key.startswith("_")
+        )
+        return f"{self.__label}: [{keys}]"
+
+    def _get_child(self, keys: List[str]) -> SeriesValue:
+        child = self.__dict__[keys[0]]
+        if len(keys) > 1:
+            return child._get_child(keys[1:])
+        if not isinstance(child, SeriesValue):
+            raise FoxplotException(f"{child.label} is not a time series")
+        return child
+
+    def _list_labels(self) -> List[str]:
+        labels = []
+        for key, child in self.__dict__.items():
+            if isinstance(key, int) or key.startswith("_"):
+                continue
+            labels.extend(child._list_labels())
+        return labels
 
     def _update(self, index: int, unpacked: Union[dict, list]) -> None:
         items = (
@@ -71,22 +101,3 @@ class NestedDict:
                 )(label=f"{self.__label}{sep}{key}")
                 self.__dict__[key] = child
             child._update(index, value)
-
-    def _get_from_keys(self, keys: List[str]) -> SeriesValue:
-        child = self.__dict__[keys[0]]
-        if len(keys) > 1:
-            return child._get_from_keys(keys[1:])
-        if not isinstance(child, SeriesValue):
-            raise FoxplotException(f"{child.label} is not a time series")
-        return child
-
-    def __getitem__(self, key):
-        return self.__dict__[key]
-
-    def __repr__(self):
-        keys = ", ".join(
-            str(key)
-            for key in self.__dict__.keys()
-            if isinstance(key, int) or not key.startswith("_")
-        )
-        return f"{self.__label}: [{keys}]"

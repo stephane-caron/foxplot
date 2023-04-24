@@ -18,17 +18,17 @@
 import unittest
 
 from foxplot.generate_html import generate_html
-from foxplot.series import Series
 
 
 class TestGenerateHtml(unittest.TestCase):
     def test_generate_html(self):
-        generate_html(
-            Series(
-                index=None,
-                left_axis_fields=[],
-                right_axis_fields=[],
-                timestamped=False,
-            ),
-            "Test",
+        times = [1.0, 2.0, 0.0]
+        label = "my_left_axis_foo"
+        html = generate_html(
+            times,
+            left_axis={label: [0.0, 1.0, -1.0]},
+            right_axis={},
+            title="Test",
         )
+        self.assertIn(label, html)
+        self.assertIn(f'label: "{label}"', html)

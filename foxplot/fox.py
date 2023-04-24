@@ -31,8 +31,9 @@ class Fox:
     Our main class to read, access and manipulate series of dictionary data.
     """
 
+    __time: str
     data: NestedDict
-    time: str
+    length: int
 
     def __init__(self, time: str):
         """Initialize series.
@@ -40,9 +41,18 @@ class Fox:
         Args:
             time: Label of time index in input dictionaries.
         """
-        self.length = 0
+        self.__time = time
         self.data = NestedDict("/")
-        self.time = time
+        self.length = 0
+
+    @property
+    def all(self) -> List[str]:
+        """List of all labels present in the data."""
+        return self.data._list_labels()
+
+    def get(self, label: str) -> SeriesValue:
+        keys = label.strip("/").split("/")
+        return self.data._get_child(keys)
 
     def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
@@ -57,10 +67,6 @@ class Fox:
         self.data._update(self.length, unpacked)
         self.length += 1
 
-    def get(self, label: str) -> SeriesValue:
-        keys = label.strip("/").split("/")
-        return self.data._get_child(keys)
-
     def plot(
         self,
         left: List[SeriesValue],
@@ -71,8 +77,8 @@ class Fox:
         open_new_tab: bool = True,
     ) -> str:
         times = (
-            self.get(self.time)
-            if self.time is not None
+            self.get(self.__time)._get(self.length)
+            if self.__time is not None
             else [float(x) for x in range(self.length)]
         )
         left_series = {
@@ -89,7 +95,7 @@ class Fox:
             title,
             left_axis_unit,
             right_axis_unit,
-            timestamped=self.time is not None,
+            timestamped=self.__time is not None,
         )
         if open_new_tab:
             filename = write_output(html)
