@@ -45,14 +45,14 @@ class Fox:
         self.data = NestedDict("/")
         self.length = 0
 
-    @property
-    def all(self) -> List[str]:
-        """List of all labels present in the data."""
-        return self.data._list_labels()
-
     def get(self, label: str) -> SeriesValue:
         keys = label.strip("/").split("/")
         return self.data._get_child(keys)
+
+    @property
+    def labels(self) -> List[str]:
+        """List of all labels present in the data."""
+        return self.data._list_labels()
 
     def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
