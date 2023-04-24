@@ -22,7 +22,6 @@ import argparse
 import sys
 from datetime import datetime
 
-from .plot import plot
 from .series import Series
 
 
@@ -85,25 +84,21 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = Series()
+    fox = Series(args.time)
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:
             fox.read_from_file(file)
     else:  # args.file is None:
         fox.read_from_file(sys.stdin)
 
-    times = fox.get(args.time).get_range(0, fox.length)
     if args.interactive:
         __import__("IPython").embed()
     else:  # not args.interactive
         left_labels = args.left if args.left else []
         right_labels = args.right if args.right else []
-        left_series = [fox.get(label) for label in left_labels]
-        right_series = [fox.get(label) for label in right_labels]
-        plot(
-            times,
-            left_series,
-            right_series,
+        fox.plot(
+            left_labels,
+            right_labels,
             args.title,
             args.left_axis_unit,
             args.right_axis_unit,

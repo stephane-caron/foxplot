@@ -17,11 +17,9 @@
 # limitations under the License.
 
 """Plot time series."""
-import tempfile
-import webbrowser
-from datetime import datetime
 
-from .generate_html import generate_html
+import tempfile
+from datetime import datetime
 
 
 def write_output(html: str) -> str:
@@ -43,9 +41,3 @@ def write_output(html: str) -> str:
         output_file.write(html)
         filename = output_file.name
     return filename
-
-
-def plot(*args):
-    html = generate_html(*args)
-    filename = write_output(html)
-    webbrowser.open_new_tab(filename)

@@ -19,12 +19,11 @@
 """Generate an HTML page containing the output plot."""
 
 from math import isnan
-from typing import Iterable, List
+from typing import Dict, Iterable, List
 
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
-from .series import SeriesValue
 
 
 def __escape_null(series: Iterable) -> str:
@@ -56,8 +55,8 @@ def __escape_null(series: Iterable) -> str:
 
 def generate_html(
     times: List[float],
-    left_series: List[SeriesValue],
-    right_series: List[SeriesValue],
+    left_axis: Dict[str, list],
+    right_axis: Dict[str, list],
     title: str,
     left_axis_unit: str = "",
     right_axis_unit: str = "",
@@ -81,13 +80,12 @@ def generate_html(
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
-    left_labels = set([series.label for series in left_series])
-    right_labels = set([series.label for series in right_series])
+    left_labels = set(left_axis.keys())
+    right_labels = set(right_axis.keys())
     labels = left_labels | right_labels
     series_from_label = {}
-    for side in (left_series, right_series):
-        for series in side:
-            series_from_label[series.label] = series.get_range(0, len(times))
+    series_from_label.update(left_axis)
+    series_from_label.update(right_axis)
     if None in times:
         raise ValueError("time index cannot contain None values")
     html = f"""<!DOCTYPE html>

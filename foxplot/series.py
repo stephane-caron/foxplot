@@ -18,11 +18,14 @@
 """Series data unpacked from input dictionaries."""
 
 import typing
+import webbrowser
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from .decoders.json import decode_json
 from .exceptions import FoxplotException
+from .generate_html import generate_html
+from .plot import write_output
 
 
 @dataclass
@@ -35,11 +38,8 @@ class SeriesValue:
         self.data = {}
         self.label = label
 
-    def get(self, index: int, default: Any):
-        return self.data.get(index, default)
-
-    def get_range(self, start, stop):
-        return [self.get(index, None) for index in range(start, stop)]
+    def get(self, max_index: int):
+        return [self.data.get(index, None) for index in range(max_index)]
 
     def update(self, index: int, value: Any):
         self.data[index] = value
@@ -86,10 +86,17 @@ class NestedDict:
 class Series:
 
     root: NestedDict
+    time: str
 
-    def __init__(self):
+    def __init__(self, time: str):
+        """Initialize series.
+
+        Args:
+            time: Name of time index in input dictionaries.
+        """
         self.length = 0
         self.root = NestedDict("/")
+        self.time = time
 
     def read_from_file(self, file: typing.TextIO) -> None:
         """Process time series data.
@@ -103,4 +110,22 @@ class Series:
 
     def get(self, name: str) -> SeriesValue:
         keys = name.strip("/").split("/")
-        return self.root.get_from_keys(keys)
+        return self.root.get_from_keys(keys).get(self.length)
+
+    def plot(self, left_labels, right_labels, *args):
+        times = (
+            self.get(self.time)
+            if self.time is not None
+            else [float(x) for x in range(self.length)]
+        )
+        left_series = {label: self.get(label) for label in left_labels}
+        right_series = {label: self.get(label) for label in right_labels}
+        html = generate_html(
+            times,
+            left_series,
+            right_series,
+            *args,
+            timestamped=self.time is not None,
+        )
+        filename = write_output(html)
+        webbrowser.open_new_tab(filename)
