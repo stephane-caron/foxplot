@@ -21,8 +21,6 @@
 import argparse
 import sys
 from datetime import datetime
-from os import path
-from typing import List
 
 from .plot import plot
 from .series import Series
@@ -40,7 +38,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
         "-l",
         "--left",
         nargs="*",
-        help="fields to plot using the (default) left axis",
+        help="series to plot using the (default) left axis",
     )
     parser.add_argument(
         "-lu",
@@ -60,7 +58,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
         "-r",
         "--right",
         nargs="*",
-        help="fields to plot using the right axis",
+        help="series to plot using the right axis",
     )
     parser.add_argument(
         "-ru",
@@ -81,22 +79,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="plot title",
     )
     return parser.parse_args()
-
-
-def get_fields(data: dict) -> List[str]:
-    """Get the list of fields available in a nested dictionary.
-
-    Returns:
-        List of fields available in dictionary.
-    """
-    if not isinstance(data, dict):
-        return []
-    fields = []
-    for key in data:
-        if not isinstance(data[key], dict):
-            fields.append(key)
-        fields.extend(path.join(key, field) for field in get_fields(data[key]))
-    return fields
 
 
 def main() -> None:
