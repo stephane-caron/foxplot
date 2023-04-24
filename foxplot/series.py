@@ -27,8 +27,8 @@ from .decoders.json import decode_json
 @dataclass
 class SeriesValue:
 
-    label: str
     data: Dict[int, Any]
+    label: str
 
     def __init__(self, label: str):
         self.data = {}
@@ -48,28 +48,27 @@ class SeriesValue:
 class NestedDict:
     """Series data unpacked from input dictionaries."""
 
-    label: str
+    __label: str
 
     def __init__(self, label: str):
-        self.label = label
+        self.__label = label
 
     def update(self, index: int, unpacked: dict) -> None:
         for key, value in unpacked.items():
             if key in self.__dict__:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
-                sep = "/" if not self.label.endswith("/") else ""
-                label = f"{self.label}{sep}{key}"
+                sep = "/" if not self.__label.endswith("/") else ""
                 child = (
-                    NestedDict(label)
-                    if isinstance(value, dict)
-                    else SeriesValue(label)
-                )
+                    NestedDict if isinstance(value, dict) else SeriesValue
+                )(label=f"{self.__label}{sep}{key}")
                 self.__dict__[key] = child
             child.update(index, value)
 
     def __repr__(self):
-        return "Dictionary with keys:\n- " + "\n- ".join(self.__dict__.keys())
+        return "Dictionary with keys:\n- " + "\n- ".join(
+            key for key in self.__dict__.keys() if not key.startswith("_")
+        )
 
     def get_from_keys(self, keys: List[str], max_index: int):
         child = self.__dict__[keys[0]]
