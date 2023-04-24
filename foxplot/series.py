@@ -86,11 +86,12 @@ class NestedDict:
         return self.__dict__[key]
 
     def __repr__(self):
-        return "Dictionary with keys:\n- " + "\n- ".join(
+        keys = ", ".join(
             str(key)
             for key in self.__dict__.keys()
             if isinstance(key, int) or not key.startswith("_")
         )
+        return f"{self.__label}: [{keys}]"
 
 
 class Series:
