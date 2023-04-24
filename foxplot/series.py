@@ -17,13 +17,10 @@
 
 """Series data unpacked from input dictionaries."""
 
-import os
 import typing
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
-from .color_picker import ColorPicker
 from .decoders.json import decode_json
-from .exceptions import FieldNeedsExpansion
 
 
 def get_from_keys(
@@ -47,10 +44,6 @@ def get_from_keys(
     )
     if len(keys) > 1:
         return get_from_keys(subcollection, keys[1:])
-    if isinstance(subcollection, dict):
-        raise FieldNeedsExpansion(list(subcollection.keys()))
-    if isinstance(subcollection, list):
-        raise FieldNeedsExpansion(range(len(subcollection)))
     return subcollection  # found a value
 
 
@@ -95,8 +88,6 @@ class Series:
     def __unpack_value(self, unpacked: dict, field: str):
         try:
             keys = field.lstrip("/").split("/")
-            if len(keys[0]) < 1:
-                raise FieldNeedsExpansion(list(unpacked.keys()))
             value = get_from_keys(unpacked, keys)
         except KeyError as key_error:
             value = "null"
@@ -121,8 +112,6 @@ class Series:
         self.field_values = {field: [] for field in self.fields}
         nb_unpacked = 0
         for unpacked in decode_json(file=file):
-            expand_fields: List[Tuple[str, Sequence[str]]] = []
-
             if self.index is None:
                 self.index_values.append(nb_unpacked)
             else:  # self.index is not None:
@@ -130,40 +119,8 @@ class Series:
                     self.__unpack_value(unpacked, self.index)
                 )
             nb_unpacked += 1
-
             for field in self.fields:
-                try:
-                    value = self.__unpack_value(unpacked, field)
-                    self.field_values[field].append(value)
-                except FieldNeedsExpansion as exn:
-                    if len(exn.subfields) > 0:  # o/w wait for non-empty
-                        expand_fields.append((field, exn.subfields))
-                        print(f"{expand_fields=}")
-
-            while expand_fields:
-                old_field, subfields = expand_fields.pop()
-                print(f"\t{old_field=}, {subfields=}")
-                self.fields.remove(old_field)
-                axis_list = (
-                    self.left_axis_fields
-                    if old_field in self.left_axis_fields
-                    else self.right_axis_fields
-                )
-                if old_field in axis_list:
-                    axis_list.remove(old_field)
-                del self.field_values[old_field]
-                for subfield in subfields:
-                    new_field = os.path.join(old_field, subfield)
-                    self.fields.append(new_field)
-                    self.field_values[new_field] = ["null"] * nb_unpacked
-                    axis_list.append(new_field)
-
-            if len(self.fields) > len(ColorPicker.COLORS):
-                if self.index in self.fields:
-                    self.fields.remove(self.index)
-                raise ValueError(
-                    "Too many fields (not enough colors!): "
-                    + (" ".join(self.fields))
-                )
+                value = self.__unpack_value(unpacked, field)
+                self.field_values[field].append(value)
         print(f"{self.index_values=}")
         print(f"{self.field_values=}")
