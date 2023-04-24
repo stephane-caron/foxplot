@@ -17,10 +17,9 @@
 
 """Series data unpacked from input dictionaries."""
 
-import typing
 import webbrowser
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, TextIO
 
 from .decoders.json import decode_json
 from .exceptions import FoxplotException
@@ -92,13 +91,13 @@ class Series:
         """Initialize series.
 
         Args:
-            time: Name of time index in input dictionaries.
+            time: Label of time index in input dictionaries.
         """
         self.length = 0
         self.root = NestedDict("/")
         self.time = time
 
-    def read_from_file(self, file: typing.TextIO) -> None:
+    def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
 
         Args:
@@ -108,11 +107,18 @@ class Series:
             self.root.update(self.length, unpacked)
             self.length += 1
 
-    def get(self, name: str) -> SeriesValue:
-        keys = name.strip("/").split("/")
+    def get(self, label: str) -> SeriesValue:
+        keys = label.strip("/").split("/")
         return self.root.get_from_keys(keys).get(self.length)
 
-    def plot(self, left_labels, right_labels, *args):
+    def plot(
+        self,
+        left_labels: list,
+        right_labels: Optional[list] = None,
+        title: str = "",
+        left_axis_unit: str = "",
+        right_axis_unit: str = "",
+    ):
         times = (
             self.get(self.time)
             if self.time is not None
@@ -124,7 +130,9 @@ class Series:
             times,
             left_series,
             right_series,
-            *args,
+            title,
+            left_axis_unit,
+            right_axis_unit,
             timestamped=self.time is not None,
         )
         filename = write_output(html)
