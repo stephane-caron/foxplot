@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Main class to manipulate dictionary-series data."""
+
 import webbrowser
 from typing import List, Optional, TextIO
 
@@ -25,7 +27,6 @@ from .series import NestedDict, SeriesValue
 
 
 class Fox:
-
     """Frequent Observation diXionaries, our main class.
 
     Our main class to read, access and manipulate series of dictionary data.
@@ -45,7 +46,17 @@ class Fox:
         self.data = NestedDict("/")
         self.length = 0
 
-    def get(self, label: str) -> SeriesValue:
+    def get_series(self, label: str) -> SeriesValue:
+        """
+        Get time-series data from a given label.
+
+        Args:
+            label: Label to the data in input dictionaries, for example
+                ``/observation/cpu_temperature``.
+
+        Returns:
+            Corresponding time series.
+        """
         keys = label.strip("/").split("/")
         return self.data._get_child(keys)
 
@@ -77,7 +88,7 @@ class Fox:
         open: bool = True,
     ) -> None:
         times = (
-            self.get(self.__time)._get(self.length)
+            self.get_series(self.__time)._get(self.length)
             if self.__time is not None
             else [float(x) for x in range(self.length)]
         )

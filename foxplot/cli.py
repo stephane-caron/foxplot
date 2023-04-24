@@ -96,8 +96,8 @@ def main() -> None:
     else:  # not args.interactive
         left_labels = args.left if args.left else []
         right_labels = args.right if args.right else []
-        left_series = [fox.get(label) for label in left_labels]
-        right_series = [fox.get(label) for label in right_labels]
+        left_series = [fox.get_series(label) for label in left_labels]
+        right_series = [fox.get_series(label) for label in right_labels]
         fox.plot(
             left_series,
             right_series,

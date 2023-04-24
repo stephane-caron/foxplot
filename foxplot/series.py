@@ -28,14 +28,14 @@ class SeriesValue:
     __data: Dict[int, Any]
     __label: str
 
-    def __init__(self, label: str):
-        self.__data = {}
-        self.__label = label
-
     @property
     def label(self) -> str:
         """Label of the series in the input data."""
         return self.__label
+
+    def __init__(self, label: str):
+        self.__data = {}
+        self.__label = label
 
     def __repr__(self):
         values = list(self.__data.values())
