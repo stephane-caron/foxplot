@@ -51,12 +51,15 @@ class Fox:
             file: File to read time series from.
         """
         for unpacked in decode_json(file=file):
-            self.data._update(self.length, unpacked)
-            self.length += 1
+            self.unpack(unpacked)
+
+    def unpack(self, unpacked: dict) -> None:
+        self.data._update(self.length, unpacked)
+        self.length += 1
 
     def get(self, label: str) -> SeriesValue:
         keys = label.strip("/").split("/")
-        return self.data._get_from_keys(keys)
+        return self.data._get_child(keys)
 
     def plot(
         self,
