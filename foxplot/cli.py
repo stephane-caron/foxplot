@@ -25,7 +25,7 @@ from os import path
 from typing import List
 
 from .plot import plot
-from .series import SeriesDict
+from .series import NestedDict
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -103,7 +103,7 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = SeriesDict()
+    fox = NestedDict()
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:
             max_index = fox.read_from_file(file)

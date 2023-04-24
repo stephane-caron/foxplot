@@ -40,7 +40,7 @@ class SeriesValue:
         return f"Time series with values: {values}"
 
 
-class SeriesDict:
+class NestedDict:
     """Series data unpacked from input dictionaries."""
 
     def read_from_file(self, file: typing.TextIO, start_index: int = 0) -> int:
@@ -66,7 +66,7 @@ class SeriesDict:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
                 child = (
-                    SeriesDict() if isinstance(value, dict) else SeriesValue()
+                    NestedDict() if isinstance(value, dict) else SeriesValue()
                 )
                 self.__dict__[key] = child
             child.update(index, value)
