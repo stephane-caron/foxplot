@@ -24,7 +24,7 @@ from typing import Iterable, List
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
-from .series import SeriesDict
+from .series import SeriesDict, SeriesValue
 
 
 def __escape_null(series: Iterable) -> str:
@@ -55,9 +55,9 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
+    times: SeriesValue,
     series_dict: SeriesDict,
     max_index: int,
-    time_index: str,
     left_axis_fields: List[str],
     right_axis_fields: List[str],
     title: str,
@@ -85,7 +85,6 @@ def generate_html(
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
     right_axis_set = set(right_axis_fields)  # for faster queries below
     fields = left_axis_fields + right_axis_fields
-    times = series_dict.get_series(time_index, max_index)
     if None in times:
         raise ValueError("index series cannot contain None values")
     html = f"""<!DOCTYPE html>

@@ -19,15 +19,12 @@
 """Command-line entry point for foxplot."""
 
 import argparse
-import logging
 import sys
-import tempfile
-import webbrowser
 from datetime import datetime
 from os import path
 from typing import List
 
-from .generate_html import generate_html
+from .plot import plot
 from .series import SeriesDict
 
 
@@ -102,38 +99,9 @@ def get_fields(data: dict) -> List[str]:
     return fields
 
 
-def write_output(html: str) -> str:
-    """Write output page.
-
-    Args:
-        html: HTML content.
-
-    Returns:
-        Name of the output file (a temporary file).
-    """
-    filename: str = ""
-    with tempfile.NamedTemporaryFile(
-        mode="w+",
-        prefix=f"plot-{datetime.now().strftime('%Y%m%d-%H%M%S')}-",
-        suffix=".html",
-        delete=False,
-    ) as output_file:
-        output_file.write(html)
-        filename = output_file.name
-    return filename
-
-
 def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
-
-    index: str = args.time
-    if index is not None:
-        logging.info(f'Using "{index}" as time index')
-    else:  # index is None:
-        logging.info("No index provided, counting items")
-    left_axis_fields = args.left if args.left else []
-    right_axis_fields = args.right if args.right else []
 
     fox = SeriesDict()
     if args.file is not None:
@@ -142,19 +110,19 @@ def main() -> None:
     else:  # args.file is None:
         max_index = fox.read_from_file(sys.stdin)
 
+    times = fox.get_series(args.time, max_index)
     if args.interactive:
         __import__("IPython").embed()
-
-    html = generate_html(
-        fox,
-        max_index,
-        args.time,
-        left_axis_fields,
-        right_axis_fields,
-        args.title,
-        args.left_axis_unit,
-        args.right_axis_unit,
-    )
-
-    filename = write_output(html)
-    webbrowser.open_new_tab(filename)
+    else:  # not args.interactive
+        left_axis_fields = args.left if args.left else []
+        right_axis_fields = args.right if args.right else []
+        plot(
+            times,
+            fox,
+            max_index,
+            left_axis_fields,
+            right_axis_fields,
+            args.title,
+            args.left_axis_unit,
+            args.right_axis_unit,
+        )
