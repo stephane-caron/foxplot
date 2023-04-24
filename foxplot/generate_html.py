@@ -24,7 +24,7 @@ from typing import Iterable, List
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
-from .series import NestedDict, SeriesValue
+from .series import Series, SeriesValue
 
 
 def __escape_null(series: Iterable) -> str:
@@ -56,8 +56,7 @@ def __escape_null(series: Iterable) -> str:
 
 def generate_html(
     times: SeriesValue,
-    series_dict: NestedDict,
-    max_index: int,
+    series: Series,
     left_axis_fields: List[str],
     right_axis_fields: List[str],
     title: str,
@@ -111,7 +110,7 @@ def generate_html(
                 {times},"""
     for field in fields:
         html += f"""
-                {__escape_null(series_dict.get_series(field, max_index))},"""
+                {__escape_null(series.get(field))},"""
     html += """
             ];
 

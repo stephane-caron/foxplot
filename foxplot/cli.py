@@ -25,7 +25,7 @@ from os import path
 from typing import List
 
 from .plot import plot
-from .series import NestedDict
+from .series import Series
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -103,14 +103,14 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = NestedDict()
+    fox = Series()
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:
-            max_index = fox.read_from_file(file)
+            fox.read_from_file(file)
     else:  # args.file is None:
-        max_index = fox.read_from_file(sys.stdin)
+        fox.read_from_file(sys.stdin)
 
-    times = fox.get_series(args.time, max_index)
+    times = fox.get(args.time)
     if args.interactive:
         __import__("IPython").embed()
     else:  # not args.interactive
@@ -119,7 +119,6 @@ def main() -> None:
         plot(
             times,
             fox,
-            max_index,
             left_axis_fields,
             right_axis_fields,
             args.title,

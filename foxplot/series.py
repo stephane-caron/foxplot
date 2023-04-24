@@ -43,23 +43,6 @@ class SeriesValue:
 class NestedDict:
     """Series data unpacked from input dictionaries."""
 
-    def read_from_file(self, file: typing.TextIO, start_index: int = 0) -> int:
-        """Process time series data.
-
-        Args:
-            file: File to read time series from.
-            start_index: Optional internal start index.
-
-        Returns:
-            Index after input has been read.
-        """
-        index = start_index
-        print(f"read from {file=}")
-        for unpacked in decode_json(file=file):
-            self.update(index, unpacked)
-            index += 1
-        return index
-
     def update(self, index: int, unpacked: dict) -> None:
         for key, value in unpacked.items():
             if key in self.__dict__:
@@ -74,12 +57,35 @@ class NestedDict:
     def __repr__(self):
         return "Dictionary with keys:\n- " + "\n- ".join(self.__dict__.keys())
 
-    def _get_from_keys(self, keys: List[str], max_index: int):
+    def get_from_keys(self, keys: List[str], max_index: int):
         child = self.__dict__[keys[0]]
         if len(keys) > 1:
-            return child._get_from_keys(keys[1:], max_index)
+            return child.get_from_keys(keys[1:], max_index)
         return [child.get(index) for index in range(max_index)]
 
-    def get_series(self, name: str, max_index: int):
+
+class Series:
+
+    index: int
+    root: NestedDict
+
+    def __init__(self):
+        self.index = 0
+        self.root = NestedDict()
+
+    def read_from_file(self, file: typing.TextIO):
+        """Process time series data.
+
+        Args:
+            file: File to read time series from.
+
+        Returns:
+            Index after input has been read.
+        """
+        for unpacked in decode_json(file=file):
+            self.root.update(self.index, unpacked)
+            self.index += 1
+
+    def get(self, name: str):
         keys = name.strip("/").split("/")
-        return self._get_from_keys(keys, max_index)
+        return self.root.get_from_keys(keys, self.index)
