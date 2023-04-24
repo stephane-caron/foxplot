@@ -20,6 +20,10 @@ $ foxplot my_time_series.json
 rq -mJ < my_time_series.mpack | jq '{.my.filters.here}' | foxplot
 ```
 
+## Design notes
+
+* Foxplot prioritizes ease-of-use (interactive mode) over performance
+
 ## See also
 
 * [µPlot](https://github.com/leeoniya/uPlot)'s performance was a key enabler for this project.
