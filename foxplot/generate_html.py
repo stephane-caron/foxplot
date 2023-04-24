@@ -24,7 +24,7 @@ from typing import Iterable, List
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
-from .series import Series, SeriesValue
+from .series import SeriesValue
 
 
 def __escape_null(series: Iterable) -> str:
@@ -55,10 +55,9 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
-    times: SeriesValue,
-    series: Series,
-    left_axis_fields: List[str],
-    right_axis_fields: List[str],
+    times: List[float],
+    left_series: List[SeriesValue],
+    right_series: List[SeriesValue],
     title: str,
     left_axis_unit: str = "",
     right_axis_unit: str = "",
@@ -82,10 +81,15 @@ def generate_html(
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
-    right_axis_set = set(right_axis_fields)  # for faster queries below
-    fields = left_axis_fields + right_axis_fields
+    left_labels = set([series.label for series in left_series])
+    right_labels = set([series.label for series in right_series])
+    labels = left_labels | right_labels
+    series_from_label = {}
+    for side in (left_series, right_series):
+        for series in side:
+            series_from_label[series.label] = series.get_range(0, len(times))
     if None in times:
-        raise ValueError("index series cannot contain None values")
+        raise ValueError("time index cannot contain None values")
     html = f"""<!DOCTYPE html>
 <html lang="en">
     <head>
@@ -108,9 +112,9 @@ def generate_html(
 
             let data = [
                 {times},"""
-    for field in fields:
+    for label in labels:
         html += f"""
-                {__escape_null(series.get(field))},"""
+                {__escape_null(series_from_label[label])},"""
     html += """
             ];
 
@@ -173,7 +177,7 @@ def generate_html(
                         value: (self, rawValue) => Number.parseFloat(rawValue -
                         {times[0]}).toPrecision(3),
                     }},"""
-    for field in fields:
+    for label in labels:
         html += f"""
                     {{
                         // initial toggled state (optional)
@@ -181,14 +185,14 @@ def generate_html(
                         spanGaps: false,
 
                         // in-legend display
-                        label: "{field}","""
-        if field in right_axis_set:
+                        label: "{label}","""
+        if label in right_labels:
             html += f"""
                         value: (self, rawValue) =>
                             Number.parseFloat(rawValue).toPrecision(2) +
                             "{right_axis_label}",
                         scale: "{right_axis_unit}","""
-        else:  # field in self.left_axis_fields
+        else:  # label in left_labels
             html += f"""
                         value: (self, rawValue) =>
                             Number.parseFloat(rawValue).toPrecision(2) +

@@ -22,6 +22,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from .decoders.json import decode_json
+from .exceptions import FoxplotException
 
 
 @dataclass
@@ -34,11 +35,14 @@ class SeriesValue:
         self.data = {}
         self.label = label
 
+    def get(self, index: int, default: Any):
+        return self.data.get(index, default)
+
+    def get_range(self, start, stop):
+        return [self.get(index, None) for index in range(start, stop)]
+
     def update(self, index: int, value: Any):
         self.data[index] = value
-
-    def get(self, index: int):
-        return self.data.get(index, None)
 
     def __repr__(self):
         values = list(self.data.values())
@@ -65,40 +69,38 @@ class NestedDict:
                 self.__dict__[key] = child
             child.update(index, value)
 
+    def get_from_keys(self, keys: List[str]) -> SeriesValue:
+        child = self.__dict__[keys[0]]
+        if len(keys) > 1:
+            return child.get_from_keys(keys[1:])
+        if not isinstance(child, SeriesValue):
+            raise FoxplotException(f"{child.label} is not a time series")
+        return child
+
     def __repr__(self):
         return "Dictionary with keys:\n- " + "\n- ".join(
             key for key in self.__dict__.keys() if not key.startswith("_")
         )
 
-    def get_from_keys(self, keys: List[str], max_index: int):
-        child = self.__dict__[keys[0]]
-        if len(keys) > 1:
-            return child.get_from_keys(keys[1:], max_index)
-        return [child.get(index) for index in range(max_index)]
-
 
 class Series:
 
-    index: int
     root: NestedDict
 
     def __init__(self):
-        self.index = 0
+        self.length = 0
         self.root = NestedDict("/")
 
-    def read_from_file(self, file: typing.TextIO):
+    def read_from_file(self, file: typing.TextIO) -> None:
         """Process time series data.
 
         Args:
             file: File to read time series from.
-
-        Returns:
-            Index after input has been read.
         """
         for unpacked in decode_json(file=file):
-            self.root.update(self.index, unpacked)
-            self.index += 1
+            self.root.update(self.length, unpacked)
+            self.length += 1
 
-    def get(self, name: str):
+    def get(self, name: str) -> SeriesValue:
         keys = name.strip("/").split("/")
-        return self.root.get_from_keys(keys, self.index)
+        return self.root.get_from_keys(keys)
