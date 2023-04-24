@@ -74,8 +74,8 @@ class Fox:
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
-        open_new_tab: bool = True,
-    ) -> str:
+        open: bool = True,
+    ) -> None:
         times = (
             self.get(self.__time)._get(self.length)
             if self.__time is not None
@@ -97,7 +97,12 @@ class Fox:
             right_axis_unit,
             timestamped=self.__time is not None,
         )
-        if open_new_tab:
+        if open:
             filename = write_output(html)
             webbrowser.open_new_tab(filename)
-        return html
+        else:  # print command line
+            left_args = "-l ".join(left_series.keys())
+            right_args = ("-r " if right_series else "") + "-r ".join(
+                right_series.keys()
+            )
+            print(f"foxplot -t {self.__time} -l {left_args} {right_args}")
