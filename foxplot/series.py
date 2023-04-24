@@ -43,13 +43,21 @@ class SeriesValue:
 class NestedDict:
     """Series data unpacked from input dictionaries."""
 
+    label: str
+
+    def __init__(self, label: str):
+        self.label = label
+
     def update(self, index: int, unpacked: dict) -> None:
         for key, value in unpacked.items():
             if key in self.__dict__:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
+                sep = "/" if not self.label.endswith("/") else ""
                 child = (
-                    NestedDict() if isinstance(value, dict) else SeriesValue()
+                    NestedDict(label=f"{self.label}{sep}{key}")
+                    if isinstance(value, dict)
+                    else SeriesValue()
                 )
                 self.__dict__[key] = child
             child.update(index, value)
@@ -71,7 +79,7 @@ class Series:
 
     def __init__(self):
         self.index = 0
-        self.root = NestedDict()
+        self.root = NestedDict("/")
 
     def read_from_file(self, file: typing.TextIO):
         """Process time series data.
