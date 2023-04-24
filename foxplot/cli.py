@@ -54,9 +54,10 @@ def parse_command_line_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "-i",
-        "--index",
-        default=None,
-        help="key to use as index for the time series (count items otherwise)",
+        "--interactive",
+        action="store_true",
+        default=False,
+        help="interact with the data from a Python interpreter",
     )
     parser.add_argument(
         "-r",
@@ -73,10 +74,8 @@ def parse_command_line_arguments() -> argparse.Namespace:
     )
     parser.add_argument(
         "-t",
-        "--timestamped",
-        action="store_true",
-        default=False,
-        help="flag indicating that the index is a Unix time in seconds",
+        "--time",
+        help="key to use as time index for the series",
     )
     parser.add_argument(
         "--title",
@@ -128,9 +127,9 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    index: str = args.index
+    index: str = args.time
     if index is not None:
-        logging.info(f'Using "{index}" as index')
+        logging.info(f'Using "{index}" as time index')
     else:  # index is None:
         logging.info("No index provided, counting items")
     left_axis_fields = args.left if args.left else []
@@ -139,7 +138,7 @@ def main() -> None:
         index,
         left_axis_fields,
         right_axis_fields,
-        timestamped=args.timestamped,
+        timestamped=index is not None,
     )
 
     if args.file is not None:
@@ -147,6 +146,9 @@ def main() -> None:
             series.read_from_file(file)
     else:  # args.file is None:
         series.read_from_file(sys.stdin)
+
+    if args.interactive:
+        __import__("IPython").embed()
 
     html = generate_html(
         series,
