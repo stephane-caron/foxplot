@@ -28,7 +28,7 @@ from typing import List
 
 from .generate_html import generate_html
 from .series import Series
-from .spdlog import logging
+import logging
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
