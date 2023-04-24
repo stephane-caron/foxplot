@@ -19,12 +19,12 @@
 """Generate an HTML page containing the output plot."""
 
 from math import isnan
-from typing import Iterable
+from typing import Iterable, List
 
 from pkg_resources import resource_filename
 
 from .color_picker import ColorPicker
-from .series import Series
+from .series import SeriesDict
 
 
 def __escape_null(series: Iterable) -> str:
@@ -55,10 +55,15 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
-    series: Series,
+    series_dict: SeriesDict,
+    max_index: int,
+    time_index: str,
+    left_axis_fields: List[str],
+    right_axis_fields: List[str],
     title: str,
     left_axis_unit: str = "",
     right_axis_unit: str = "",
+    timestamped: bool = True,
 ) -> str:
     """Generate plot in an HTML page.
 
@@ -78,8 +83,10 @@ def generate_html(
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
-    right_axis_set = set(series.right_axis_fields)  # for faster queries below
-    if None in series.index_values:
+    right_axis_set = set(right_axis_fields)  # for faster queries below
+    fields = left_axis_fields + right_axis_fields
+    times = series_dict.get_series(time_index, max_index)
+    if None in times:
         raise ValueError("index series cannot contain None values")
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -102,10 +109,10 @@ def generate_html(
             const {{ linear, stepped, bars, spline, spline2 }} = uPlot.paths;
 
             let data = [
-                {series.index_values},"""
-    for field in series.fields:
+                {times},"""
+    for field in fields:
         html += f"""
-                {__escape_null(series.field_values[field])},"""
+                {__escape_null(series_dict.get_series(field, max_index))},"""
     html += """
             ];
 
@@ -159,16 +166,16 @@ def generate_html(
     html += f"""
                 scales: {{
                     x: {{
-                        time: {"true" if series.timestamped else "false"},
+                        time: {"true" if timestamped else "false"},
                     }},
                 }},
                 series: ["""
     html += f"""
                     {{
                         value: (self, rawValue) => Number.parseFloat(rawValue -
-                        {series.index_values[0]}).toPrecision(3),
+                        {times[0]}).toPrecision(3),
                     }},"""
-    for field in series.fields:
+    for field in fields:
         html += f"""
                     {{
                         // initial toggled state (optional)

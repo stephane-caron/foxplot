@@ -19,6 +19,7 @@
 """Command-line entry point for foxplot."""
 
 import argparse
+import logging
 import sys
 import tempfile
 import webbrowser
@@ -27,8 +28,7 @@ from os import path
 from typing import List
 
 from .generate_html import generate_html
-from .series import Series
-import logging
+from .series import SeriesDict
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -134,24 +134,23 @@ def main() -> None:
         logging.info("No index provided, counting items")
     left_axis_fields = args.left if args.left else []
     right_axis_fields = args.right if args.right else []
-    series = Series(
-        index,
-        left_axis_fields,
-        right_axis_fields,
-        timestamped=index is not None,
-    )
 
+    fox = SeriesDict()
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:
-            series.read_from_file(file)
+            max_index = fox.read_from_file(file)
     else:  # args.file is None:
-        series.read_from_file(sys.stdin)
+        max_index = fox.read_from_file(sys.stdin)
 
     if args.interactive:
         __import__("IPython").embed()
 
     html = generate_html(
-        series,
+        fox,
+        max_index,
+        args.time,
+        left_axis_fields,
+        right_axis_fields,
         args.title,
         args.left_axis_unit,
         args.right_axis_unit,

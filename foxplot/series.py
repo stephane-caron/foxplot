@@ -18,109 +18,68 @@
 """Series data unpacked from input dictionaries."""
 
 import typing
-from typing import Any, Dict, List, Optional, Sequence, Union
+from dataclasses import dataclass, field
+from typing import Any, Dict, List
 
 from .decoders.json import decode_json
 
 
-def get_from_keys(
-    collection: Union[Dict[str, Any], List[Any]],
-    keys: Sequence[str],
-):
-    """Get value from a nested dictionary.
+@dataclass
+class SeriesValue:
 
-    Get value `collection[key1][key2][...][keyN]` from a nested dictionary
-    `collection` and keys `[key1, key2, ..., keyN]`.
+    data: Dict[int, Any] = field(default_factory=dict)
 
-    Args:
-        collection: Dictionary or list to get value from.
-        keys: Sequence of keys to the value.
-    """
-    key = keys[0]
-    subcollection = (
-        collection[int(key)]
-        if isinstance(collection, list)
-        else collection[key]
-    )
-    if len(keys) > 1:
-        return get_from_keys(subcollection, keys[1:])
-    return subcollection  # found a value
+    def update(self, index: int, value: Any):
+        self.data[index] = value
+
+    def get(self, index: int):
+        return self.data.get(index, None)
+
+    def __repr__(self):
+        values = list(self.data.values())
+        return f"Time series with values: {values}"
 
 
-class Series:
-    """Series data unpacked from input dictionaries.
+class SeriesDict:
+    """Series data unpacked from input dictionaries."""
 
-    Attributes:
-        fields: Fields to plot.
-        field_values: Values for fields unpacked from input dictionaries.
-        index_values: Index values, either generated or unpacked from input
-            dictionaries.
-        index: If set, read index values from input dictionaries.
-        left_axis_fields: Fields to plot on the left axis.
-        right_axis_fields: Fields to plot on the right axis.
-        timestamped: If true, assume index is a Unix timestamp.
-    """
-
-    fields: List[str]
-    field_values: Dict[str, Any]
-    index_values: list
-    index: Optional[str]
-    left_axis_fields: List[str]
-    right_axis_fields: List[str]
-    timestamped: bool
-
-    def __init__(
-        self,
-        index: Optional[str],
-        left_axis_fields: List[str],
-        right_axis_fields: List[str],
-        timestamped: bool,
-    ):
-        """Initialize series data."""
-        self.field_values = {}
-        self.fields = left_axis_fields + right_axis_fields
-        self.index = index
-        self.index_values = []
-        self.left_axis_fields = left_axis_fields
-        self.right_axis_fields = right_axis_fields
-        self.timestamped = timestamped
-
-    def __unpack_value(self, unpacked: dict, field: str):
-        try:
-            keys = field.lstrip("/").split("/")
-            value = get_from_keys(unpacked, keys)
-        except KeyError as key_error:
-            value = "null"
-            if field == self.index:
-                raise ValueError(
-                    f'Index "{field}" undefined '
-                    f"in unpacked item {unpacked}"
-                ) from key_error
-        return value
-
-    def read_from_file(self, file: typing.TextIO) -> None:
+    def read_from_file(self, file: typing.TextIO, start_index: int = 0) -> int:
         """Process time series data.
 
         Args:
             file: File to read time series from.
+            start_index: Optional internal start index.
 
         Returns:
-            Series data as a dictionary.
+            Index after input has been read.
         """
-        if len(self.fields) < 1:
-            self.fields = ["/"]  # special field to expand all
-        self.field_values = {field: [] for field in self.fields}
-        nb_unpacked = 0
+        index = start_index
+        print(f"read from {file=}")
         for unpacked in decode_json(file=file):
-            if self.index is None:
-                self.index_values.append(nb_unpacked)
-            else:  # self.index is not None:
-                self.index_values.append(
-                    self.__unpack_value(unpacked, self.index)
+            self.update(index, unpacked)
+            index += 1
+        return index
+
+    def update(self, index: int, unpacked: dict) -> None:
+        for key, value in unpacked.items():
+            if key in self.__dict__:
+                child = self.__dict__[key]
+            else:  # key not in self.__dict__
+                child = (
+                    SeriesDict() if isinstance(value, dict) else SeriesValue()
                 )
-            nb_unpacked += 1
-            for field in self.fields:
-                value = self.__unpack_value(unpacked, field)
-                self.field_values[field].append(value)
-        print(f"{self.index_values=}")
-        print(f"{self.field_values=}")
+                self.__dict__[key] = child
+            child.update(index, value)
+
+    def __repr__(self):
+        return "Dictionary with keys:\n- " + "\n- ".join(self.__dict__.keys())
+
+    def _get_from_keys(self, keys: List[str], max_index: int):
+        child = self.__dict__[keys[0]]
+        if len(keys) > 1:
+            return child._get_from_keys(keys[1:], max_index)
+        return [child.get(index) for index in range(max_index)]
+
+    def get_series(self, name: str, max_index: int):
+        keys = name.strip("/").split("/")
+        return self._get_from_keys(keys, max_index)
