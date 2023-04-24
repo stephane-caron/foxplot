@@ -19,7 +19,7 @@
 
 import webbrowser
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, TextIO
+from typing import Any, Dict, List, Optional, TextIO, Union
 
 from .decoders.json import decode_json
 from .exceptions import FoxplotException
@@ -29,7 +29,6 @@ from .plot import write_output
 
 @dataclass
 class SeriesValue:
-
     data: Dict[int, Any]
     label: str
 
@@ -37,10 +36,10 @@ class SeriesValue:
         self.data = {}
         self.label = label
 
-    def get(self, max_index: int):
+    def _get(self, max_index: int):
         return [self.data.get(index, None) for index in range(max_index)]
 
-    def update(self, index: int, value: Any):
+    def _update(self, index: int, value: Any):
         self.data[index] = value
 
     def __repr__(self):
@@ -56,35 +55,46 @@ class NestedDict:
     def __init__(self, label: str):
         self.__label = label
 
-    def update(self, index: int, unpacked: dict) -> None:
-        for key, value in unpacked.items():
+    def _update(self, index: int, unpacked: Union[dict, list]) -> None:
+        items = (
+            unpacked.items()
+            if isinstance(unpacked, dict)
+            else enumerate(unpacked)
+        )
+        for key, value in items:
             if key in self.__dict__:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
                 sep = "/" if not self.__label.endswith("/") else ""
                 child = (
-                    NestedDict if isinstance(value, dict) else SeriesValue
+                    NestedDict
+                    if isinstance(value, (dict, list))
+                    else SeriesValue
                 )(label=f"{self.__label}{sep}{key}")
                 self.__dict__[key] = child
-            child.update(index, value)
+            child._update(index, value)
 
-    def get_from_keys(self, keys: List[str]) -> SeriesValue:
+    def _get_from_keys(self, keys: List[str]) -> SeriesValue:
         child = self.__dict__[keys[0]]
         if len(keys) > 1:
-            return child.get_from_keys(keys[1:])
+            return child._get_from_keys(keys[1:])
         if not isinstance(child, SeriesValue):
             raise FoxplotException(f"{child.label} is not a time series")
         return child
 
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
     def __repr__(self):
         return "Dictionary with keys:\n- " + "\n- ".join(
-            key for key in self.__dict__.keys() if not key.startswith("_")
+            str(key)
+            for key in self.__dict__.keys()
+            if isinstance(key, int) or not key.startswith("_")
         )
 
 
 class Series:
-
-    root: NestedDict
+    data: NestedDict
     time: str
 
     def __init__(self, time: str):
@@ -94,7 +104,7 @@ class Series:
             time: Label of time index in input dictionaries.
         """
         self.length = 0
-        self.root = NestedDict("/")
+        self.data = NestedDict("/")
         self.time = time
 
     def read_from_file(self, file: TextIO) -> None:
@@ -104,12 +114,12 @@ class Series:
             file: File to read time series from.
         """
         for unpacked in decode_json(file=file):
-            self.root.update(self.length, unpacked)
+            self.data._update(self.length, unpacked)
             self.length += 1
 
     def get(self, label: str) -> SeriesValue:
         keys = label.strip("/").split("/")
-        return self.root.get_from_keys(keys).get(self.length)
+        return self.data._get_from_keys(keys)
 
     def plot(
         self,
