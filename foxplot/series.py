@@ -17,35 +17,38 @@
 
 """Series data unpacked from input dictionaries."""
 
-from dataclasses import dataclass
 from typing import Any, Dict, List, Union
 
 from .exceptions import FoxplotException
 
 
-@dataclass
 class SeriesValue:
-    """Index time-series values."""
+    """Indexed time-series values."""
 
-    data: Dict[int, Any]
-    label: str
+    __data: Dict[int, Any]
+    __label: str
 
     def __init__(self, label: str):
-        self.data = {}
-        self.label = label
+        self.__data = {}
+        self.__label = label
+
+    @property
+    def label(self) -> str:
+        """Label of the series in the input data."""
+        return self.__label
 
     def __repr__(self):
-        values = list(self.data.values())
+        values = list(self.__data.values())
         return f"Time series with values: {values}"
 
     def _get(self, max_index: int):
-        return [self.data.get(index, None) for index in range(max_index)]
+        return [self.__data.get(index, None) for index in range(max_index)]
 
     def _list_labels(self) -> List[str]:
-        return [self.label]
+        return [self.__label]
 
     def _update(self, index: int, value: Any):
-        self.data[index] = value
+        self.__data[index] = value
 
 
 class NestedDict:
