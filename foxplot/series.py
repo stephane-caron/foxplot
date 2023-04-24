@@ -25,6 +25,8 @@ from .exceptions import FoxplotException
 
 @dataclass
 class SeriesValue:
+    """Index time-series values."""
+
     data: Dict[int, Any]
     label: str
 

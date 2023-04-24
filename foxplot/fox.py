@@ -68,7 +68,8 @@ class Fox:
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
-    ):
+        open_new_tab: bool = True,
+    ) -> str:
         times = (
             self.get(self.time)
             if self.time is not None
@@ -90,5 +91,7 @@ class Fox:
             right_axis_unit,
             timestamped=self.time is not None,
         )
-        filename = write_output(html)
-        webbrowser.open_new_tab(filename)
+        if open_new_tab:
+            filename = write_output(html)
+            webbrowser.open_new_tab(filename)
+        return html
