@@ -113,8 +113,8 @@ class Series:
 
     def plot(
         self,
-        left_labels: list,
-        right_labels: Optional[list] = None,
+        left: List[SeriesValue],
+        right: Optional[List[SeriesValue]] = None,
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -124,8 +124,13 @@ class Series:
             if self.time is not None
             else [float(x) for x in range(self.length)]
         )
-        left_series = {label: self.get(label) for label in left_labels}
-        right_series = {label: self.get(label) for label in right_labels}
+        left_series = {
+            series.label: series._get(self.length) for series in left
+        }
+        right_series = {
+            series.label: series._get(self.length)
+            for series in (right if right is not None else [])
+        }
         html = generate_html(
             times,
             left_series,
