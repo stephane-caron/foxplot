@@ -22,7 +22,7 @@ import argparse
 import sys
 from datetime import datetime
 
-from .series import Series
+from .fox import Fox
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -84,7 +84,7 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = Series(args.time)
+    fox = Fox(time=args.time)
     if args.file is not None:
         with open(args.file, "r", encoding="utf-8") as file:
             fox.read_from_file(file)
