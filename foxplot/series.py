@@ -18,7 +18,7 @@
 """Series data unpacked from input dictionaries."""
 
 import typing
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List
 
 from .decoders.json import decode_json
@@ -27,7 +27,12 @@ from .decoders.json import decode_json
 @dataclass
 class SeriesValue:
 
-    data: Dict[int, Any] = field(default_factory=dict)
+    label: str
+    data: Dict[int, Any]
+
+    def __init__(self, label: str):
+        self.data = {}
+        self.label = label
 
     def update(self, index: int, value: Any):
         self.data[index] = value
@@ -54,10 +59,11 @@ class NestedDict:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
                 sep = "/" if not self.label.endswith("/") else ""
+                label = f"{self.label}{sep}{key}"
                 child = (
-                    NestedDict(label=f"{self.label}{sep}{key}")
+                    NestedDict(label)
                     if isinstance(value, dict)
-                    else SeriesValue()
+                    else SeriesValue(label)
                 )
                 self.__dict__[key] = child
             child.update(index, value)
