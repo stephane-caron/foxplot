@@ -22,7 +22,7 @@ import tempfile
 from datetime import datetime
 
 
-def write_output(html: str) -> str:
+def write_tmpfile(html: str) -> str:
     """Write output page.
 
     Args:

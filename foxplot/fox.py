@@ -22,8 +22,8 @@ from typing import List, Optional, TextIO
 
 from .decoders.json import decode_json
 from .generate_html import generate_html
-from .plot import write_output
 from .series import NestedDict, SeriesValue
+from .write_tmpfile import write_tmpfile
 
 
 class Fox:
@@ -109,7 +109,7 @@ class Fox:
             timestamped=self.__time is not None,
         )
         if open:
-            filename = write_output(html)
+            filename = write_tmpfile(html)
             webbrowser.open_new_tab(filename)
         else:  # print command line
             left_args = "-l ".join(left_series.keys())
