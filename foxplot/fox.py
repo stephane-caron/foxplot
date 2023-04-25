@@ -23,7 +23,7 @@ from typing import List, Optional, TextIO
 from .decoders.json import decode_json
 from .generate_html import generate_html
 from .node import Node
-from .series import IndexedSeries
+from .indexed_series import IndexedSeries
 from .write_tmpfile import write_tmpfile
 
 
