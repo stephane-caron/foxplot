@@ -22,8 +22,8 @@ from typing import List, Optional, TextIO
 
 from .decoders.json import decode_json
 from .generate_html import generate_html
-from .node import Node
 from .indexed_series import IndexedSeries
+from .node import Node
 from .write_tmpfile import write_tmpfile
 
 
@@ -37,15 +37,19 @@ class Fox:
     data: Node
     length: int
 
-    def __init__(self, time: str):
+    def __init__(self, from_file: Optional[str] = None, time: str = ""):
         """Initialize series.
 
         Args:
+            from_file: If set, read data from this path.
             time: Label of time index in input dictionaries.
         """
         self.__time = time
         self.data = Node("/")
         self.length = 0
+        if from_file:
+            with open(from_file, "r", encoding="utf-8") as file:
+                self.read_from_file(file)
 
     def get_series(self, label: str) -> IndexedSeries:
         """
