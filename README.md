@@ -4,7 +4,7 @@
 
 Plot time-series data from [line-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON).
 
-Foxplot stands for "Frequent Observation diXionary (hum!) plots". Frequent observations arise from robotic control loops, our initial use case. Dictionaries are the representation used in [Vulp 🦊](https://github.com/tasts-robots/vulp). Plots are plots.
+Foxplot stands for "Frequent Observation diXionary plots". Frequent observations arise from the project's initial use case (robotic control loops). Dictionaries are the observation format used in [Vulp](https://github.com/tasts-robots/vulp). Plots are plots :wink:
 
 ## Usage
 
