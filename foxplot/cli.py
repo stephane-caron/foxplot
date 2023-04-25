@@ -84,11 +84,8 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = Fox(time=args.time)
-    if args.file is not None:
-        with open(args.file, "r", encoding="utf-8") as file:
-            fox.read_from_file(file)
-    else:  # args.file is None:
+    fox = Fox(from_file=args.file, time=args.time)
+    if args.file is None:
         fox.read_from_file(sys.stdin)
 
     if args.interactive:

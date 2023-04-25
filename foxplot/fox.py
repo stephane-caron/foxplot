@@ -33,6 +33,7 @@ class Fox:
     Our main class to read, access and manipulate series of dictionary data.
     """
 
+    __file: Optional[str]
     __time: str
     data: Node
     length: int
@@ -44,6 +45,7 @@ class Fox:
             from_file: If set, read data from this path.
             time: Label of time index in input dictionaries.
         """
+        self.__file = from_file
         self.__time = time
         self.data = Node("/")
         self.length = 0
@@ -120,7 +122,8 @@ class Fox:
         right_args = ("-r " if right_series else "") + "-r ".join(
             right_series.keys()
         )
-        print(f"foxplot -t {self.__time} -l {left_args} {right_args}")
+        file = f"{self.__file} " if self.__file is not None else ""
+        print(f"foxplot {file}-t {self.__time} -l {left_args} {right_args}")
 
     def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
