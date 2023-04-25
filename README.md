@@ -8,10 +8,24 @@ Foxplot stands for "Frequent Observation diXionary plots". Frequent observations
 
 ## Usage
 
+### Interactive mode
+
+```console
+$ foxplot -i robot_data.json
+Python 3.8.10 (default, Mar 13 2023, 10:26:41)
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+
+In [1]: fox.plot(left=[fox.data.observation.cpu_temperature])
+New tab opened in your web browser! The command line is to produce it directly is:
+
+foxplot robot_data.json -l /observation/cpu_temperature
+```
+
 ### JSON files
 
 ```console
-$ foxplot my_time_series.json
+foxplot robot_data.json -l /observation/cpu_temperature
 ```
 
 ### MessagePack files
