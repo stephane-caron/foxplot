@@ -48,7 +48,7 @@ class Node:
         """String representation of the node."""
         keys = ", ".join(
             str(key)
-            for key in self.__dict__.keys()
+            for key in self.__dict__
             if isinstance(key, int) or not key.startswith("_")
         )
         return f"{self.__label}: [{keys}]"

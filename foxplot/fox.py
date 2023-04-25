@@ -76,7 +76,7 @@ class Fox:
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
-        open: bool = True,
+        open_new_tab: bool = True,
     ) -> None:
         """Plot a set of indexed series.
 
@@ -86,7 +86,7 @@ class Fox:
             title: Plot title.
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
-            open: If true (default), open plot in a new browser tab.
+            open_new_tab: If true (default), open plot in a new browser tab.
         """
         times = (
             self.get_series(self.__time)._get(self.length)
@@ -109,15 +109,14 @@ class Fox:
             right_axis_unit,
             timestamped=self.__time != "",
         )
-        if open:
+        if open_new_tab:
             filename = write_tmpfile(html)
             webbrowser.open_new_tab(filename)
-        else:  # print command line
-            left_args = "-l ".join(left_series.keys())
-            right_args = ("-r " if right_series else "") + "-r ".join(
-                right_series.keys()
-            )
-            print(f"foxplot -t {self.__time} -l {left_args} {right_args}")
+        left_args = "-l ".join(left_series.keys())
+        right_args = ("-r " if right_series else "") + "-r ".join(
+            right_series.keys()
+        )
+        print(f"foxplot -t {self.__time} -l {left_args} {right_args}")
 
     def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
