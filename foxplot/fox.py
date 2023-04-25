@@ -109,9 +109,13 @@ class Fox:
             right_axis_unit,
             timestamped=self.__time != "",
         )
+
         if open_new_tab:
             filename = write_tmpfile(html)
             webbrowser.open_new_tab(filename)
+            print("New tab opened in your web browser! ", end="")
+
+        print("The corresponding command line is:\n")
         left_args = "-l ".join(left_series.keys())
         right_args = ("-r " if right_series else "") + "-r ".join(
             right_series.keys()
