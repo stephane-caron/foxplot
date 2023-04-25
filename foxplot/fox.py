@@ -117,13 +117,14 @@ class Fox:
             webbrowser.open_new_tab(filename)
             print("New tab opened in your web browser! ", end="")
 
-        print("The corresponding command line is:\n")
-        left_args = "-l ".join(left_series.keys())
-        right_args = ("-r " if right_series else "") + "-r ".join(
+        print("The command line is to produce it directly is:\n")
+        left_args = " ".join(left_series.keys())
+        right_args = ("-r " if right_series else "") + " ".join(
             right_series.keys()
         )
         file = f"{self.__file} " if self.__file is not None else ""
-        print(f"foxplot {file}-t {self.__time} -l {left_args} {right_args}")
+        time = f"-t {self.__time} " if self.__time else ""
+        print(f"foxplot {file}{time}-l {left_args} {right_args}")
 
     def read_from_file(self, file: TextIO) -> None:
         """Process time series data.
