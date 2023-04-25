@@ -6,6 +6,12 @@ Plot time-series data from [line-delimited JSON](https://en.wikipedia.org/wiki/J
 
 Foxplot stands for "Frequent Observation diXionary plots". Frequent observations arise from the project's initial use case (robotic control loops). Dictionaries are the observation format used in [Vulp](https://github.com/tasts-robots/vulp). Plots are plots :wink:
 
+## Installation
+
+```console
+$ pip install foxplot
+```
+
 ## Usage
 
 ### Interactive mode
