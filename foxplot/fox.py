@@ -98,7 +98,7 @@ class Fox:
             title,
             left_axis_unit,
             right_axis_unit,
-            timestamped=self.__time is not None,
+            timestamped=self.__time != "",
         )
         if open:
             filename = write_tmpfile(html)
