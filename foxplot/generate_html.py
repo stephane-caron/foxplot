@@ -65,10 +65,16 @@ def generate_html(
     """Generate plot in an HTML page.
 
     Args:
-        series: Data to plot.
+        times: List of time index values.
+        left_axis: Series to plot on the left axis, provided as a
+            ``{label: values}`` dictionary.
+        right_axis: Series to plot on the right axis, provided as a
+            ``{label: values}`` dictionary.
         title: Plot title.
         left_axis_unit: Left axis unit.
         right_axis_unit: Right axis unit.
+        timestamped: If true, interpret the values of ``times`` as Unix
+            timestamps.
 
     Returns:
         HTML contents of the page.

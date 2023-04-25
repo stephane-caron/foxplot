@@ -52,8 +52,7 @@ class Fox:
                 self.read_from_file(file)
 
     def get_series(self, label: str) -> IndexedSeries:
-        """
-        Get time-series data from a given label.
+        """Get time-series data from a given label.
 
         Args:
             label: Label to the data in input dictionaries, for example
@@ -79,6 +78,16 @@ class Fox:
         right_axis_unit: str = "",
         open: bool = True,
     ) -> None:
+        """Plot a set of indexed series.
+
+        Args:
+            left: Series to plot on the left axis.
+            right: Series to plot on the right axis.
+            title: Plot title.
+            left_axis_unit: Unit label for the left axis.
+            right_axis_unit: Unit label for the right axis.
+            open: If true (default), open plot in a new browser tab.
+        """
         times = (
             self.get_series(self.__time)._get(self.length)
             if self.__time is not None
@@ -128,5 +137,10 @@ class Fox:
         self.__time = time
 
     def unpack(self, unpacked: dict) -> None:
+        """Append data from an unpacked dictionary.
+
+        Args:
+            unpacked: Unpacked dictionary.
+        """
         self.data._update(self.length, unpacked)
         self.length += 1
