@@ -20,7 +20,7 @@
 from typing import Any, Dict, List
 
 
-class SeriesValue:
+class IndexedSeries:
     """Indexed time-series values."""
 
     __data: Dict[int, Any]

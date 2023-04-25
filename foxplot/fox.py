@@ -22,8 +22,8 @@ from typing import List, Optional, TextIO
 
 from .decoders.json import decode_json
 from .generate_html import generate_html
-from .series import SeriesValue
 from .node import Node
+from .series import IndexedSeries
 from .write_tmpfile import write_tmpfile
 
 
@@ -47,7 +47,7 @@ class Fox:
         self.data = Node("/")
         self.length = 0
 
-    def get_series(self, label: str) -> SeriesValue:
+    def get_series(self, label: str) -> IndexedSeries:
         """
         Get time-series data from a given label.
 
@@ -66,23 +66,10 @@ class Fox:
         """List of all labels present in the data."""
         return self.data._list_labels()
 
-    def read_from_file(self, file: TextIO) -> None:
-        """Process time series data.
-
-        Args:
-            file: File to read time series from.
-        """
-        for unpacked in decode_json(file=file):
-            self.unpack(unpacked)
-
-    def unpack(self, unpacked: dict) -> None:
-        self.data._update(self.length, unpacked)
-        self.length += 1
-
     def plot(
         self,
-        left: List[SeriesValue],
-        right: Optional[List[SeriesValue]] = None,
+        left: List[IndexedSeries],
+        right: Optional[List[IndexedSeries]] = None,
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -118,3 +105,24 @@ class Fox:
                 right_series.keys()
             )
             print(f"foxplot -t {self.__time} -l {left_args} {right_args}")
+
+    def read_from_file(self, file: TextIO) -> None:
+        """Process time series data.
+
+        Args:
+            file: File to read time series from.
+        """
+        for unpacked in decode_json(file=file):
+            self.unpack(unpacked)
+
+    def set_time(self, time: str):
+        """Set label of time index in input dictionaries.
+
+        Args:
+            time: Label of time index in input dictionaries.
+        """
+        self.__time = time
+
+    def unpack(self, unpacked: dict) -> None:
+        self.data._update(self.length, unpacked)
+        self.length += 1
