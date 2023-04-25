@@ -29,12 +29,23 @@ class Node:
     __label: str
 
     def __init__(self, label: str):
+        """Initialize node with a label.
+
+        Args:
+            label: Node label.
+        """
         self.__label = label
 
     def __getitem__(self, key):
+        """Get item from node, either a child node or an indexed series (leaf).
+
+        Args:
+            key: Key that identifies the child item.
+        """
         return self.__dict__[key]
 
     def __repr__(self):
+        """String representation of the node."""
         keys = ", ".join(
             str(key)
             for key in self.__dict__.keys()
@@ -43,6 +54,11 @@ class Node:
         return f"{self.__label}: [{keys}]"
 
     def _get_child(self, keys: List[str]) -> IndexedSeries:
+        """Get leaf descendant in the tree from a list of keys.
+
+        Args:
+            keys: List of keys uniquely identifying the leaf descendant.
+        """
         child = self.__dict__[keys[0]]
         if len(keys) > 1:
             return child._get_child(keys[1:])
@@ -51,6 +67,7 @@ class Node:
         return child
 
     def _list_labels(self) -> List[str]:
+        """List all labels reachable from this node."""
         labels = []
         for key, child in self.__dict__.items():
             if isinstance(key, int) or key.startswith("_"):
@@ -59,6 +76,12 @@ class Node:
         return labels
 
     def _update(self, index: int, unpacked: Union[dict, list]) -> None:
+        """Update node from a new unpacked dictionary.
+
+        Args:
+            index: Index of the unpacked dictionary in the sequential input.
+            unpacked: Unpacked dictionary.
+        """
         items = (
             unpacked.items()
             if isinstance(unpacked, dict)
