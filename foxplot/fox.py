@@ -22,7 +22,8 @@ from typing import List, Optional, TextIO
 
 from .decoders.json import decode_json
 from .generate_html import generate_html
-from .series import NestedDict, SeriesValue
+from .series import SeriesValue
+from .node import Node
 from .write_tmpfile import write_tmpfile
 
 
@@ -33,7 +34,7 @@ class Fox:
     """
 
     __time: str
-    data: NestedDict
+    data: Node
     length: int
 
     def __init__(self, time: str):
@@ -43,7 +44,7 @@ class Fox:
             time: Label of time index in input dictionaries.
         """
         self.__time = time
-        self.data = NestedDict("/")
+        self.data = Node("/")
         self.length = 0
 
     def get_series(self, label: str) -> SeriesValue:
