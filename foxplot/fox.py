@@ -134,7 +134,7 @@ class Fox:
             filename: Name of a file to read time series from.
         """
         if filename == "stdin":
-            self.read_from_json_stream(sys.stdin)
+            self.read_from_json(sys.stdin)
         elif filename.endswith(".json"):
             with open(filename, "r", encoding="utf-8") as file:
                 self.read_from_json(file)
