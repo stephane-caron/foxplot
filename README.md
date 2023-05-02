@@ -37,7 +37,7 @@ foxplot robot_data.json -l /observation/cpu_temperature
 ### MessagePack files
 
 ```console
-rq -mJ < my_time_series.mpack | jq '{.my.filters.here}' | foxplot
+foxplot -i robot_data.mpack
 ```
 
 ## Design notes

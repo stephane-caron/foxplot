@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2023/05/02
+
+### Added
+
+- MessagePack support
+
 ## [0.0.1] - 2023/04/25
 
 ### Added
