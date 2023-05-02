@@ -3,4 +3,5 @@
 .coverage
 .ropeproject
 .tox
+dist/
 htmlcov/
