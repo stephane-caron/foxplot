@@ -18,7 +18,9 @@
 """Decoder functions."""
 
 from .json import decode_json
+from .msgpack import decode_msgpack
 
 __all__ = [
     "decode_json",
+    "decode_msgpack",
 ]
