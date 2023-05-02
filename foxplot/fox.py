@@ -50,8 +50,7 @@ class Fox:
         self.data = Node("/")
         self.length = 0
         if from_file:
-            with open(from_file, "r", encoding="utf-8") as file:
-                self.read_from_file(file)
+            self.read_from_file(from_file)
 
     def get_series(self, label: str) -> IndexedSeries:
         """Get time-series data from a given label.
@@ -126,11 +125,21 @@ class Fox:
         time = f"-t {self.__time} " if self.__time else ""
         print(f"foxplot {file}{time}-l {left_args} {right_args}")
 
-    def read_from_file(self, file: TextIO) -> None:
+    def read_from_file(self, filename: str) -> None:
         """Process time series data.
 
         Args:
-            file: File to read time series from.
+            filename: Name of a file to read time series from.
+        """
+        if filename.endswith(".json"):
+            with open(filename, "r", encoding="utf-8") as file:
+                self.read_from_json(file)
+
+    def read_from_json(self, file: TextIO) -> None:
+        """Process time series data from a JSON stream.
+
+        Args:
+            file: JSON stream to read time series from.
         """
         for unpacked in decode_json(file=file):
             self.unpack(unpacked)

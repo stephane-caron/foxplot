@@ -86,7 +86,7 @@ def main() -> None:
 
     fox = Fox(from_file=args.file, time=args.time)
     if args.file is None:
-        fox.read_from_file(sys.stdin)
+        fox.read_from_json(sys.stdin)
 
     if args.interactive:
         __import__("IPython").embed()
