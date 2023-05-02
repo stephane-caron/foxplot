@@ -17,10 +17,12 @@
 
 """Main class to manipulate dictionary-series data."""
 
+import sys
 import webbrowser
-from typing import List, Optional, TextIO
+from typing import BinaryIO, List, Optional, TextIO
 
 from .decoders.json import decode_json
+from .decoders.msgpack import decode_msgpack
 from .generate_html import generate_html
 from .indexed_series import IndexedSeries
 from .node import Node
@@ -131,9 +133,14 @@ class Fox:
         Args:
             filename: Name of a file to read time series from.
         """
-        if filename.endswith(".json"):
+        if filename == "stdin":
+            self.read_from_json_stream(sys.stdin)
+        elif filename.endswith(".json"):
             with open(filename, "r", encoding="utf-8") as file:
                 self.read_from_json(file)
+        elif filename.endswith(".mpack"):
+            with open(filename, "rb") as file:
+                self.read_from_msgpack(file)
 
     def read_from_json(self, file: TextIO) -> None:
         """Process time series data from a JSON stream.
@@ -142,6 +149,15 @@ class Fox:
             file: JSON stream to read time series from.
         """
         for unpacked in decode_json(file=file):
+            self.unpack(unpacked)
+
+    def read_from_msgpack(self, file: BinaryIO) -> None:
+        """Process time series data from a MessagePack stream.
+
+        Args:
+            file: MessagePack stream to read time series from.
+        """
+        for unpacked in decode_msgpack(file=file):
             self.unpack(unpacked)
 
     def set_time(self, time: str):
