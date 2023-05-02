@@ -22,7 +22,7 @@ from typing import Generator
 import msgpack
 
 
-def decode_json(file, chunk_size=100_000) -> Generator[dict, None, None]:
+def decode_msgpack(file, chunk_size=100_000) -> Generator[dict, None, None]:
     """Decode dictionaries from a line-delimited JSON file.
 
     Args:
