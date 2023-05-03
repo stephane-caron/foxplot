@@ -18,7 +18,7 @@ $ pip install foxplot
 
 In interactive mode, you can explore the data in ``fox.data`` (tab completion works) and plot it using the ``fox.plot`` function:
 
-```console
+```python
 $ foxplot -i upkie_2023-05-03-103245.mpack
 Python 3.8.10 (default, Mar 13 2023, 10:26:41)
 Type 'copyright', 'credits' or 'license' for more information
