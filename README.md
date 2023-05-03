@@ -16,29 +16,33 @@ $ pip install foxplot
 
 ### Interactive mode
 
+In interactive mode, you can explore the data in ``fox.data`` (tab completion works) and plot it using the ``fox.plot`` function:
+
 ```console
-$ foxplot -i robot_data.json
+$ foxplot -i upkie_2023-05-03-103245.mpack
 Python 3.8.10 (default, Mar 13 2023, 10:26:41)
 Type 'copyright', 'credits' or 'license' for more information
-IPython 7.22.0 -- An enhanced Interactive Python. Type '?' for help.
+IPython 8.0.1 -- An enhanced Interactive Python. Type '?' for help.
 
-In [1]: fox.plot(left=[fox.data.observation.cpu_temperature])
+In [1]: fox.plot(
+   ...:     [
+   ...:         fox.data.observation.servo.left_knee.torque,
+   ...:         fox.data.observation.servo.left_wheel.torque,
+   ...:     ],
+   ...:     right=[
+   ...:         fox.data.observation.servo.left_knee.velocity,
+   ...:         fox.data.observation.servo.left_wheel.velocity,
+   ...:     ],
+   ...: )
 New tab opened in your web browser! The command line is to produce it directly is:
 
-foxplot robot_data.json -l /observation/cpu_temperature
+foxplot upkie_2023-05-03-103245.mpack -l /observation/servo/left_knee/torque /observation/servo/left_wheel/torque -r /observation/servo/left_knee/velocity /observation/servo/left_wheel/velocity
 ```
 
-### JSON files
+### Plotting from files
 
-```console
-foxplot robot_data.json -l /observation/cpu_temperature
-```
-
-### MessagePack files
-
-```console
-foxplot -i robot_data.mpack
-```
+- JSON: ``foxplot my_data.json -l /observation/cpu_temperature``
+- MessagePack: ``foxplot my_data.mpack -l /observation/cpu_temperature``
 
 ## Design notes
 
