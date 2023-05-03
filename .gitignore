@@ -3,5 +3,6 @@
 .coverage
 .ropeproject
 .tox
+_build
 dist/
 htmlcov/
