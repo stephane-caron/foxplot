@@ -1,0 +1,11 @@
+name: foxplot
+channels:
+    - conda-forge
+dependencies:
+    - pip >=21.3.1
+    - pip:
+        - foxplot
+        - furo
+        - sphinx
+        - sphinx-autodoc-typehints
+        - sphinx-mathjax-offline
