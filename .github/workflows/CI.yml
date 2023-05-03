@@ -16,10 +16,10 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
-            - name: "Set up Python ${{ matrix.python-version }}"
+            - name: "Set up Python 3.9"
               uses: actions/setup-python@v4
               with:
-                  python-version: "${{ matrix.python-version }}"
+                  python-version: "3.9"
 
             - name: "Install dependencies"
               run: |
@@ -27,7 +27,7 @@ jobs:
                   # tox version: https://github.com/tox-dev/tox/issues/2778
                   python -m pip install tox==3.28.0
 
-            - name: "Test with tox for ${{ matrix.os }}"
+            - name: "Test with tox for ubuntu-latest"
               run: |
                   tox -e lint
               env:
