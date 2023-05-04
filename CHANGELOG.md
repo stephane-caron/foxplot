@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Use ``None`` as the default (undefined) time key
+
 ## [0.0.2] - 2023/05/02
 
 ### Added

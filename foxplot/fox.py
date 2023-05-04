@@ -36,11 +36,13 @@ class Fox:
     """
 
     __file: Optional[str]
-    __time: str
+    __time: Optional[str]
     data: Node
     length: int
 
-    def __init__(self, from_file: Optional[str] = None, time: str = ""):
+    def __init__(
+        self, from_file: Optional[str] = None, time: Optional[str] = None
+    ):
         """Initialize series.
 
         Args:
@@ -110,7 +112,7 @@ class Fox:
             title,
             left_axis_unit,
             right_axis_unit,
-            timestamped=self.__time != "",
+            timestamped=self.__time is not None,
         )
 
         if open_new_tab:
@@ -124,7 +126,7 @@ class Fox:
             right_series.keys()
         )
         file = f"{self.__file} " if self.__file is not None else ""
-        time = f"-t {self.__time} " if self.__time else ""
+        time = f"-t {self.__time} " if self.__time is not None else ""
         print(f"foxplot {file}{time}-l {left_args} {right_args}")
 
     def read_from_file(self, filename: str) -> None:
