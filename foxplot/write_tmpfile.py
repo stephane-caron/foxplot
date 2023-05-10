@@ -39,5 +39,5 @@ def write_tmpfile(html: str) -> str:
         delete=False,
     ) as output_file:
         output_file.write(html)
-        filename = output_file.name
+        filename = f'file://{output_file.name}'
     return filename
