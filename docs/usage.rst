@@ -5,7 +5,7 @@ Usage
 Interactive mode
 ================
 
-In interactive mode, you can explore the data in ``fox.data`` (tab completion works) and plot it using the ``fox.plot`` function:
+In interactive mode, you can explore the data in ``data`` (tab completion works) and plot it using the ``fox.plot`` function:
 
 .. code:: console
 
@@ -16,12 +16,12 @@ In interactive mode, you can explore the data in ``fox.data`` (tab completion wo
 
     In [1]: fox.plot(
        ...:     [
-       ...:         fox.data.observation.servo.left_knee.torque,
-       ...:         fox.data.observation.servo.left_wheel.torque,
+       ...:         data.observation.servo.left_knee.torque,
+       ...:         data.observation.servo.left_wheel.torque,
        ...:     ],
        ...:     right=[
-       ...:         fox.data.observation.servo.left_knee.velocity,
-       ...:         fox.data.observation.servo.left_wheel.velocity,
+       ...:         data.observation.servo.left_knee.velocity,
+       ...:         data.observation.servo.left_wheel.velocity,
        ...:     ],
        ...: )
 
