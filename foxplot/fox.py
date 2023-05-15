@@ -19,7 +19,7 @@
 
 import sys
 import webbrowser
-from typing import BinaryIO, List, Optional, TextIO
+from typing import BinaryIO, List, Optional, TextIO, Union
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
@@ -41,7 +41,9 @@ class Fox:
     length: int
 
     def __init__(
-        self, from_file: Optional[str] = None, time: Optional[str] = None
+        self,
+        from_file: Optional[str] = None,
+        time: Union[None, str, IndexedSeries] = None,
     ):
         """Initialize series.
 
@@ -50,11 +52,13 @@ class Fox:
             time: Label of time index in input dictionaries.
         """
         self.__file = from_file
-        self.__time = time
+        self.__time = None
         self.data = Node("/")
         self.length = 0
         if from_file:
             self.read_from_file(from_file)
+        if time is not None:
+            self.set_time(time)
 
     def get_series(self, label: str) -> IndexedSeries:
         """Get time-series data from a given label.
@@ -162,13 +166,14 @@ class Fox:
         for unpacked in decode_msgpack(file=file):
             self.unpack(unpacked)
 
-    def set_time(self, time: str):
+    def set_time(self, time: Union[str, IndexedSeries]):
         """Set label of time index in input dictionaries.
 
         Args:
             time: Label of time index in input dictionaries.
         """
-        self.__time = time
+        label = time.label if isinstance(time, IndexedSeries) else time
+        self.__time = label
 
     def unpack(self, unpacked: dict) -> None:
         """Append data from an unpacked dictionary.
