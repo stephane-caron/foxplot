@@ -88,8 +88,27 @@ def main() -> None:
     if args.file is None:
         fox.read_from_json(sys.stdin)
 
-    if args.interactive:
-        __import__("IPython").embed()
+    nothing_to_plot = not args.left and not args.right
+    if args.interactive or nothing_to_plot:
+        usage = (
+            "-" * 68 + "\n\n\n"
+            "Welcome to foxplot!\n\n"
+            "Explore your time series in ``data`` (tab completion works).\n"
+            "When you know what you want, plot time series with:\n\n"
+            "    fox.plot(\n"
+            "        left=[data.foo.bar, data.other.bar],\n"
+            "        right=[data.something.else],\n"
+            "        time=data.timestamp,\n"
+            "        title=\"My awesome plot\",\n"
+            "    )"
+        )
+        __import__("IPython").embed(
+            header=usage,
+            user_ns={
+                "data": fox.data,
+                "fox": fox,
+            },
+        )
     else:  # not args.interactive
         left_labels = args.left if args.left else []
         right_labels = args.right if args.right else []
