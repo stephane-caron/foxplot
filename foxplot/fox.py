@@ -82,6 +82,7 @@ class Fox:
         self,
         left: List[IndexedSeries],
         right: Optional[List[IndexedSeries]] = None,
+        time: Union[str, IndexedSeries, None] = None,
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -97,6 +98,8 @@ class Fox:
             right_axis_unit: Unit label for the right axis.
             open_new_tab: If true (default), open plot in a new browser tab.
         """
+        if time is not None:
+            self.set_time(time)
         times = (
             self.get_series(self.__time)._get(self.length)
             if self.__time is not None
@@ -130,8 +133,8 @@ class Fox:
             right_series.keys()
         )
         file = f"{self.__file} " if self.__file is not None else ""
-        time = f"-t {self.__time} " if self.__time is not None else ""
-        print(f"foxplot {file}{time}-l {left_args} {right_args}")
+        timestamp = f"-t {self.__time} " if self.__time is not None else ""
+        print(f"foxplot {file}{timestamp}-l {left_args} {right_args}")
 
     def read_from_file(self, filename: str) -> None:
         """Process time series data.
