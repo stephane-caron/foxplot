@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Export ``data`` in interactive mode
+- Plot function now has a ``time`` keyword argument
+- Usage message in interactive mode
+
+### Changed
+
+- Can now set time from label or series data
+- Switch to interactive mode by default when there is nothing to plot
+
 ### Fixed
 
 - Use ``None`` as the default (undefined) time key
