@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Increase time precision from 3 to 4 significant digits
+
 ## [0.1.0] - 2023/05/23
 
 ### Added

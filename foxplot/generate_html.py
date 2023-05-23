@@ -179,7 +179,7 @@ def generate_html(
     html += f"""
                     {{
                         value: (self, rawValue) => Number.parseFloat(rawValue -
-                        {times[0]}).toPrecision(3),
+                        {times[0]}).toPrecision(4),
                     }},"""
     for label in labels:
         html += f"""
