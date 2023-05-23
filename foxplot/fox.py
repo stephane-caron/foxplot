@@ -93,6 +93,7 @@ class Fox:
         Args:
             left: Series to plot on the left axis.
             right: Series to plot on the right axis.
+            time: Time index as a series or its label in input dictionaries.
             title: Plot title.
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
@@ -173,7 +174,7 @@ class Fox:
         """Set label of time index in input dictionaries.
 
         Args:
-            time: Label of time index in input dictionaries.
+            time: Time index as a series or its label in input dictionaries.
         """
         label = time.label if isinstance(time, IndexedSeries) else time
         self.__time = label
