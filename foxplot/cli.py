@@ -99,7 +99,7 @@ def main() -> None:
             "        left=[data.foo.bar, data.other.bar],\n"
             "        right=[data.something.else],\n"
             "        time=data.timestamp,\n"
-            "        title=\"My awesome plot\",\n"
+            '        title="My awesome plot",\n'
             "    )"
         )
         __import__("IPython").embed(
