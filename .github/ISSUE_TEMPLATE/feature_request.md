@@ -1,6 +1,6 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: 💡 Feature request
+about: Suggest an idea to improve Foxplot
 title: ''
 labels: ''
 assignees: ''
