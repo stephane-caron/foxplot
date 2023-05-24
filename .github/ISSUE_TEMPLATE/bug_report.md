@@ -1,32 +1,45 @@
 ---
-name: Bug report
-about: Something is not working the way it should
+name: 🐞 Bug report
+about: Something in Foxplot is not working the way it should
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-**Describe the bug**
+## Bug description
+
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## Expected behavior
 
-**Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+## Reproduction steps
+
+Steps to reproduce the behavior:
+
+1. Load data from...
+2. Plot the following sources...
+3. See error
+
+### Code
+
+Provide some minimal code to reproduce it:
+
+```
+...
+```
+
+## Additional context
+
+Add any other context about the problem here.
+
+### Screenshots
+
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. Firefox]
- - Version [e.g. 0.1.0]
+### System
 
-**Additional context**
-Add any other context about the problem here.
+- OS: [e.g. Linux]
+- Browser: [e.g. Firefox 113]
