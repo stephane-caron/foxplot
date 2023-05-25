@@ -41,6 +41,9 @@ Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
 [tool.black]
 line-length = 79
 
+[tool.pytype]
+inputs = ['foxplot']
+
 [tool.ruff]
 line-length = 79
 select = [
