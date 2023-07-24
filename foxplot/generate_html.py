@@ -86,8 +86,8 @@ def generate_html(
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
-    left_labels = set(left_axis.keys())
-    right_labels = set(right_axis.keys())
+    left_labels = left_axis.keys()
+    right_labels = right_axis.keys()
     labels = left_labels | right_labels
     series_from_label = {}
     series_from_label.update(left_axis)
