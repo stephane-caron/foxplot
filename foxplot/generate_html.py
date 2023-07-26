@@ -88,7 +88,7 @@ def generate_html(
     right_axis_label = f" {right_axis_unit}" if right_axis_unit else ""
     left_labels = list(left_axis.keys())
     right_labels = list(right_axis.keys())
-    labels = left_labels + right_labels
+    labels = left_labels + [r for r in right_labels if r not in left_labels]
     series_from_label = {}
     series_from_label.update(left_axis)
     series_from_label.update(right_axis)
