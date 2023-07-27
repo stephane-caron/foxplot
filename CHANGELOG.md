@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Increase time precision from 3 to 4 significant digits
 - Keep ordered axis labels for plot color consistency (thanks to @boragokbakan)
 
+### Fixed
+
+- Consistent key order between plots of the same log (thanks to @boragokbakan)
+
 ## [0.1.0] - 2023/05/23
 
 ### Added
