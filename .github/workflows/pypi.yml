@@ -1,4 +1,4 @@
-name: PyPI check
+name: PyPI checks
 
 on:
     push:
@@ -7,7 +7,9 @@ on:
 
 jobs:
     pip:
+        name: "PyPI checks"
         runs-on: ubuntu-latest
+
         steps:
             - name: "Checkout sources"
             - uses: actions/checkout@v3
