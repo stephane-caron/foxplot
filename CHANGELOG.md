@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.0] - 2023/08/08
 
+### Added
+
+- CI workflow checking that PyPI package installation upon new releases
+
 ### Changed
 
 - Increase time precision from 3 to 4 significant digits

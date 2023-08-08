@@ -1,0 +1,27 @@
+name: PyPI check
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+jobs:
+    pip:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout sources"
+            - uses: actions/checkout@v3
+
+            - name: "Set up Python 3.9"
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.9"
+
+            - name: "Install package"
+              run: pip install foxplot
+
+            - name: "Import foxplot"
+              run: python -c "import foxplot"
+
+            - name: "Run foxplot from the command line"
+              run: foxplot -h
