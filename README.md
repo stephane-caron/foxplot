@@ -11,7 +11,7 @@ Foxplot stands for "Frequent Observation diXionary plots". Frequent observations
 ## Installation
 
 ```console
-$ pip install foxplot
+pip install foxplot
 ```
 
 ## Usage
