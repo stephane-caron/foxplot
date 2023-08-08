@@ -1,4 +1,4 @@
-name: PyPI checks
+name: PyPI
 
 on:
     push:
