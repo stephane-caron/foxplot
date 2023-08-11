@@ -50,6 +50,14 @@ foxplot upkie_2023-05-03-103245.mpack -l /observation/servo/left_knee/torque /ob
 
 * Foxplot prioritizes ease-of-use (interactive mode) over performance
 
+## Tips
+
+* For Zsh users:
+
+```zsh
+zstyle ":completion:*:*:foxplot:*" ignored-patterns "^*.(json|mpack)"
+```
+
 ## See also
 
 * [µPlot](https://github.com/leeoniya/uPlot)'s performance was a key enabler for this project.
