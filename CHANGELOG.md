@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Detect time key from root keys in the input
+
+### Changed
+
+- Removed `time` argument from the plot function
+
 ## [0.2.0] - 2023/08/08
 
 ### Added
