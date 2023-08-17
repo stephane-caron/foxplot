@@ -82,7 +82,6 @@ class Fox:
         self,
         left: List[IndexedSeries],
         right: Optional[List[IndexedSeries]] = None,
-        time: Union[str, IndexedSeries, None] = None,
         title: str = "",
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -93,14 +92,11 @@ class Fox:
         Args:
             left: Series to plot on the left axis.
             right: Series to plot on the right axis.
-            time: Time index as a series or its label in input dictionaries.
             title: Plot title.
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
             open_new_tab: If true (default), open plot in a new browser tab.
         """
-        if time is not None:
-            self.set_time(time)
         times = (
             self.get_series(self.__time)._get(self.length)
             if self.__time is not None
@@ -187,3 +183,15 @@ class Fox:
         """
         self.data._update(self.length, unpacked)
         self.length += 1
+
+    def detect_time(self) -> None:
+        """Search for a time key in root keys."""
+        candidates = ("time", "timestamp")
+        for key in candidates:
+            if key in self.data.__dict__:
+                self.set_time(self.data.__dict__[key])
+                print(
+                    f'Detected "{key}" as time key from the input '
+                    "(call `fox.set_time` to select a different one)"
+                )
+                return
