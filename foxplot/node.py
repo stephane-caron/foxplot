@@ -75,13 +75,17 @@ class Node:
             labels.extend(child._list_labels())
         return labels
 
-    def _update(self, index: int, unpacked: Union[dict, list]) -> None:
+    def _update(self, index: int, unpacked: Union[None, dict, list]) -> None:
         """Update node from a new unpacked dictionary.
 
         Args:
             index: Index of the unpacked dictionary in the sequential input.
             unpacked: Unpacked dictionary.
         """
+        if unpacked is None:
+            print("TODO: proper warning!")
+            print(f"{index=}, {unpacked=}")
+            return
         items = (
             unpacked.items()
             if isinstance(unpacked, dict)
