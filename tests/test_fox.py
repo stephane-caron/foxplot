@@ -170,3 +170,37 @@ class TestFox(unittest.TestCase):
         fox.unpack(custom_dict)
         custom_dict["time"] += 1.0
         fox.unpack(custom_dict)
+
+    def test_missing_values(self):
+        custom_dict = {
+            "action": {
+                "servo": {
+                    "left_hip": {"position": 0.0, "velocity": 0.0},
+                    "left_knee": {"position": 0.0, "velocity": 0.0},
+                    "left_wheel": {
+                        "position": None,
+                        "velocity": -1.7930299043655396,
+                    },
+                    "right_hip": {"position": 0.0, "velocity": 0.0},
+                    "right_knee": {"position": 0.0, "velocity": 0.0},
+                    "right_wheel": {
+                        "position": None,
+                        "velocity": 1.7930299043655396,
+                    },
+                }
+            },
+            "time": 1681318144.751641,
+        }
+        fox = Fox(time="time")
+        fox.unpack(custom_dict)
+        custom_dict["time"] += 1.0
+        fox.unpack(custom_dict)
+
+        old_action = custom_dict["action"]
+        custom_dict["action"] = None  # missing value
+        custom_dict["time"] += 1.0
+        fox.unpack(custom_dict)
+
+        custom_dict["action"] = old_action
+        custom_dict["time"] += 1.0
+        fox.unpack(custom_dict)
