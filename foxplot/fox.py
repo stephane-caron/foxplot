@@ -128,12 +128,12 @@ class Fox:
 
         print("The command line is to produce it directly is:\n")
         left_args = " ".join(left_series.keys())
-        right_args = ("-r " if right_series else "") + " ".join(
-            right_series.keys()
+        right_args = (
+            f"-r {' '.join(right_series.keys())} " if right_series else ""
         )
-        file = f"{self.__file} " if self.__file is not None else ""
+        file = self.__file if self.__file is not None else ""
         timestamp = f"-t {self.__time} " if self.__time is not None else ""
-        print(f"foxplot {file}{timestamp}-l {left_args} {right_args}")
+        print(f"foxplot {timestamp}-l {left_args} {right_args}{file}")
 
     def read_from_file(self, filename: str) -> None:
         """Process time series data.
