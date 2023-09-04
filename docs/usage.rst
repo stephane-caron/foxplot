@@ -5,7 +5,7 @@ Usage
 Interactive mode
 ================
 
-In interactive mode, you can explore the data in ``data`` (tab completion works) and plot it using the ``fox.plot`` function:
+In interactive mode, you can explore the data in ``data`` (tab completion works) and plot it using the ``foxplot`` function:
 
 .. code:: console
 
@@ -14,7 +14,7 @@ In interactive mode, you can explore the data in ``data`` (tab completion works)
     Type 'copyright', 'credits' or 'license' for more information
     IPython 8.0.1 -- An enhanced Interactive Python. Type '?' for help.
 
-    In [1]: fox.plot(
+    In [1]: foxplot(
        ...:     [
        ...:         data.observation.servo.left_knee.torque,
        ...:         data.observation.servo.left_wheel.torque,
