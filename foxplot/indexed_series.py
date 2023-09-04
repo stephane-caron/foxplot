@@ -40,6 +40,10 @@ class IndexedSeries:
         """Label of the series in the input data."""
         return self.__label
 
+    def __len__(self):
+        """Length of the indexed series."""
+        return len(self.__data)
+
     def __repr__(self):
         """String representation of the series."""
         values = list(self.__data.values())
