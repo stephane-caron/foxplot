@@ -6,11 +6,17 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Allow single-series plots
 - Detect time key from root keys in the input
+- Length attribute to indexed series
 
 ### Changed
 
+- CLI: Expose `foxplot` function rather than a fox instance
+- CLI: Expose `set_time` function
+- Put filename at the end of suggested command line
 - Removed `time` argument from the plot function
+- Rephrase command-line hint
 
 ## [0.2.0] - 2023/08/08
 
