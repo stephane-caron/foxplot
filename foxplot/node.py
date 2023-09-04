@@ -83,8 +83,6 @@ class Node:
             unpacked: Unpacked dictionary.
         """
         if unpacked is None:
-            print("TODO: proper warning!")
-            print(f"{index=}, {unpacked=}")
             return
         items = (
             unpacked.items()
