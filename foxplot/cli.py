@@ -89,6 +89,12 @@ def main() -> None:
         fox.read_from_json(sys.stdin)
     fox.detect_time()
 
+    def foxplot(*args, **kwargs):
+        return fox.plot(*args, **kwargs)
+
+    def set_time(time):
+        return fox.set_time(time)
+
     nothing_to_plot = not args.left and not args.right
     if args.interactive or nothing_to_plot:
         usage = (
@@ -96,7 +102,7 @@ def main() -> None:
             "Welcome to foxplot!\n\n"
             "Explore your time series in ``data`` (tab completion works).\n"
             "When you know what you want, plot time series with:\n\n"
-            "    fox.plot(\n"
+            "    foxplot(\n"
             "        left=[data.foo.bar, data.other.bar],\n"
             "        right=[data.something.else],\n"
             "        time=data.timestamp,\n"
@@ -107,7 +113,8 @@ def main() -> None:
             header=usage,
             user_ns={
                 "data": fox.data,
-                "fox": fox,
+                "foxplot": foxplot,
+                "set_time": set_time,
             },
         )
     else:  # not args.interactive
