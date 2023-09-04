@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Warn when trying to plot structured data
+
 ## [0.3.0] - 2023/09/04
 
 ### Added

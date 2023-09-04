@@ -17,6 +17,7 @@
 
 """Main class to manipulate dictionary-series data."""
 
+import logging
 import sys
 import webbrowser
 from typing import BinaryIO, List, Optional, TextIO, Union
@@ -104,13 +105,23 @@ class Fox:
             if self.__time is not None
             else [float(x) for x in range(self.length)]
         )
-        left_series = {
-            series.label: series._get(self.length) for series in left
-        }
-        right_series = {
-            series.label: series._get(self.length)
-            for series in (right if right is not None else [])
-        }
+
+        def list_to_dict(series_list):
+            series_dict = {}
+            for series in series_list:
+                label = series.label
+                if isinstance(series, Node):
+                    logging.warn(
+                        "Skipping '%s' as it contains sub-fields (%s)",
+                        label,
+                        repr(series),
+                    )
+                    continue
+                series_dict[label] = series._get(self.length)
+            return series_dict
+
+        left_series = list_to_dict(left)
+        right_series = list_to_dict(right) if right is not None else {}
         html = generate_html(
             times,
             left_series,

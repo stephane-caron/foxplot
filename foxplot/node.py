@@ -26,7 +26,7 @@ from .indexed_series import IndexedSeries
 class Node:
     """Series data unpacked from input dictionaries."""
 
-    __label: str
+    label: str
 
     def __init__(self, label: str):
         """Initialize node with a label.
@@ -34,7 +34,7 @@ class Node:
         Args:
             label: Node label.
         """
-        self.__label = label
+        self.label = label
 
     def __getitem__(self, key):
         """Get item from node, either a child node or an indexed series (leaf).
@@ -51,7 +51,7 @@ class Node:
             for key in self.__dict__
             if isinstance(key, int) or not key.startswith("_")
         )
-        return f"{self.__label}: [{keys}]"
+        return f"{self.label}: [{keys}]"
 
     def _get_child(self, keys: List[str]) -> IndexedSeries:
         """Get leaf descendant in the tree from a list of keys.
@@ -93,9 +93,9 @@ class Node:
             if key in self.__dict__:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
-                sep = "/" if not self.__label.endswith("/") else ""
+                sep = "/" if not self.label.endswith("/") else ""
                 child = (
                     Node if isinstance(value, (dict, list)) else IndexedSeries
-                )(label=f"{self.__label}{sep}{key}")
+                )(label=f"{self.label}{sep}{key}")
                 self.__dict__[key] = child
             child._update(index, value)
