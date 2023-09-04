@@ -80,7 +80,7 @@ class Fox:
 
     def plot(
         self,
-        left: List[IndexedSeries],
+        left: Union[IndexedSeries, List[IndexedSeries]],
         right: Optional[List[IndexedSeries]] = None,
         title: str = "",
         left_axis_unit: str = "",
@@ -97,6 +97,8 @@ class Fox:
             right_axis_unit: Unit label for the right axis.
             open_new_tab: If true (default), open plot in a new browser tab.
         """
+        if isinstance(left, IndexedSeries):
+            left = [left]
         times = (
             self.get_series(self.__time)._get(self.length)
             if self.__time is not None
