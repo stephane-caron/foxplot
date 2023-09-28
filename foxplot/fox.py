@@ -83,7 +83,7 @@ class Fox:
         self,
         left: Union[IndexedSeries, List[IndexedSeries]],
         right: Optional[List[IndexedSeries]] = None,
-        title: str = "",
+        title: Optional[str] = None,
         left_axis_unit: str = "",
         right_axis_unit: str = "",
         open_new_tab: bool = True,
@@ -100,6 +100,9 @@ class Fox:
         """
         if isinstance(left, IndexedSeries):
             left = [left]
+        if title is None:
+            title = f"Plot from {self.__file}"
+
         times = (
             self.get_series(self.__time)._get(self.length)
             if self.__time is not None
