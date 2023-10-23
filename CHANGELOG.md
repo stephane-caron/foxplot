@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Automatic plot title from log file name
 - Warn when trying to plot structured data
 
+### Changed
+
+- Node labels are internal (not exposed to TAB completion)
+
 ## [0.3.0] - 2023/09/04
 
 ### Added

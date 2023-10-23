@@ -188,7 +188,7 @@ class Fox:
         Args:
             time: Time index as a series or its label in input dictionaries.
         """
-        label = time.label if isinstance(time, IndexedSeries) else time
+        label = time._label if isinstance(time, IndexedSeries) else time
         self.__time = label
 
     def unpack(self, unpacked: dict) -> None:
