@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Automatic plot title from log file name
+- Plotting a internal node plots all indexed series within (non-recursively)
 - Warn when trying to plot structured data
 
 ### Changed

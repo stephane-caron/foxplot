@@ -36,7 +36,7 @@ class IndexedSeries:
         self.__label = label
 
     @property
-    def label(self) -> str:
+    def _label(self) -> str:
         """Label of the series in the input data."""
         return self.__label
 

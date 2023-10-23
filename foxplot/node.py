@@ -66,6 +66,12 @@ class Node:
             raise FoxplotException(f"{child._label} is not a time series")
         return child
 
+    def _items(self):
+        for key, child in self.__dict__.items():
+            if isinstance(key, str) and key.startswith("_"):
+                continue
+            yield (key, child)
+
     def _list_labels(self) -> List[str]:
         """List all labels reachable from this node."""
         labels = []

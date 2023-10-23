@@ -112,15 +112,23 @@ class Fox:
         def list_to_dict(series_list):
             series_dict = {}
             for series in series_list:
-                label = series.label
-                if isinstance(series, Node):
-                    logging.warn(
-                        "Skipping '%s' as it contains sub-fields (%s)",
-                        label,
-                        repr(series),
+                if isinstance(series, IndexedSeries):
+                    series_dict[series._label] = series._get(self.length)
+                elif isinstance(series, Node):
+                    for key, child in series._items():
+                        label = series._label + f"/{key}"
+                        if isinstance(child, IndexedSeries):
+                            series_dict[label] = child._get(self.length)
+                        else:
+                            logging.warn(
+                                "Skipping '%s' as it is not an indexed series",
+                                label,
+                            )
+                else:
+                    raise TypeError(
+                        f"Series '{series._label}' "
+                        f"has unknown type {type(series)}"
                     )
-                    continue
-                series_dict[label] = series._get(self.length)
             return series_dict
 
         left_series = list_to_dict(left)
