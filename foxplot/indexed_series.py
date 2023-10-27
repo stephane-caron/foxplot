@@ -54,7 +54,21 @@ class IndexedSeries:
         return f"Time series with values: {values}"
 
     def _get(self, max_index: int):
-        return [self.__data.get(index, None) for index in range(max_index)]
+        """Get indexed series as a list of values.
+
+        Args:
+            max_index: The output list will range from 0 (first time from the
+                input) to this maximum index (excluded).
+
+        Returns:
+            Indexed series as a list of values.
+        """
+        last_value = None
+        values = []
+        for index in range(max_index):
+            last_value = self.__data.get(index, last_value)
+            values.append(last_value)
+        return values
 
     def _list_labels(self) -> List[str]:
         """List all labels reachable from this node.
