@@ -7,8 +7,6 @@
 
 Plot time-series data from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
 
-Foxplot stands for "Frequent Observation diXionary plots". Frequent observations arise from the project's initial use case with robot control loops, while dictionaries are a common weakly-typed self-describing format (used *e.g.* in the [GitHub REST API](https://docs.github.com/en/rest/), [robot logging](https://github.com/tasts-robots/mpacklog), ...).
-
 ## Installation
 
 ```console
@@ -17,20 +15,18 @@ pip install foxplot
 
 ## Usage
 
-### Interactive mode
-
-In interactive mode, you can explore the data in ``data`` (tab completion works) and plot it using the ``foxplot`` function:
+Foxplot starts in interactive mode by default, which allows you to explore the input ``data`` (tab completion works) and plot times series from it using the ``foxplot`` function. For instance:
 
 ```python
-$ foxplot -i upkie_2023-05-03-103245.mpack
+$ foxplot upkie_2023-05-03-103245.mpack
 Python 3.8.10 (default, Mar 13 2023, 10:26:41)
 Type 'copyright', 'credits' or 'license' for more information
 IPython 8.0.1 -- An enhanced Interactive Python. Type '?' for help.
 
 In [1]: foxplot(
    ...:     [
-   ...:         data.observation.servo.left_knee.torque,
-   ...:         data.observation.servo.left_wheel.torque,
+   ...:         data.observation.servo.left_knee.position,
+   ...:         data.observation.servo.left_wheel.position,
    ...:     ],
    ...:     right=[
    ...:         data.observation.servo.left_knee.velocity,
@@ -42,18 +38,14 @@ New tab opened in your web browser! The command line is to produce it directly i
 foxplot upkie_2023-05-03-103245.mpack -l /observation/servo/left_knee/torque /observation/servo/left_wheel/torque -r /observation/servo/left_knee/velocity /observation/servo/left_wheel/velocity
 ```
 
-### Plotting from files
+We can also plot data from files and pipes directly, for example:
 
 - JSON: ``foxplot my_data.json -l /observation/cpu_temperature``
 - MessagePack: ``foxplot my_data.mpack -l /observation/cpu_temperature``
 
-## Design notes
-
-* Foxplot prioritizes ease-of-use (interactive mode) over performance
-
 ## Tips
 
-* For Zsh users:
+Zsh users can filter foxplot completion on JSON and MessagePack files:
 
 ```zsh
 zstyle ":completion:*:*:foxplot:*" ignored-patterns "^*.(json|mpack)"
