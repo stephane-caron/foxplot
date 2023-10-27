@@ -20,7 +20,7 @@
 from typing import List, Union
 
 from .exceptions import FoxplotException
-from .indexed_series import IndexedSeries
+from .series import Series
 
 
 class Node:
@@ -53,7 +53,7 @@ class Node:
         )
         return f"{self._label}: [{keys}]"
 
-    def _get_child(self, keys: List[str]) -> IndexedSeries:
+    def _get_child(self, keys: List[str]) -> Series:
         """Get leaf descendant in the tree from a list of keys.
 
         Args:
@@ -62,7 +62,7 @@ class Node:
         child = self.__dict__[keys[0]]
         if len(keys) > 1:
             return child._get_child(keys[1:])
-        if not isinstance(child, IndexedSeries):
+        if not isinstance(child, Series):
             raise FoxplotException(f"{child._label} is not a time series")
         return child
 
@@ -100,8 +100,8 @@ class Node:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
                 sep = "/" if not self._label.endswith("/") else ""
-                child = (
-                    Node if isinstance(value, (dict, list)) else IndexedSeries
-                )(label=f"{self._label}{sep}{key}")
+                child = (Node if isinstance(value, (dict, list)) else Series)(
+                    label=f"{self._label}{sep}{key}"
+                )
                 self.__dict__[key] = child
             child._update(index, value)

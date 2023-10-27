@@ -20,7 +20,7 @@
 from typing import Any, Dict, List
 
 
-class IndexedSeries:
+class Series:
     """Indexed time-series values.
 
     Internally, this datastructure maps time indexes (the corresponding times

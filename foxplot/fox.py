@@ -25,7 +25,7 @@ from typing import BinaryIO, List, Optional, TextIO, Union
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .generate_html import generate_html
-from .indexed_series import IndexedSeries
+from .series import Series
 from .node import Node
 from .write_tmpfile import write_tmpfile
 
@@ -44,7 +44,7 @@ class Fox:
     def __init__(
         self,
         from_file: Optional[str] = None,
-        time: Union[None, str, IndexedSeries] = None,
+        time: Union[None, str, Series] = None,
     ):
         """Initialize series.
 
@@ -61,7 +61,7 @@ class Fox:
         if time is not None:
             self.set_time(time)
 
-    def get_series(self, label: str) -> IndexedSeries:
+    def get_series(self, label: str) -> Series:
         """Get time-series data from a given label.
 
         Args:
@@ -81,8 +81,8 @@ class Fox:
 
     def plot(
         self,
-        left: Union[IndexedSeries, List[IndexedSeries]],
-        right: Optional[List[IndexedSeries]] = None,
+        left: Union[Series, List[Series]],
+        right: Optional[List[Series]] = None,
         title: Optional[str] = None,
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -98,7 +98,7 @@ class Fox:
             right_axis_unit: Unit label for the right axis.
             open_new_tab: If true (default), open plot in a new browser tab.
         """
-        if isinstance(left, IndexedSeries):
+        if isinstance(left, Series):
             left = [left]
         if title is None:
             title = f"Plot from {self.__file}"
@@ -112,12 +112,12 @@ class Fox:
         def list_to_dict(series_list):
             series_dict = {}
             for series in series_list:
-                if isinstance(series, IndexedSeries):
+                if isinstance(series, Series):
                     series_dict[series._label] = series._get(self.length)
                 elif isinstance(series, Node):
                     for key, child in series._items():
                         label = series._label + f"/{key}"
-                        if isinstance(child, IndexedSeries):
+                        if isinstance(child, Series):
                             series_dict[label] = child._get(self.length)
                         else:
                             logging.warn(
@@ -190,13 +190,13 @@ class Fox:
         for unpacked in decode_msgpack(file=file):
             self.unpack(unpacked)
 
-    def set_time(self, time: Union[str, IndexedSeries]):
+    def set_time(self, time: Union[str, Series]):
         """Set label of time index in input dictionaries.
 
         Args:
             time: Time index as a series or its label in input dictionaries.
         """
-        label = time._label if isinstance(time, IndexedSeries) else time
+        label = time._label if isinstance(time, Series) else time
         self.__time = label
 
     def unpack(self, unpacked: dict) -> None:
