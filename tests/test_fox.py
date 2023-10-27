@@ -2,18 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2023 Inria
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
 
 import unittest
 
@@ -204,3 +193,26 @@ class TestFox(unittest.TestCase):
         custom_dict["action"] = old_action
         custom_dict["time"] += 1.0
         fox.unpack(custom_dict)
+
+    def test_repeat_last_on_missing(self):
+        fox = Fox(time="time")
+        config_a = 12345
+
+        n = 1
+        fox.unpack({"config_a": config_a, "time": 0.0})
+        self.assertEqual(fox.data.config_a._get(n), [config_a])
+
+        n = 2
+        fox.unpack({"x": 12, "time": 1.0})
+        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
+        self.assertEqual(fox.data.x._get(n), [None, 12])
+
+        n = 3
+        fox.unpack({"x": 22, "time": 2.0})
+        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
+        self.assertEqual(fox.data.x._get(n), [None, 12, 22])
+
+        n = 4
+        fox.unpack({"x": 32, "time": 3.0})
+        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
+        self.assertEqual(fox.data.x._get(n), [None, 12, 22, 32])
