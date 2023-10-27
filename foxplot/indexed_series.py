@@ -21,7 +21,11 @@ from typing import Any, Dict, List
 
 
 class IndexedSeries:
-    """Indexed time-series values."""
+    """Indexed time-series values.
+
+    Internally, this datastructure maps time indexes (the corresponding times
+    themselves are stored in a different list) to values.
+    """
 
     __data: Dict[int, Any]
     __label: str
@@ -53,7 +57,18 @@ class IndexedSeries:
         return [self.__data.get(index, None) for index in range(max_index)]
 
     def _list_labels(self) -> List[str]:
+        """List all labels reachable from this node.
+
+        Returns:
+            List of labels. Since this node is a leaf, there is only one.
+        """
         return [self.__label]
 
-    def _update(self, index: int, value: Any):
+    def _update(self, index: int, value: Any) -> None:
+        """Update the value at a given time index.
+
+        Args:
+            index: Time index.
+            value: New value.
+        """
         self.__data[index] = value
