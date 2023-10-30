@@ -5,7 +5,7 @@
 [![Coverage](https://coveralls.io/repos/github/stephane-caron/foxplot/badge.svg?branch=main)](https://coveralls.io/github/stephane-caron/foxplot?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/foxplot)](https://pypi.org/project/foxplot/)
 
-Plot time-series data from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
+Plot time series from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
 
 ## Installation
 

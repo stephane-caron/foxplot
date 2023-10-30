@@ -14,8 +14,8 @@ from typing import BinaryIO, List, Optional, TextIO, Union
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .generate_html import generate_html
-from .series import Series
 from .node import Node
+from .series import Series
 from .write_tmpfile import write_tmpfile
 
 
@@ -68,14 +68,24 @@ class Fox:
         """List of all labels present in the data."""
         return self.data._list_labels()
 
+    def __print_command_line(self, left_series, right_series):
+        print("The command line to generate this plot is:\n")
+        left_args = " ".join(left_series.keys())
+        right_args = (
+            f"-r {' '.join(right_series.keys())} " if right_series else ""
+        )
+        file = self.__file if self.__file is not None else ""
+        timestamp = f"-t {self.__time} " if self.__time is not None else ""
+        print(f"foxplot {timestamp}-l {left_args} {right_args}{file}")
+
     def plot(
         self,
-        left: Union[Series, List[Series]],
+        left: Union[Series, Node, List[Union[Series, Node]]],
         right: Optional[List[Series]] = None,
         title: Optional[str] = None,
         left_axis_unit: str = "",
         right_axis_unit: str = "",
-        open_new_tab: bool = True,
+        print_command_line: bool = False,
     ) -> None:
         """Plot a set of indexed series.
 
@@ -85,7 +95,8 @@ class Fox:
             title: Plot title.
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
-            open_new_tab: If true (default), open plot in a new browser tab.
+            print_command_line: If true, print out how to obtain the plot from
+                the command line.
         """
         if isinstance(left, Series):
             left = [left]
