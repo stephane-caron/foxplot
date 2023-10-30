@@ -126,8 +126,7 @@ class Fox:
                             )
                 else:
                     raise TypeError(
-                        f"Series '{series._label}' "
-                        f"has unknown type {type(series)}"
+                        f"Series '{series}' has unknown type {type(series)}"
                     )
             return series_dict
 
