@@ -143,19 +143,10 @@ class Fox:
             timestamped=self.__time is not None,
         )
 
-        if open_new_tab:
-            filename = write_tmpfile(html)
-            webbrowser.open_new_tab(filename)
-            print("New tab opened in your web browser! ", end="")
-
-        print("The command line is to produce it directly is:\n")
-        left_args = " ".join(left_series.keys())
-        right_args = (
-            f"-r {' '.join(right_series.keys())} " if right_series else ""
-        )
-        file = self.__file if self.__file is not None else ""
-        timestamp = f"-t {self.__time} " if self.__time is not None else ""
-        print(f"foxplot {timestamp}-l {left_args} {right_args}{file}")
+        filename = write_tmpfile(html)
+        webbrowser.open_new_tab(filename)
+        if print_command_line:
+            self.__print_command_line(left_series, right_series)
 
     def read_from_file(self, filename: str) -> None:
         """Process time series data.
