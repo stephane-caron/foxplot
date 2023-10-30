@@ -14,7 +14,7 @@ In interactive mode, you can explore the data in ``data`` (tab completion works)
     Type 'copyright', 'credits' or 'license' for more information
     IPython 8.0.1 -- An enhanced Interactive Python. Type '?' for help.
 
-    In [1]: foxplot(
+    In [1]: fox.plot(
        ...:     [
        ...:         data.observation.servo.left_knee.torque,
        ...:         data.observation.servo.left_wheel.torque,
