@@ -10,7 +10,7 @@
 from math import isnan
 from typing import Dict, Iterable, List
 
-from pkg_resources import resource_filename
+from importlib import resources
 
 from .color_picker import ColorPicker
 
@@ -68,9 +68,9 @@ def generate_html(
     Returns:
         HTML contents of the page.
     """
-    uplot_min_css = resource_filename("foxplot", "uPlot/uPlot.min.css")
-    uplot_iife_js = resource_filename("foxplot", "uPlot/uPlot.iife.js")
-    uplot_mwheel_js = resource_filename("foxplot", "uPlot/uPlot.mousewheel.js")
+    uplot_min_css = resources.path("foxplot", "uPlot/uPlot.min.css")
+    uplot_iife_js = resources.path("foxplot", "uPlot/uPlot.iife.js")
+    uplot_mwheel_js = resources.path("foxplot", "uPlot/uPlot.mousewheel.js")
 
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
