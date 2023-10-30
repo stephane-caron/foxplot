@@ -10,8 +10,11 @@
 import argparse
 import sys
 from datetime import datetime
+from typing import List, Union
 
 from .fox import Fox
+from .fox.series import Series
+from .fox.node import Node
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -102,7 +105,9 @@ def main() -> None:
     else:  # not args.interactive
         left_labels = args.left if args.left else []
         right_labels = args.right if args.right else []
-        left_series = [fox.get_series(label) for label in left_labels]
+        left_series: List[Union[Series, Node]] = [
+            fox.get_series(label) for label in left_labels
+        ]
         right_series = [fox.get_series(label) for label in right_labels]
         fox.plot(
             left_series,
