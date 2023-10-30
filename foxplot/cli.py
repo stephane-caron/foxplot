@@ -13,8 +13,8 @@ from datetime import datetime
 from typing import List, Union
 
 from .fox import Fox
-from .fox.series import Series
-from .fox.node import Node
+from .node import Node
+from .series import Series
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
