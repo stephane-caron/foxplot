@@ -98,7 +98,7 @@ class Fox:
             print_command_line: If true, print out how to obtain the plot from
                 the command line.
         """
-        if isinstance(left, Series):
+        if isinstance(left, Series) or isinstance(left, Node):
             left = [left]
         if title is None:
             title = f"Plot from {self.__file}"
