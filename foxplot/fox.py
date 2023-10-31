@@ -9,7 +9,7 @@
 import logging
 import sys
 import webbrowser
-from typing import BinaryIO, List, Optional, TextIO, Union
+from typing import BinaryIO, Dict, List, Optional, TextIO, Union
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
@@ -78,10 +78,45 @@ class Fox:
         timestamp = f"-t {self.__time} " if self.__time is not None else ""
         print(f"foxplot {timestamp}-l {left_args} {right_args}{file}")
 
+    def __list_to_dict(
+        self, series_list: List[Union[Series, Node]]
+    ) -> Dict[str, List[float]]:
+        """Convert a list of series (or nodes) to a dictionary.
+
+        The output dictionary has one key per series in the list. Nodes are
+        expanded just once, assuming all their children in the data tree
+        are series.
+
+        Args:
+            series_list: Input list of series;
+
+        Returns:
+            Dictionary mapping series names to their values.
+        """
+        series_dict = {}
+        for series in series_list:
+            if isinstance(series, Series):
+                series_dict[series._label] = series._get(self.length)
+            elif isinstance(series, Node):
+                for key, child in series._items():
+                    label = series._label + f"/{key}"
+                    if isinstance(child, Series):
+                        series_dict[label] = child._get(self.length)
+                    else:
+                        logging.warn(
+                            "Skipping '%s' as it is not an indexed series",
+                            label,
+                        )
+            else:
+                raise TypeError(
+                    f"Series '{series}' has unknown type {type(series)}"
+                )
+        return series_dict
+
     def plot(
         self,
         left: Union[Series, Node, List[Union[Series, Node]]],
-        right: Optional[List[Series]] = None,
+        right: Optional[Union[Series, Node, List[Union[Series, Node]]]] = None,
         title: Optional[str] = None,
         left_axis_unit: str = "",
         right_axis_unit: str = "",
@@ -100,6 +135,8 @@ class Fox:
         """
         if isinstance(left, Series) or isinstance(left, Node):
             left = [left]
+        if isinstance(right, Series) or isinstance(right, Node):
+            right = [right]
         if title is None:
             title = f"Plot from {self.__file}"
 
@@ -109,29 +146,8 @@ class Fox:
             else [float(x) for x in range(self.length)]
         )
 
-        def list_to_dict(series_list):
-            series_dict = {}
-            for series in series_list:
-                if isinstance(series, Series):
-                    series_dict[series._label] = series._get(self.length)
-                elif isinstance(series, Node):
-                    for key, child in series._items():
-                        label = series._label + f"/{key}"
-                        if isinstance(child, Series):
-                            series_dict[label] = child._get(self.length)
-                        else:
-                            logging.warn(
-                                "Skipping '%s' as it is not an indexed series",
-                                label,
-                            )
-                else:
-                    raise TypeError(
-                        f"Series '{series}' has unknown type {type(series)}"
-                    )
-            return series_dict
-
-        left_series = list_to_dict(left)
-        right_series = list_to_dict(right) if right is not None else {}
+        left_series = self.__list_to_dict(left)
+        right_series = self.__list_to_dict(right) if right is not None else {}
         html = generate_html(
             times,
             left_series,

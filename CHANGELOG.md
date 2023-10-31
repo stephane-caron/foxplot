@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Allow single-series right plots
 - Argument ``print_command_line`` to plotting function
 
 ### Changed
@@ -37,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Allow single-series plots
+- Allow single-series left plots
 - Detect time key from root keys in the input
 - Length attribute to indexed series
 

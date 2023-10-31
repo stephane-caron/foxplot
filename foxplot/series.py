@@ -42,7 +42,7 @@ class Series:
         values = list(self.__data.values())
         return f"Time series with values: {values}"
 
-    def _get(self, max_index: int):
+    def _get(self, max_index: int) -> List[float]:
         """Get indexed series as a list of values.
 
         Args:
