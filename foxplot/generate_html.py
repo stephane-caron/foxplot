@@ -67,9 +67,12 @@ def generate_html(
     Returns:
         HTML contents of the page.
     """
-    uplot_min_css = resources.path("foxplot.uplot", "uPlot.min.css")
-    uplot_iife_js = resources.path("foxplot.uplot", "uPlot.iife.js")
-    uplot_mwheel_js = resources.path("foxplot.uplot", "uPlot.mousewheel.js")
+    with resources.path("foxplot.uplot", "uPlot.min.css") as path:
+        uplot_min_css = path
+    with resources.path("foxplot.uplot", "uPlot.iife.js") as path:
+        uplot_iife_js = path
+    with resources.path("foxplot.uplot", "uPlot.mousewheel.js") as path:
+        uplot_mwheel_js = path
 
     color_picker = ColorPicker()
     left_axis_label = f" {left_axis_unit}" if left_axis_unit else ""
