@@ -14,6 +14,10 @@ from typing import Dict, Iterable, List
 from .color_picker import ColorPicker
 
 
+def __ensure_floats(series: Iterable) -> List[float]:
+    return [float(x) for x in series]
+
+
 def __escape_null(series: Iterable) -> str:
     """Escape undefined values in a series.
 
@@ -106,7 +110,7 @@ def generate_html(
             const {{ linear, stepped, bars, spline, spline2 }} = uPlot.paths;
 
             let data = [
-                {times},"""
+                {__ensure_floats(times)},"""
     for label in labels:
         html += f"""
                 {__escape_null(series_from_label[label])},"""
