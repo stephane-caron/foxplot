@@ -186,6 +186,7 @@ class Fox:
         """
         for unpacked in decode_json(file=file):
             self.unpack(unpacked)
+        self.data._freeze(self.length)
 
     def read_from_msgpack(self, file: BinaryIO) -> None:
         """Process time series data from a MessagePack stream.
@@ -195,15 +196,7 @@ class Fox:
         """
         for unpacked in decode_msgpack(file=file):
             self.unpack(unpacked)
-
-    def set_time(self, time: Union[str, Series]):
-        """Set label of time index in input dictionaries.
-
-        Args:
-            time: Time index as a series or its label in input dictionaries.
-        """
-        label = time._label if isinstance(time, Series) else time
-        self.__time = label
+        self.data._freeze(self.length)
 
     def unpack(self, unpacked: dict) -> None:
         """Append data from an unpacked dictionary.
@@ -213,6 +206,19 @@ class Fox:
         """
         self.data._update(self.length, unpacked)
         self.length += 1
+
+    def freeze(self):
+        """Freeze all time series at the current input length."""
+        self.data._freeze(self.length)
+
+    def set_time(self, time: Union[str, Series]):
+        """Set label of time index in input dictionaries.
+
+        Args:
+            time: Time index as a series or its label in input dictionaries.
+        """
+        label = time._label if isinstance(time, Series) else time
+        self.__time = label
 
     def detect_time(self) -> None:
         """Search for a time key in root keys."""
