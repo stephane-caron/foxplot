@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 import unittest
 
@@ -15,6 +15,7 @@ class TestFox(unittest.TestCase):
         fox.unpack({"time": 0.0, "foo": 1.0})
         fox.unpack({"time": 1.0, "foo": 1.0})
         fox.unpack({"time": 2.0, "foo": 1.0})
+        fox.freeze()
         fox.plot(left=[fox.data.foo])
 
     def test_unpack(self):
@@ -194,25 +195,39 @@ class TestFox(unittest.TestCase):
         custom_dict["time"] += 1.0
         fox.unpack(custom_dict)
 
-    def test_repeat_last_on_missing(self):
+    def test_repeat_last_on_missing_1(self):
         fox = Fox(time="time")
         config_a = 12345
-
-        n = 1
         fox.unpack({"config_a": config_a, "time": 0.0})
-        self.assertEqual(fox.data.config_a._get(n), [config_a])
+        fox.data._freeze(1)
+        self.assertEqual(fox.data.config_a._values.tolist(), [config_a])
 
-        n = 2
+    def test_repeat_last_on_missing_2(self):
+        fox = Fox(time="time")
+        config_a = 12345
+        fox.unpack({"config_a": config_a, "time": 0.0})
         fox.unpack({"x": 12, "time": 1.0})
-        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
-        self.assertEqual(fox.data.x._get(n), [None, 12])
+        fox.data._freeze(2)
+        self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 2)
+        self.assertEqual(fox.data.x._values.tolist(), [None, 12])
 
-        n = 3
+    def test_repeat_last_on_missing_3(self):
+        fox = Fox(time="time")
+        config_a = 12345
+        fox.unpack({"config_a": config_a, "time": 0.0})
+        fox.unpack({"x": 12, "time": 1.0})
         fox.unpack({"x": 22, "time": 2.0})
-        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
-        self.assertEqual(fox.data.x._get(n), [None, 12, 22])
+        fox.data._freeze(3)
+        self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 3)
+        self.assertEqual(fox.data.x._values.tolist(), [None, 12, 22])
 
-        n = 4
+    def test_repeat_last_on_missing_4(self):
+        fox = Fox(time="time")
+        config_a = 12345
+        fox.unpack({"config_a": config_a, "time": 0.0})
+        fox.unpack({"x": 12, "time": 1.0})
+        fox.unpack({"x": 22, "time": 2.0})
         fox.unpack({"x": 32, "time": 3.0})
-        self.assertEqual(fox.data.config_a._get(n), [config_a] * n)
-        self.assertEqual(fox.data.x._get(n), [None, 12, 22, 32])
+        fox.data._freeze(4)
+        self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 4)
+        self.assertEqual(fox.data.x._values.tolist(), [None, 12, 22, 32])
