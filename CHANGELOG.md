@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Separate classes for "hot" (reading the input) and "frozen" series
+
+### Removed
+
+- Replace ``_get(n)`` method by ``_values`` in frozen series
+
 ## [0.5.0] - 2023-11-01
 
 ### Added
