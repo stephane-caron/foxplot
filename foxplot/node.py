@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Internal node used to access data in interactive mode."""
 
 from typing import List, Union
 
 from .exceptions import FoxplotException
+from .hot_series import HotSeries
 from .series import Series
 
 
@@ -89,8 +90,18 @@ class Node:
                 child = self.__dict__[key]
             else:  # key not in self.__dict__
                 sep = "/" if not self._label.endswith("/") else ""
-                child = (Node if isinstance(value, (dict, list)) else Series)(
-                    label=f"{self._label}{sep}{key}"
-                )
+                is_primitive = not isinstance(value, (dict, list))
+                ChildClass = HotSeries if is_primitive else Node
+                child = ChildClass(label=f"{self._label}{sep}{key}")
                 self.__dict__[key] = child
             child._update(index, value)
+
+    def _freeze(self, max_index: int) -> None:
+        update = {}
+        for key, child in self.__dict__.items():
+            if isinstance(child, HotSeries):
+                frozen_series = child._freeze(max_index)
+                update[key] = frozen_series
+            elif isinstance(child, Node):
+                child._freeze(max_index)
+        self.__dict__.update(update)
