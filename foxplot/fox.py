@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Main class to manipulate dictionary-series data."""
 
@@ -96,12 +96,12 @@ class Fox:
         series_dict = {}
         for series in series_list:
             if isinstance(series, Series):
-                series_dict[series._label] = series._get(self.length)
+                series_dict[series._label] = series._values
             elif isinstance(series, Node):
                 for key, child in series._items():
                     label = series._label + f"/{key}"
                     if isinstance(child, Series):
-                        series_dict[label] = child._get(self.length)
+                        series_dict[label] = child._values
                     else:
                         logging.warn(
                             "Skipping '%s' as it is not an indexed series",
@@ -141,7 +141,7 @@ class Fox:
             title = f"Plot from {self.__file}"
 
         times = (
-            self.get_series(self.__time)._get(self.length)
+            self.get_series(self.__time)._values
             if self.__time is not None
             else [float(x) for x in range(self.length)]
         )
