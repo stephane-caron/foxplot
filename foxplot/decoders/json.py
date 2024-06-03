@@ -18,7 +18,7 @@ def decode_json(file, chunk_size=100_000) -> Generator[dict, None, None]:
         chunk_size: Number of bytes read at a time from the standard input.
 
     Yields:
-        dict: Dictionary read from the standard input.
+        dict: Dictionary read from file.
     """
     decoder = json.JSONDecoder()
     buffer = ""

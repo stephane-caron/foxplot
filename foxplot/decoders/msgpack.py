@@ -19,7 +19,7 @@ def decode_msgpack(file, chunk_size=100_000) -> Generator[dict, None, None]:
         chunk_size: Number of bytes read at a time from the standard input.
 
     Yields:
-        dict: Dictionary read from the standard input.
+        dict: Dictionary read from file.
     """
     unpacker = msgpack.Unpacker(raw=False)
     while True:

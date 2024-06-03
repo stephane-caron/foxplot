@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Feature: calculation of sums and products between series
 - Function: Windowed standard deviations
 - Separate classes for "hot" (reading the input) and "frozen" series
+- Start a functions submodule for commonly used functions
+
+### Fixed
+
+- Make sure frozen series at leaves are floating-point valued
 
 ### Removed
 
