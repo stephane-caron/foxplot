@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Feature: calculation of sums and products between series
+- Function: Windowed standard deviations
 - Separate classes for "hot" (reading the input) and "frozen" series
 
 ### Removed

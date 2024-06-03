@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import List, Union
 
 from .fox import Fox
+from .functions import std as std_func
 from .node import Node
 from .series import Series
 
@@ -100,6 +101,7 @@ def main() -> None:
             user_ns={
                 "data": fox.data,
                 "fox": fox,
+                "std": std_func,
             },
         )
     else:  # not args.interactive
