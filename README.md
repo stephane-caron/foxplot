@@ -1,6 +1,6 @@
 # foxplot
 
-[![Build](https://img.shields.io/github/actions/workflow/status/stephane-caron/foxplot/CI.yml?branch=main)](https://github.com/stephane-caron/foxplot/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/stephane-caron/foxplot/ci.yml?branch=main)](https://github.com/stephane-caron/foxplot/actions)
 [![Documentation](https://img.shields.io/github/actions/workflow/status/stephane-caron/foxplot/docs.yml?branch=main&label=docs)](https://stephane-caron.github.io/foxplot/)
 [![Coverage](https://coveralls.io/repos/github/stephane-caron/foxplot/badge.svg?branch=main)](https://coveralls.io/github/stephane-caron/foxplot?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/foxplot)](https://pypi.org/project/foxplot/)
