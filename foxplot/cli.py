@@ -108,10 +108,10 @@ def main() -> None:
         left_labels = args.left if args.left else []
         right_labels = args.right if args.right else []
         left_series: List[Union[Series, Node]] = [
-            fox.get_series(label) for label in left_labels
+            fox.get_frozen_series(label) for label in left_labels
         ]
         right_series: List[Union[Series, Node]] = [
-            fox.get_series(label) for label in right_labels
+            fox.get_frozen_series(label) for label in right_labels
         ]
         fox.plot(
             left_series,

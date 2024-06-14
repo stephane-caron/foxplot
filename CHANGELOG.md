@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separate classes for "hot" (reading the input) and "frozen" series
 - Start a functions submodule for commonly used functions
 
+### Changed
+
+- Rename and specialize ``get_series`` to ``get_frozen_series``
+
 ### Fixed
 
 - Make sure frozen series at leaves are floating-point valued
