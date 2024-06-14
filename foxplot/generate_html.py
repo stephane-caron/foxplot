@@ -11,6 +11,8 @@ from importlib import resources
 from math import isnan
 from typing import Dict, Iterable, List
 
+from numpy.typing import NDArray
+
 from .color_picker import ColorPicker
 
 
