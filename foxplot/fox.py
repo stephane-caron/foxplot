@@ -11,11 +11,14 @@ import sys
 import webbrowser
 from typing import BinaryIO, Dict, List, Optional, TextIO, Union
 
+import numpy as np
+from numpy.typing import NDArray
+
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
+from .frozen_series import FrozenSeries
 from .generate_html import generate_html
 from .node import Node
-from .frozen_series import FrozenSeries
 from .series import Series
 from .write_tmpfile import write_tmpfile
 
@@ -84,7 +87,7 @@ class Fox:
 
     def __list_to_dict(
         self, series_list: List[Union[Series, Node]]
-    ) -> Dict[str, List[float]]:
+    ) -> Dict[str, NDArray[float]]:
         """Convert a list of series (or nodes) to a dictionary.
 
         The output dictionary has one key per series in the list. Nodes are
