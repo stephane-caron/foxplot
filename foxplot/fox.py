@@ -15,6 +15,7 @@ from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .generate_html import generate_html
 from .node import Node
+from .frozen_series import FrozenSeries
 from .series import Series
 from .write_tmpfile import write_tmpfile
 
@@ -95,7 +96,7 @@ class Fox:
         """
         series_dict = {}
         for series in series_list:
-            if isinstance(series, Series):
+            if isinstance(series, FrozenSeries):
                 series_dict[series._label] = series._values
             elif isinstance(series, Node):
                 for key, child in series._items():
@@ -109,7 +110,7 @@ class Fox:
                         )
             else:
                 raise TypeError(
-                    f"Series '{series}' has unknown type {type(series)}"
+                    f"Series '{series}' has unhandled type {type(series)}"
                 )
         return series_dict
 
