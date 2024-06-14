@@ -107,7 +107,7 @@ class Fox:
             elif isinstance(series, Node):
                 for key, child in series._items():
                     label = series._label + f"/{key}"
-                    if isinstance(child, Series):
+                    if isinstance(child, FrozenSeries):
                         series_dict[label] = child._values
                     else:
                         logging.warn(
