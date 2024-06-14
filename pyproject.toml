@@ -25,8 +25,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics",
 ]
 dependencies = [
-    "ipython",
-    "msgpack",
+    "ipython >=8.0.1",
+    "msgpack >=1.0.4",
+    "numpy >=1.15.4",
 ]
 keywords = ["json", "time", "series", "plot"]
 
