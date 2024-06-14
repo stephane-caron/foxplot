@@ -51,7 +51,7 @@ class Fox:
         if time is not None:
             self.set_time(time)
 
-    def get_series(self, label: str) -> Series:
+    def get_frozen_series(self, label: str) -> FrozenSeries:
         """Get time-series data from a given label.
 
         Args:
@@ -62,7 +62,10 @@ class Fox:
             Corresponding time series.
         """
         keys = label.strip("/").split("/")
-        return self.data._get_child(keys)
+        series = self.data._get_child(keys)
+        if not isinstance(series, FrozenSeries):
+            raise TypeError(f"Series {label} is not frozen")
+        return series
 
     @property
     def labels(self) -> List[str]:
