@@ -7,12 +7,11 @@
 """Functions that can be applied to frozen series."""
 
 import numpy as np
-from numpy.typing import NDArray
 
 from .frozen_series import FrozenSeries
 
 
-def std(series: FrozenSeries, window_size: int) -> NDArray[float]:
+def std(series: FrozenSeries, window_size: int) -> FrozenSeries:
     """Return the rolling standard deviation of the series.
 
     Args:
