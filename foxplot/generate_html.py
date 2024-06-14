@@ -31,13 +31,15 @@ def __escape_null(series: Iterable) -> str:
         "["
         + ", ".join(
             map(
-                lambda x: str(int(x))
-                if isinstance(x, bool)
-                else str(x)
-                if isinstance(x, (int, float)) and not isnan(x)
-                else x
-                if isinstance(x, str)
-                else "null",
+                lambda x: (
+                    str(int(x))
+                    if isinstance(x, bool)
+                    else (
+                        str(x)
+                        if isinstance(x, (int, float)) and not isnan(x)
+                        else x if isinstance(x, str) else "null"
+                    )
+                ),
                 series,
             )
         )
