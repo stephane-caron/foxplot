@@ -147,14 +147,16 @@ class Fox:
         if title is None:
             title = f"Plot from {self.__file}"
 
-        times = (
-            self.get_series(self.__time)._values
+        times: NDArray[float] = (
+            self.get_frozen_series(self.__time)._values
             if self.__time is not None
-            else [float(x) for x in range(self.length)]
+            else np.array(range(self.length), dtype=float)
         )
 
-        left_series = self.__list_to_dict(left)
-        right_series = self.__list_to_dict(right) if right is not None else {}
+        left_series: Dict[str, NDArray[float]] = self.__list_to_dict(left)
+        right_series: Dict[str, NDArray[float]] = {}
+        if right is not None:
+            right_series = self.__list_to_dict(right)
         html = generate_html(
             times,
             left_series,

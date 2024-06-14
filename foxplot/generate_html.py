@@ -50,9 +50,9 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
-    times: List[float],
-    left_axis: Dict[str, list],
-    right_axis: Dict[str, list],
+    times: NDArray[float],
+    left_axis: Dict[str, NDArray[float]],
+    right_axis: Dict[str, NDArray[float]],
     title: str,
     left_axis_unit: str = "",
     right_axis_unit: str = "",
