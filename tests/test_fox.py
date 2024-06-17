@@ -6,6 +6,8 @@
 
 import unittest
 
+import numpy as np
+
 from foxplot.fox import Fox
 
 
@@ -209,7 +211,8 @@ class TestFox(unittest.TestCase):
         fox.unpack({"x": 12, "time": 1.0})
         fox.data._freeze(2)
         self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 2)
-        self.assertEqual(fox.data.x._values.tolist(), [None, 12])
+        self.assertTrue(np.isnan(fox.data.x._values[0]))
+        self.assertTrue(np.allclose(fox.data.x._values[1:], [12.0]))
 
     def test_repeat_last_on_missing_3(self):
         fox = Fox(time="time")
@@ -219,7 +222,8 @@ class TestFox(unittest.TestCase):
         fox.unpack({"x": 22, "time": 2.0})
         fox.data._freeze(3)
         self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 3)
-        self.assertEqual(fox.data.x._values.tolist(), [None, 12, 22])
+        self.assertTrue(np.isnan(fox.data.x._values[0]))
+        self.assertTrue(np.allclose(fox.data.x._values[1:], [12.0, 22.0]))
 
     def test_repeat_last_on_missing_4(self):
         fox = Fox(time="time")
@@ -230,4 +234,7 @@ class TestFox(unittest.TestCase):
         fox.unpack({"x": 32, "time": 3.0})
         fox.data._freeze(4)
         self.assertEqual(fox.data.config_a._values.tolist(), [config_a] * 4)
-        self.assertEqual(fox.data.x._values.tolist(), [None, 12, 22, 32])
+        self.assertTrue(np.isnan(fox.data.x._values[0]))
+        self.assertTrue(
+            np.allclose(fox.data.x._values[1:], [12.0, 22.0, 32.0])
+        )
