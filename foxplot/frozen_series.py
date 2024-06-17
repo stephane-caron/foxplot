@@ -8,6 +8,7 @@
 
 from os.path import commonprefix
 
+import numpy as np
 from numpy.typing import NDArray
 
 from .series import Series
@@ -22,9 +23,9 @@ def _operator_label(op: str, label: str, other_label: str) -> str:
 class FrozenSeries(Series):
     """Time-series values."""
 
-    _values: NDArray[float]
+    _values: NDArray[np.float64]
 
-    def __init__(self, label: str, values: NDArray[float]):
+    def __init__(self, label: str, values: NDArray[np.float64]):
         """Initialize a new series.
 
         Args:

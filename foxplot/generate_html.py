@@ -11,6 +11,7 @@ from importlib import resources
 from math import isnan
 from typing import Dict, Iterable, List
 
+import numpy as np
 from numpy.typing import NDArray
 
 from .color_picker import ColorPicker
@@ -50,9 +51,9 @@ def __escape_null(series: Iterable) -> str:
 
 
 def generate_html(
-    times: NDArray[float],
-    left_axis: Dict[str, NDArray[float]],
-    right_axis: Dict[str, NDArray[float]],
+    times: NDArray[np.float64],
+    left_axis: Dict[str, NDArray[np.float64]],
+    right_axis: Dict[str, NDArray[np.float64]],
     title: str,
     left_axis_unit: str = "",
     right_axis_unit: str = "",

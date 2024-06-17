@@ -87,7 +87,7 @@ class Fox:
 
     def __list_to_dict(
         self, series_list: List[Union[Series, Node]]
-    ) -> Dict[str, NDArray[float]]:
+    ) -> Dict[str, NDArray[np.float64]]:
         """Convert a list of series (or nodes) to a dictionary.
 
         The output dictionary has one key per series in the list. Nodes are
@@ -147,14 +147,14 @@ class Fox:
         if title is None:
             title = f"Plot from {self.__file}"
 
-        times: NDArray[float] = (
+        times: NDArray[np.float64] = (
             self.get_frozen_series(self.__time)._values
             if self.__time is not None
-            else np.array(range(self.length), dtype=float)
+            else np.array(range(self.length), dtype=np.float64)
         )
 
-        left_series: Dict[str, NDArray[float]] = self.__list_to_dict(left)
-        right_series: Dict[str, NDArray[float]] = {}
+        left_series: Dict[str, NDArray[np.float64]] = self.__list_to_dict(left)
+        right_series: Dict[str, NDArray[np.float64]] = {}
         if right is not None:
             right_series = self.__list_to_dict(right)
         html = generate_html(
