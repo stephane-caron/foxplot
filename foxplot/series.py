@@ -10,7 +10,7 @@ import abc
 from typing import List
 
 
-class Series:
+class Series(metaclass=abc.ABCMeta):
     """Base class for labeled time series."""
 
     _label: str
