@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bump required Python version to 3.8
 - Rename and specialize ``get_series`` to ``get_frozen_series``
 - Value type for frozen series switched to NumPy arrays
 
