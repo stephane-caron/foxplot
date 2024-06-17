@@ -27,5 +27,4 @@ def decode_msgpack(file, chunk_size=100_000) -> Generator[dict, None, None]:
         if not data:  # end of file
             break
         unpacker.feed(data)
-        for unpacked in unpacker:
-            yield unpacked
+        yield from unpacker
