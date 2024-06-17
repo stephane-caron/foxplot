@@ -17,10 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Rename and specialize ``get_series`` to ``get_frozen_series``
+- Value type for frozen series switched to NumPy arrays
 
 ### Fixed
 
 - Make sure frozen series at leaves are floating-point valued
+- Type annotations for NumPy arrays
 
 ### Removed
 
