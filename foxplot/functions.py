@@ -15,6 +15,7 @@ def std(series: FrozenSeries, window_size: int) -> FrozenSeries:
     """Return the rolling standard deviation of the series.
 
     Args:
+        series: Series to compute standard deviations from.
         window_size: Size of the rolling window in which to compute
             standard deviations.
 
