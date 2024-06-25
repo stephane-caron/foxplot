@@ -11,6 +11,20 @@ import numpy as np
 from .frozen_series import FrozenSeries
 
 
+def abs(series: FrozenSeries) -> FrozenSeries:
+    """Return the series of absolute values of another series.
+
+    Args:
+        series: Series to compute absolute values from.
+
+    Returns:
+        Array of windowed standard deviations along the series.
+    """
+    label = f"abs({series._label})"
+    values = np.abs(series._values)
+    return FrozenSeries(label, values)
+
+
 def std(series: FrozenSeries, window_size: int) -> FrozenSeries:
     """Return the rolling standard deviation of the series.
 
