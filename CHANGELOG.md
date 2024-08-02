@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Function: Absolute value
 
+### Fixed
+
+- Allow input files with string values
+
 ## [0.6.0] - 2024-06-17
 
 ### Added
