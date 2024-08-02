@@ -65,5 +65,9 @@ class HotSeries(Series):
         for index in range(max_index):
             last_value = self.__indexed_values.get(index, last_value)
             values.append(last_value)
-        # Not setting the dtype below, as value type can be float, str, ...
-        return FrozenSeries(self._label, np.array(values))
+        array = (
+            np.array(values, dtype=np.float64)
+            if isinstance(last_value, (int, float))
+            else np.array(values)
+        )
+        return FrozenSeries(self._label, array)
