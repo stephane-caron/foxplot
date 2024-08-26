@@ -36,6 +36,7 @@ keywords = ["json", "time", "series", "plot"]
 foxplot = "foxplot.cli:main"
 
 [project.urls]
+Homepage = "https://github.com/stephane-caron/foxplot"
 Source = "https://github.com/stephane-caron/foxplot"
 Tracker = "https://github.com/stephane-caron/foxplot/issues"
 Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
