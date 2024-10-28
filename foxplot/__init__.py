@@ -7,7 +7,7 @@
 
 """Plot time-series data from line-delimited JSON."""
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 from .fox import Fox
 
