@@ -14,7 +14,7 @@ from typing import List, Union
 
 from .fox import Fox
 from .functions import abs as abs_func
-from .functions import estimate_lag
+from .functions import estimate_lag, low_pass_filter
 from .functions import std as std_func
 from .node import Node
 from .series import Series
@@ -101,11 +101,12 @@ def main() -> None:
         __import__("IPython").embed(
             header=usage,
             user_ns={
-                "data": fox.data,
-                "fox": fox,
                 "abs": abs_func,
-                "std": std_func,
+                "data": fox.data,
                 "estimate_lag": estimate_lag,
+                "fox": fox,
+                "low_pass_filter": low_pass_filter,
+                "std": std_func,
             },
         )
     else:  # not args.interactive

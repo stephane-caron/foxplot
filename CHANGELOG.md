@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Function: low-pass filter
+- Function: lag estimator
+
 ### Removed
 
 - Remove `print_command_line` argument from `Fox.plot`
