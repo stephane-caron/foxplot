@@ -61,7 +61,7 @@ def estimate_lag(
     input: FrozenSeries,
     output: FrozenSeries,
     time_constant: float,
-) -> FrozenSeries:
+) -> Node:
     """Estimate input-output response as a first-order low-pass filter.
 
     Args:
