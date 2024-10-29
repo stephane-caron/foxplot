@@ -9,6 +9,7 @@
 import numpy as np
 
 from .frozen_series import FrozenSeries
+from .node import Node
 
 
 def abs(series: FrozenSeries) -> FrozenSeries:
@@ -29,6 +30,7 @@ def estimate_lag(
     time: FrozenSeries,
     input: FrozenSeries,
     output: FrozenSeries,
+    time_constant: float,
 ) -> FrozenSeries:
     """Estimate input-output response as a first-order low-pass filter.
 
@@ -46,29 +48,55 @@ def estimate_lag(
     https://scaron.info/blog/simple-linear-regression-with-online-updates.html
     """
     label = f"lag(input={input._label}, output={output._label})"
-    dot_uu = 0.0
-    dot_uv = 0.0
     nb_steps = len(time)
-    values = [np.nan]
+    slopes = [np.nan]
+    intercepts = [np.nan]
+    lags = [np.nan]
+    dots = np.zeros(5)
     for i in range(nb_steps - 1):
         dt = time._values[i + 1] - time._values[i]
-        u = input._values[i] - output._values[i]
-        v = output._values[i + 1] - output._values[i]
-        if np.isnan(dt) or np.isnan(u) or np.isnan(v):
-            values.append(np.nan)
+        x = input._values[i] - output._values[i]
+        y = output._values[i + 1] - output._values[i]
+        if np.isnan(dt) or np.isnan(x) or np.isnan(y):
+            slopes.append(np.nan)
+            intercepts.append(np.nan)
+            lags.append(np.nan)
             continue
-        dot_uu += u * u
-        dot_uv += u * v
-        if dot_uu < 1e-10:
-            values.append(np.nan)
+        forgetting_factor = np.exp(-dt / time_constant)
+        dots *= forgetting_factor
+        dots += np.array([1.0, x, y, x * x, x * y])
+        dot_11, dot_1x, dot_1y, dot_xx, dot_xy = dots
+        det = dot_11 * dot_xx - dot_1x**2
+        if det < 1e-10:
+            slopes.append(np.nan)
+            intercepts.append(np.nan)
+            lags.append(np.nan)
             continue
-        exp_lag_dt = dot_uv / dot_uu
-        if exp_lag_dt < 1e-10:
-            values.append(np.nan)
+        intercept = (dot_xx * dot_1y - dot_xy * dot_1x) / det
+        slope = (dot_xy * dot_11 - dot_1x * dot_1y) / det
+        if slope < 1e-10:
+            slopes.append(np.nan)
+            intercepts.append(np.nan)
+            lags.append(np.nan)
             continue
-        lag = np.log(exp_lag_dt) / dt
-        values.append(lag)
-    return FrozenSeries(label, np.array(values))
+        # slope = exp(-dt / lag)
+        lag = -dt / np.log(slope)
+        intercepts.append(intercept)
+        slopes.append(slope)
+        lags.append(lag)
+    node = Node(label)
+    children = {
+        "slope": np.array(slopes),
+        "intercept": np.array(intercepts),
+        "lag": np.array(lags),
+    }
+    node.__dict__.update(
+        {
+            key: FrozenSeries(f"{label}/{key}", value)
+            for key, value in children.items()
+        }
+    )
+    return node
 
 
 def std(series: FrozenSeries, window_size: int) -> FrozenSeries:
