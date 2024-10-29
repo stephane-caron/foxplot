@@ -14,8 +14,8 @@ from typing import List, Union
 
 from .fox import Fox
 from .functions import abs as abs_func
-from .functions import std as std_func
 from .functions import estimate_lag
+from .functions import std as std_func
 from .node import Node
 from .series import Series
 
