@@ -11,8 +11,9 @@ import sys
 from typing import BinaryIO, Dict, List, Optional, TextIO, Union
 
 import numpy as np
-import uplot
 from numpy.typing import NDArray
+
+import uplot
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
@@ -154,12 +155,12 @@ class Fox:
             right_series = self.__list_to_dict(right)
         uplot.plot2(
             times,
-            left_series,
-            right_series,
-            title,
-            # left_axis_unit,
-            # right_axis_unit,
+            list(left_series.values()),
+            list(right_series.values()),
+            title=title,
             timestamped=self.__time is not None,
+            left_labels=list(left_series.keys()),
+            right_labels=list(right_series.keys()),
         )
 
     def read_from_file(self, filename: str) -> None:
