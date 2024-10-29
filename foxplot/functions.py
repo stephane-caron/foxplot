@@ -6,6 +6,8 @@
 
 """Functions that can be applied to frozen series."""
 
+import logging
+
 import numpy as np
 
 from .frozen_series import FrozenSeries
@@ -24,6 +26,34 @@ def abs(series: FrozenSeries) -> FrozenSeries:
     label = f"abs({series._label})"
     values = np.abs(series._values)
     return FrozenSeries(label, values)
+
+
+def low_pass_filter(
+    time: FrozenSeries,
+    input: FrozenSeries,
+    time_constant: float,
+) -> FrozenSeries:
+    label = f"low_pass_filter(input={input._label}, T={time_constant})"
+    nb_steps = len(time)
+    output = input._values[0]
+    outputs = [output]
+    for i in range(nb_steps - 1):
+        dt = time._values[i + 1] - time._values[i]
+        if time_constant < 2 * dt:
+            logging.warn(
+                "Nyquist-Shannon sampling theorem: "
+                "at time=%f, dt=%f but time_constant=%f",
+                time._values[i],
+                dt,
+                time_constant,
+            )
+            outputs.append(np.nan)
+            continue
+        forgetting_factor = np.exp(-dt / time_constant)
+        output += (1.0 - forgetting_factor) * (input._values[i] - output)
+        outputs.append(output)
+    assert len(outputs) == len(input._values) == len(time._values)
+    return FrozenSeries(label, np.array(outputs))
 
 
 def estimate_lag(
