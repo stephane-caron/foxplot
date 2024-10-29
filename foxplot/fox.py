@@ -8,19 +8,17 @@
 
 import logging
 import sys
-import webbrowser
 from typing import BinaryIO, Dict, List, Optional, TextIO, Union
 
 import numpy as np
+import uplot
 from numpy.typing import NDArray
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .frozen_series import FrozenSeries
-from .generate_html import generate_html
 from .node import Node
 from .series import Series
-from .write_tmpfile import write_tmpfile
 
 
 class Fox:
@@ -127,7 +125,6 @@ class Fox:
         title: Optional[str] = None,
         left_axis_unit: str = "",
         right_axis_unit: str = "",
-        print_command_line: bool = False,
     ) -> None:
         """Plot a set of indexed series.
 
@@ -137,8 +134,6 @@ class Fox:
             title: Plot title.
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
-            print_command_line: If true, print out how to obtain the plot from
-                the command line.
         """
         if isinstance(left, Series) or isinstance(left, Node):
             left = [left]
@@ -157,20 +152,15 @@ class Fox:
         right_series: Dict[str, NDArray[np.float64]] = {}
         if right is not None:
             right_series = self.__list_to_dict(right)
-        html = generate_html(
+        uplot.plot2(
             times,
             left_series,
             right_series,
             title,
-            left_axis_unit,
-            right_axis_unit,
+            # left_axis_unit,
+            # right_axis_unit,
             timestamped=self.__time is not None,
         )
-
-        filename = write_tmpfile(html)
-        webbrowser.open_new_tab(filename)
-        if print_command_line:
-            self.__print_command_line(left_series, right_series)
 
     def read_from_file(self, filename: str) -> None:
         """Process time series data.
