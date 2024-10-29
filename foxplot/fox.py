@@ -11,9 +11,8 @@ import sys
 from typing import BinaryIO, Dict, List, Optional, TextIO, Union
 
 import numpy as np
-from numpy.typing import NDArray
-
 import uplot
+from numpy.typing import NDArray
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
