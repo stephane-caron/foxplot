@@ -114,7 +114,8 @@ def estimate_lag(
             continue
         dot_xy = dots[1]
         slope = dot_xy / dot_xx
-        if slope < 1e-10:
+        if slope < 1e-10 or slope > 0.9999999999:
+            dots *= 0.0
             slopes.append(np.nan)
             lags.append(np.nan)
             fitting_errors.append(np.nan)
