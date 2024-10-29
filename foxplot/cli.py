@@ -15,6 +15,7 @@ from typing import List, Union
 from .fox import Fox
 from .functions import abs as abs_func
 from .functions import std as std_func
+from .functions import estimate_lag
 from .node import Node
 from .series import Series
 
@@ -104,6 +105,7 @@ def main() -> None:
                 "fox": fox,
                 "abs": abs_func,
                 "std": std_func,
+                "estimate_lag": estimate_lag,
             },
         )
     else:  # not args.interactive
