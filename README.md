@@ -5,7 +5,7 @@
 [![Coverage](https://coveralls.io/repos/github/stephane-caron/foxplot/badge.svg?branch=main)](https://coveralls.io/github/stephane-caron/foxplot?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/foxplot)](https://pypi.org/project/foxplot/)
 
-Plot time series from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
+Manipulate time series read from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
 
 ## Installation
 
@@ -15,7 +15,7 @@ pip install foxplot
 
 ## Usage
 
-Foxplot starts in interactive mode by default to explore the input gathered in ``data`` (tab completion works: try ``data.<TAB>``). Plot times series using the ``fox.plot`` function, for example:
+The `foxplot` command-line tool starts in interactive mode by default to explore the input gathered in `data` (tab completion works: try `data.<TAB>`). Plot times series using the `fox.plot` function, for example:
 
 ```python
 $ foxplot upkie_2023-05-03-103245.mpack
@@ -26,7 +26,7 @@ IPython 8.0.1 -- An enhanced Interactive Python. Type '?' for help.
 In [1]: fox.plot(data.observation.imu.angular_velocity)
 ```
 
-This call opens a new tab in your browser with the desired plot. In this example, ``angular_velocity`` is a 3D vector, thus the plot will include three curves.
+This call opens a new tab in your browser with the desired plot. In this example, `angular_velocity` is a 3D vector, thus the plot will include three curves.
 
 ### Left and right axes
 
@@ -48,7 +48,7 @@ In [2]: fox.plot(
    ...: )
 ```
 
-Check out the other arguments to ``fox.plot`` in its documentation (IPython: ``fox.plot?``).
+Check out the other arguments to `fox.plot` in its documentation (IPython: `fox.plot?`).
 
 ### Computing new series
 
@@ -66,8 +66,8 @@ In [3]: fox.plot(left_knee_power, right=[left_knee.velocity])
 
 We can also plot data from files and pipes directly, for example:
 
-- JSON: ``foxplot my_data.json -l /observation/cpu_temperature``
-- MessagePack: ``foxplot my_data.mpack -l /observation/cpu_temperature``
+- JSON: `foxplot my_data.json -l /observation/cpu_temperature`
+- MessagePack: `foxplot my_data.mpack -l /observation/cpu_temperature`
 
 ## Tips
 
