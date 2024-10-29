@@ -6,7 +6,7 @@
 
 """Internal node used to access data in interactive mode."""
 
-from typing import List, Union
+from typing import Any, Dict, List, Union, cast
 
 from .exceptions import FoxplotException
 from .hot_series import HotSeries
@@ -86,14 +86,16 @@ class Node:
             else enumerate(unpacked)
         )
         for key, value in items:
+            # Explicitly signal to the type checker that keys can be integers
+            self_dict = cast(Dict[Union[str, int], Any], self.__dict__)
             if key in self.__dict__:
-                child = self.__dict__[key]
+                child = self_dict[key]
             else:  # key not in self.__dict__
                 sep = "/" if not self._label.endswith("/") else ""
                 is_primitive = not isinstance(value, (dict, list))
                 ChildClass = HotSeries if is_primitive else Node
                 child = ChildClass(label=f"{self._label}{sep}{key}")
-                self.__dict__[key] = child
+                self_dict[key] = child
             child._update(index, value)
 
     def _freeze(self, max_index: int) -> None:
