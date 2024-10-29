@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Remove `print_command_line` argument from `Fox.plot`
+
 ## [0.7.0] - 2024-10-28
 
 ### Added
