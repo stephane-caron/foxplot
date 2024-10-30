@@ -1,6 +1,0 @@
-***
-API
-***
-
-.. automodule:: foxplot
-    :members:
