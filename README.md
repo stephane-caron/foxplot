@@ -35,4 +35,5 @@ Check out the [documentation](https://stephane-caron.github.io/foxplot/) for mor
 - [mpacklog.cpp](https://github.com/upkie/mpacklog.cpp): library to log dictionaries to MessagePack files in C++.
 - [mpacklog.py](https://github.com/upkie/mpacklog.py): library and command-line tools to log dictionaries to MessagePack files in Python.
 - [rq](https://github.com/dflemstr/rq/): command-line tool to manipulate streams of records in various formats.
+- [uplot-python](https://github.com/stephane-caron/uplot-python): plotting backend used in this project.
 - [µPlot](https://github.com/leeoniya/uPlot): time-series plotting library, whose performance was a key enabler for this project.

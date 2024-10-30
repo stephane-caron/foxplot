@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Remove `print_command_line` argument from `Fox.plot`
+- Remove µPlot source from distribution
 
 ## [0.7.0] - 2024-10-28
 
