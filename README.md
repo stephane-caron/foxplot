@@ -5,7 +5,7 @@
 [![Coverage](https://coveralls.io/repos/github/stephane-caron/foxplot/badge.svg?branch=main)](https://coveralls.io/github/stephane-caron/foxplot?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/foxplot)](https://pypi.org/project/foxplot/)
 
-Manipulate time series read from [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
+Manipulate time series read from [MessagePack](https://msgpack.org/) or [newline-delimited JSON](https://en.wikipedia.org/wiki/JSON_streaming#Newline-delimited-JSON).
 
 ## Installation
 
@@ -28,54 +28,7 @@ In [1]: fox.plot(data.observation.imu.angular_velocity)
 
 This call opens a new tab in your browser with the desired plot. In this example, `angular_velocity` is a 3D vector, thus the plot will include three curves.
 
-### Left and right axes
-
-Here is a plot with both left- and right-axis time series:
-
-```python
-In [2]: fox.plot(
-   ...:     [
-   ...:         data.observation.servo.left_knee.position,
-   ...:         data.observation.servo.left_wheel.position,
-   ...:     ],
-   ...:     right=[
-   ...:         data.observation.servo.left_knee.velocity,
-   ...:         data.observation.servo.left_wheel.velocity,
-   ...:     ],
-   ...:     left_axis_unit="rad",
-   ...:     right_axis_unit="rad/s",
-   ...:     print_command_line=True,
-   ...: )
-```
-
-Check out the other arguments to `fox.plot` in its documentation (IPython: `fox.plot?`).
-
-### Computing new series
-
-Time series are labeled NumPy arrays, and can be manipulated as such. For example:
-
-```python
-In [1]: left_knee = data.observation.servo.left_knee
-
-In [2]: left_knee_power = left_knee.torque * left_knee.velocity
-
-In [3]: fox.plot(left_knee_power, right=[left_knee.velocity])
-```
-
-### Plotting from files
-
-We can also plot data from files and pipes directly, for example:
-
-- JSON: `foxplot my_data.json -l /observation/cpu_temperature`
-- MessagePack: `foxplot my_data.mpack -l /observation/cpu_temperature`
-
-## Tips
-
-Zsh users can filter foxplot completion on JSON and MessagePack files:
-
-```zsh
-zstyle ":completion:*:*:foxplot:*" ignored-patterns "^*.(json|mpack)"
-```
+Check out the [documentation](https://stephane-caron.github.io/foxplot/) for more advanced examples, such as left and right axes or computing new series from existing ones.
 
 ## See also
 

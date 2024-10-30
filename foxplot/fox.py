@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Main class to manipulate dictionary-series data."""
+"""The :class:`Fox` class is where we manipulate dictionary-series data."""
 
 import logging
 import sys
