@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Function: low-pass filter
 - Function: lag estimator
+- Function: low-pass filter
+- docs: Functions page
+- docs: Interactive-mode page
+- docs: Tips-and-tricks page
 
 ### Removed
 
