@@ -33,6 +33,16 @@ def low_pass_filter(
     input: FrozenSeries,
     time_constant: float,
 ) -> FrozenSeries:
+    """Apply low-pass filter to a time series.
+
+    Args:
+        time: Times corresponding to inputs.
+        input: Input values.
+        time_constant: Cutoff period of the low-pass filter.
+
+    Returns:
+        Low-pass filtered time series.
+    """
     label = f"low_pass_filter(input={input._label}, T={time_constant})"
     nb_steps = len(time)
     output = input._values[0]
