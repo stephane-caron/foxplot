@@ -78,14 +78,15 @@ def estimate_lag(
         time: Times corresponding to inputs and outputs.
         input: Input values.
         output: Output values.
+        time_constant: Time-constant of the estimation's sliding window.
 
     Returns:
         Array of lag estimates, where the lag is defined as the cutoff period
         of the estimated first-order low-pass filter.
 
-    We carry out the cutoff period of a corresponding low-pass filter by online
-    simplie linear regression, as described for instance in this note:
-    https://scaron.info/blog/simple-linear-regression-with-online-updates.html
+    We carry out the cutoff period of a corresponding low-pass filter by
+    sliding-window online linear regression, as described .e.g in `this note
+    <https://scaron.info/blog/simple-linear-regression-with-online-updates.html>`__
     """
     label = f"lag(input={input._label}, output={output._label})"
     nb_steps = len(time)
