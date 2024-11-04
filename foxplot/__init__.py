@@ -9,6 +9,10 @@
 
 __version__ = "1.0.0"
 
+from .decode import decode
 from .fox import Fox
 
-__all__ = ["Fox"]
+__all__ = [
+    "Fox",
+    "decode",
+]
