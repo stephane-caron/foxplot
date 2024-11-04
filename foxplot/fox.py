@@ -68,21 +68,6 @@ class Fox:
             raise TypeError(f"Series {label} is not frozen")
         return series
 
-    @property
-    def labels(self) -> List[str]:
-        """List of all labels present in the data."""
-        return self.data._list_labels()
-
-    def __print_command_line(self, left_series, right_series):
-        print("The command line to generate this plot is:\n")
-        left_args = " ".join(left_series.keys())
-        right_args = (
-            f"-r {' '.join(right_series.keys())} " if right_series else ""
-        )
-        file = self.__file if self.__file is not None else ""
-        timestamp = f"-t {self.__time} " if self.__time is not None else ""
-        print(f"foxplot {timestamp}-l {left_args} {right_args}{file}")
-
     def __list_to_dict(
         self, series_list: List[Union[Series, Node]]
     ) -> Dict[str, NDArray[np.float64]]:
