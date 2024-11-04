@@ -7,15 +7,13 @@
 """The :class:`Fox` class is where we manipulate dictionary-series data."""
 
 import logging
-import sys
-from typing import BinaryIO, Dict, List, Optional, TextIO, Union
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import uplot
 from numpy.typing import NDArray
 
-from .decoders.json import decode_json
-from .decoders.msgpack import decode_msgpack
+from .decode import decode
 from .frozen_series import FrozenSeries
 from .node import Node
 from .series import Series
@@ -27,8 +25,8 @@ class Fox:
     Our main class to read, access and manipulate series of dictionary data.
     """
 
-    __file: Optional[str]
-    __time: Optional[str]
+    __filename: Optional[str]
+    __time_label: Optional[str]
     data: Node
     length: int
 
@@ -43,8 +41,8 @@ class Fox:
             from_file: If set, read data from this path.
             time: Label of time index in input dictionaries.
         """
-        self.__file = from_file
-        self.__time = None
+        self.__filename = from_file
+        self.__time_label = None
         self.data = Node("/")
         self.length = 0
         if from_file:
@@ -125,11 +123,11 @@ class Fox:
         if isinstance(right, Series) or isinstance(right, Node):
             right = [right]
         if title is None:
-            title = f"Plot from {self.__file}"
+            title = f"Plot from {self.__filename}"
 
         times: NDArray[np.float64] = (
-            self.get_frozen_series(self.__time)._values
-            if self.__time is not None
+            self.get_frozen_series(self.__time_label)._values
+            if self.__time_label is not None
             else np.array(range(self.length), dtype=np.float64)
         )
 
@@ -142,7 +140,7 @@ class Fox:
             list(left_series.values()),
             list(right_series.values()),
             title=title,
-            timestamped=self.__time is not None,
+            timestamped=self.__time_label is not None,
             left_labels=list(left_series.keys()),
             right_labels=list(right_series.keys()),
         )
@@ -153,32 +151,7 @@ class Fox:
         Args:
             filename: Name of a file to read time series from.
         """
-        if filename == "stdin":
-            self.read_from_json(sys.stdin)
-        elif filename.endswith(".json"):
-            with open(filename, "r", encoding="utf-8") as file:
-                self.read_from_json(file)
-        elif filename.endswith(".mpack"):
-            with open(filename, "rb") as file:
-                self.read_from_msgpack(file)
-
-    def read_from_json(self, file: TextIO) -> None:
-        """Process time series data from a JSON stream.
-
-        Args:
-            file: JSON stream to read time series from.
-        """
-        for unpacked in decode_json(file=file):
-            self.unpack(unpacked)
-        self.data._freeze(self.length)
-
-    def read_from_msgpack(self, file: BinaryIO) -> None:
-        """Process time series data from a MessagePack stream.
-
-        Args:
-            file: MessagePack stream to read time series from.
-        """
-        for unpacked in decode_msgpack(file=file):
+        for unpacked in decode(filename):
             self.unpack(unpacked)
         self.data._freeze(self.length)
 
@@ -202,7 +175,7 @@ class Fox:
             time: Time index as a series or its label in input dictionaries.
         """
         label = time._label if isinstance(time, Series) else time
-        self.__time = label
+        self.__time_label = label
 
     def detect_time(self) -> None:
         """Search for a time key in root keys."""
