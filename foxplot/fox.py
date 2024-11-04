@@ -91,7 +91,7 @@ class Fox:
                     if isinstance(child, FrozenSeries):
                         series_dict[label] = child._values
                     else:
-                        logging.warn(
+                        logging.warning(
                             "Skipping '%s' as it is not an indexed series",
                             label,
                         )

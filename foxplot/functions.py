@@ -50,7 +50,7 @@ def low_pass_filter(
     for i in range(nb_steps - 1):
         dt = time._values[i + 1] - time._values[i]
         if time_constant < 2 * dt:
-            logging.warn(
+            logging.warning(
                 "Nyquist-Shannon sampling theorem: "
                 "at time=%f, dt=%f but time_constant=%f",
                 time._values[i],
@@ -97,7 +97,7 @@ def estimate_lag(
     for i in range(nb_steps - 1):
         dt = time._values[i + 1] - time._values[i]
         if time_constant < 2 * dt:
-            logging.warn(
+            logging.warning(
                 "Nyquist-Shannon sampling theorem: "
                 "at time=%f, dt=%f but time_constant=%f",
                 time._values[i],
