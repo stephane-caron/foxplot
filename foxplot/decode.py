@@ -5,28 +5,31 @@
 # Copyright 2024 Inria
 
 import sys
+from pathlib import PosixPath
+from typing import Union
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .exceptions import FoxplotError
 
 
-def decode(filename: str) -> None:
+def decode(file_path: Union[str, PosixPath]) -> None:
     """Unpack a series of dictionaries from a given file.
 
     Args:
-        filename: Name of a file to read time series from (can be "stdin").
+        file_path: Path to the file to read from (can be "stdin").
 
     Yields:
         Unpacked dictionaries.
     """
-    if filename == "stdin":
+    file_path = str(file_path)
+    if file_path == "stdin":
         yield from decode_json(file=sys.stdin)
-    elif filename.endswith(".json"):
-        with open(filename, "r", encoding="utf-8") as file:
+    elif file_path.endswith(".json"):
+        with open(file_path, "r", encoding="utf-8") as file:
             yield from decode_json(file=file)
-    elif filename.endswith(".mpack"):
-        with open(filename, "rb") as file:
+    elif file_path.endswith(".mpack"):
+        with open(file_path, "rb") as file:
             yield from decode_msgpack(file=file)
     else:  # unknown file extension
-        raise FoxplotError(f"Unknown file type in '{filename}'")
+        raise FoxplotError(f"Unknown file type in '{file_path}'")
