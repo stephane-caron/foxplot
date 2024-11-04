@@ -7,5 +7,5 @@
 """Custom exceptions."""
 
 
-class FoxplotException(Exception):
+class FoxplotError(Exception):
     """Base class for Foxplot exceptions."""

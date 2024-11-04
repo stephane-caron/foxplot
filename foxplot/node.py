@@ -8,7 +8,7 @@
 
 from typing import Any, Dict, List, Union, cast
 
-from .exceptions import FoxplotException
+from .exceptions import FoxplotError
 from .hot_series import HotSeries
 from .series import Series
 
@@ -53,7 +53,7 @@ class Node:
         if len(keys) > 1:
             return child._get_child(keys[1:])
         if not isinstance(child, Series):
-            raise FoxplotException(f"{child._label} is not a time series")
+            raise FoxplotError(f"{child._label} is not a time series")
         return child
 
     def _items(self):

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Top-level `decode` function to unpack dictionaries from files
 
+### Changed
+
+- Rename `FoxplotException` to `FoxplotError`
+
 ### Removed
 
 - Clean up unused internal color picker

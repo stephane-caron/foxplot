@@ -8,7 +8,7 @@ import sys
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
-from .exceptions import FoxplotException
+from .exceptions import FoxplotError
 
 
 def decode(filename: str) -> None:
@@ -32,4 +32,4 @@ def decode(filename: str) -> None:
             for unpacked in decode_msgpack(file=file):
                 yield unpacked
     else:  # unknown file extension
-        raise FoxplotException(f"Unknown file type in '{filename}'")
+        raise FoxplotError(f"Unknown file type in '{filename}'")
