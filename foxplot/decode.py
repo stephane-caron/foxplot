@@ -12,24 +12,21 @@ from .exceptions import FoxplotError
 
 
 def decode(filename: str) -> None:
-    """Unpack dictionaries series from file.
+    """Unpack a series of dictionaries from a given file.
 
     Args:
-        filename: Name of a file to read time series from.
+        filename: Name of a file to read time series from (can be "stdin").
 
     Yields:
         Unpacked dictionaries.
     """
     if filename == "stdin":
-        for unpacked in decode_json(file=sys.stdin):
-            yield unpacked
+        yield from decode_json(file=sys.stdin)
     elif filename.endswith(".json"):
         with open(filename, "r", encoding="utf-8") as file:
-            for unpacked in decode_json(file=file):
-                yield unpacked
+            yield from decode_json(file=file)
     elif filename.endswith(".mpack"):
         with open(filename, "rb") as file:
-            for unpacked in decode_msgpack(file=file):
-                yield unpacked
+            yield from decode_msgpack(file=file)
     else:  # unknown file extension
         raise FoxplotError(f"Unknown file type in '{filename}'")
