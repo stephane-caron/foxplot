@@ -15,7 +15,7 @@ from .series import Series
 
 
 class HotSeries(Series):
-    """Indexed time-series in which we are still inserting values.
+    """Indexed time-series in which we can still insert values.
 
     Internally, this datastructure maps time indexes (the corresponding times
     themselves are stored in a different list) to values.
