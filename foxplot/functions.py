@@ -33,7 +33,7 @@ def deriv(
     input: FrozenSeries,
     time_constant: float = 0.0,
 ) -> FrozenSeries:
-    """Time-derivative of a series, by finite differences.
+    """Time-derivative by finite differences with optional low-pass filtering.
 
     Args:
         time: Times corresponding to inputs.
@@ -61,7 +61,6 @@ def deriv(
         finite_diff = (input._values[i + 1] - input._values[i]) / dt
         if time_constant < 2 * dt or filtered_output is None:
             # Nyquist-Shannon sampling theorem (again)
-            print(f"{dt=}, {finite_diff=}")
             filtered_output = finite_diff
             outputs.append(finite_diff)
         else:  # low-pass filtering

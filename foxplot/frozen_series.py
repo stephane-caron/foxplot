@@ -58,5 +58,8 @@ class FrozenSeries(Series):
         Args:
             other: Other series.
         """
+        if np.isscalar(other):
+            product_label = _operator_label("*", self._label, str(other))
+            return FrozenSeries(product_label, self._values * other)
         product_label = _operator_label("*", self._label, other._label)
         return FrozenSeries(product_label, self._values * other._values)
