@@ -28,6 +28,51 @@ def abs(series: FrozenSeries) -> FrozenSeries:
     return FrozenSeries(label, values)
 
 
+def deriv(
+    time: FrozenSeries,
+    input: FrozenSeries,
+    time_constant: float = 0.0,
+) -> FrozenSeries:
+    """Time-derivative of a series, by finite differences.
+
+    Args:
+        time: Times corresponding to inputs.
+        input: Input values.
+        time_constant: Cutoff period of low-pass filtering.
+
+    Returns:
+        Finite-difference derivative of the time series. If the input as unit
+        [U], its time-derivative will be in [U] / [s].
+    """
+    label = f"deriv(input={input._label}, T={time_constant})"
+    nb_steps = len(time)
+    filtered_output = None
+    outputs = []
+    for i in range(nb_steps - 1):
+        dt = time._values[i + 1] - time._values[i]
+        if dt < 0.0:
+            logging.warning(
+                "Invalid timestep dt=%f at time=%f",
+                dt,
+                time._values[i],
+            )
+            outputs.append(np.nan)
+            continue
+        finite_diff = (input._values[i + 1] - input._values[i]) / dt
+        if time_constant < 2 * dt or filtered_output is None:
+            # Nyquist-Shannon sampling theorem (again)
+            print(f"{dt=}, {finite_diff=}")
+            filtered_output = finite_diff
+            outputs.append(finite_diff)
+        else:  # low-pass filtering
+            gamma = 1.0 - np.exp(-dt / time_constant)
+            filtered_output += gamma * (finite_diff - filtered_output)
+            outputs.append(filtered_output)
+    outputs.append(outputs[-1])
+    assert len(outputs) == len(input._values) == len(time._values)
+    return FrozenSeries(label, np.array(outputs))
+
+
 def low_pass_filter(
     time: FrozenSeries,
     input: FrozenSeries,
