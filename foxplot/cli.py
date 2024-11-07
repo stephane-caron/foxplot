@@ -14,7 +14,9 @@ from typing import List, Union
 
 from .fox import Fox
 from .functions import abs as abs_func
-from .functions import estimate_lag, low_pass_filter
+from .functions import deriv as deriv_func
+from .functions import estimate_lag as estimate_lag_func
+from .functions import low_pass_filter as low_pass_filter_func
 from .functions import std as std_func
 from .node import Node
 from .series import Series
@@ -103,9 +105,10 @@ def main() -> None:
             user_ns={
                 "abs": abs_func,
                 "data": fox.data,
-                "estimate_lag": estimate_lag,
+                "deriv": deriv_func,
+                "estimate_lag": estimate_lag_func,
                 "fox": fox,
-                "low_pass_filter": low_pass_filter,
+                "low_pass_filter": low_pass_filter_func,
                 "std": std_func,
             },
         )
