@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename `FoxplotException` to `FoxplotError`
 - Update to latest uplot-python API
 
+### Fixed
+
+- Make sure time values are scalar timestamps
+
 ### Removed
 
 - Clean up unused internal color picker

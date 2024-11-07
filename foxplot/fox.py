@@ -170,6 +170,7 @@ class Fox:
         Args:
             time: Time index as a series or its label in input dictionaries.
         """
+        time._values = time._values.astype(np.float64)
         label = time._label if isinstance(time, Series) else time
         self.__time_label = label
 
