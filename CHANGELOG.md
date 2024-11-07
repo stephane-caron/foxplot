@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Function: time-derivative by finite differences
 - Top-level `decode` function to unpack dictionaries from files
 
 ### Changed
