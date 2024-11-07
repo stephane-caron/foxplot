@@ -17,7 +17,7 @@ class TestFox(unittest.TestCase):
         fox.unpack({"time": 0.0, "foo": 1.0})
         fox.unpack({"time": 1.0, "foo": 1.0})
         fox.unpack({"time": 2.0, "foo": 1.0})
-        fox.freeze()
+        fox.data._freeze(fox.length)
         fox.plot(left=[fox.data.foo])
 
     def test_unpack(self):

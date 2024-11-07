@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Clean up unused internal color picker
 - Remove `Fox.labels` property
+- Remove `Fox.freeze` function
 
 ## [1.0.0] - 2024-10-30
 

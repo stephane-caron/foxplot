@@ -164,10 +164,6 @@ class Fox:
         self.data._update(self.length, unpacked)
         self.length += 1
 
-    def freeze(self):
-        """Freeze all time series at the current input length."""
-        self.data._freeze(self.length)
-
     def set_time(self, time: Union[str, Series]):
         """Set label of time index in input dictionaries.
 
