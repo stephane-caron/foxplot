@@ -33,10 +33,11 @@ class Fox:
 
     @staticmethod
     def empty() -> "Fox":
+        """Initialize from empty time series."""
         return Fox(filename=None)
 
     def __init__(self, filename: Union[str, PosixPath, None]) -> None:
-        """Initialize empty series.
+        """Initialize time series.
 
         Args:
             filename: Name (e.g. "stdin") or path of file to read time series
