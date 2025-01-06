@@ -13,7 +13,7 @@ from .decoders.msgpack import decode_msgpack
 from .exceptions import FoxplotError
 
 
-def decode(file_path: Union[str, PosixPath]) -> Generator[dict]:
+def decode(file_path: Union[str, PosixPath]) -> Generator[dict, None, None]:
     """Unpack a series of dictionaries from a given file.
 
     Args:
