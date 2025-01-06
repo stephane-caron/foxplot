@@ -58,7 +58,7 @@ def deriv(
     Returns:
         Finite-difference derivative of the time series. If the input has unit
         [U], its time-derivative will be in [U] / [T] where [T] is the time
-        unit specified by the `unit` argument (default: second).
+        unit specified by ``unit`` (default: second).
     """
     label = f"deriv(input={input._label}"
     if unit != "s":

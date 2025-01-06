@@ -8,7 +8,6 @@
 """Command-line entry point for foxplot."""
 
 import argparse
-import sys
 from datetime import datetime
 from typing import List, Union
 
@@ -88,7 +87,7 @@ def main() -> None:
 
     fox = Fox(from_file=args.file, time=args.time)
     if args.file is None:
-        fox.read_from_json(sys.stdin)
+        fox.read_from_file("stdin")
     fox.detect_time()
 
     nothing_to_plot = not args.left and not args.right

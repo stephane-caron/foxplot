@@ -6,14 +6,14 @@
 
 import sys
 from pathlib import PosixPath
-from typing import Union
+from typing import Union, Generator
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
 from .exceptions import FoxplotError
 
 
-def decode(file_path: Union[str, PosixPath]) -> None:
+def decode(file_path: Union[str, PosixPath]) -> Generator[dict]:
     """Unpack a series of dictionaries from a given file.
 
     Args:

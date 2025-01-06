@@ -7,6 +7,7 @@
 """The :class:`Fox` class is where we manipulate dictionary-series data."""
 
 import logging
+from pathlib import PosixPath
 from typing import Dict, List, Optional, Union
 
 import numpy as np
@@ -33,7 +34,7 @@ class Fox:
     def __init__(
         self,
         from_file: Optional[str] = None,
-        time: Union[None, str, Series] = None,
+        time: Optional[FrozenSeries] = None,
     ):
         """Initialize series.
 
@@ -145,11 +146,11 @@ class Fox:
             right_labels=list(right_series.keys()),
         )
 
-    def read_from_file(self, filename: str) -> None:
+    def read_from_file(self, filename: Union[str, PosixPath]) -> None:
         """Process time series data.
 
         Args:
-            filename: Name of a file to read time series from.
+            filename: Name or path of file to read time series from.
         """
         for unpacked in decode(filename):
             self.unpack(unpacked)
@@ -164,11 +165,11 @@ class Fox:
         self.data._update(self.length, unpacked)
         self.length += 1
 
-    def set_time(self, time: Union[str, Series]):
+    def set_time(self, time: FrozenSeries):
         """Set label of time index in input dictionaries.
 
         Args:
-            time: Time index as a series or its label in input dictionaries.
+            time: Time index as a series.
         """
         time._values = time._values.astype(np.float64)
         label = time._label if isinstance(time, Series) else time
