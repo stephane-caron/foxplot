@@ -36,13 +36,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="series to plot using the (default) left axis",
     )
     parser.add_argument(
-        "-lu",
-        "--left-axis-unit",
-        dest="left_axis_unit",
-        default="",
-        help="unit label for the left axis (default: empty)",
-    )
-    parser.add_argument(
         "-i",
         "--interactive",
         action="store_true",
@@ -54,13 +47,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
         "--right",
         nargs="*",
         help="series to plot using the right axis",
-    )
-    parser.add_argument(
-        "-ru",
-        "--right-axis-unit",
-        dest="right_axis_unit",
-        default="",
-        help="unit label for the right axis (default: empty)",
     )
     parser.add_argument(
         "-t",
@@ -149,6 +135,4 @@ def main() -> None:
             left_series,
             right_series,
             args.title,
-            args.left_axis_unit,
-            args.right_axis_unit,
         )
