@@ -146,16 +146,6 @@ class Fox:
             right_labels=list(right_series.keys()),
         )
 
-    def read_from_file(self, filename: Union[str, PosixPath]) -> None:
-        """Process time series data.
-
-        Args:
-            filename: Name or path of file to read time series from.
-        """
-        for unpacked in decode(filename):
-            self.unpack(unpacked)
-        self.data._freeze(self.length)
-
     def unpack(self, unpacked: dict) -> None:
         """Append data from an unpacked dictionary.
 
