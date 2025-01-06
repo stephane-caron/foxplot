@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump required Python version to 3.8
-- Rename and specialize ``get_series`` to ``get_frozen_series``
+- Rename and specialize `get_series` to `get_frozen_series`
 - Value type for frozen series switched to NumPy arrays
 
 ### Fixed
@@ -75,24 +75,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Replace ``_get(n)`` method by ``_values`` in frozen series
+- Replace `_get(n)` method by `_values` in frozen series
 
 ## [0.5.0] - 2023-11-01
 
 ### Added
 
 - Allow single-series right plots
-- Argument ``print_command_line`` to plotting function
+- Argument `print_command_line` to plotting function
 
 ### Changed
 
 - CLI: Revert to `fox.plot` for better docs and discoverability
-- Rename internal ``IndexedSeries`` to just ``Series``
+- Rename internal `IndexedSeries` to just `Series`
 - Repeat previous value when there is a gap in the input
 
 ### Removed
 
-- Argument ``open_new_tab`` to plotting function
+- Argument `open_new_tab` to plotting function
 
 ## [0.4.0] - 2023-10-23
 
@@ -141,8 +141,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Export ``data`` in interactive mode
-- Plot function now has a ``time`` keyword argument
+- Export `data` in interactive mode
+- Plot function now has a `time` keyword argument
 - Usage message in interactive mode
 
 ### Changed
@@ -152,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Use ``None`` as the default (undefined) time key
+- Use `None` as the default (undefined) time key
 
 ## [0.0.2] - 2023-05-02
 
