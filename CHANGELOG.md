@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Allow products between series and scalar values
 - CLI: List available functions in the initial prompt
-- Function: time-derivative by finite differences
+- Function: add time derivative by finite differences
+- Function: include `unit` argument in time derivative
 - Top-level `decode` function to unpack dictionaries from files
 
 ### Changed

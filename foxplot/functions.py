@@ -7,11 +7,21 @@
 """Functions that can be applied to frozen series."""
 
 import logging
+from typing import Dict, Literal
 
 import numpy as np
 
 from .frozen_series import FrozenSeries
 from .node import Node
+
+UNIT_TO_SECONDS: Dict[str, float] = {
+    "s": 1.0,
+    "M": 60.0,
+    "H": 3600.0,
+    "d": 3600.0 * 24.0,
+    "m": 3600.0 * 24.0 * 30.0,
+    "y": 3600.0 * 24.0 * 365.0,
+}
 
 
 def abs(series: FrozenSeries) -> FrozenSeries:
@@ -32,22 +42,35 @@ def deriv(
     time: FrozenSeries,
     input: FrozenSeries,
     time_constant: float = 0.0,
+    unit: Literal["s", "M", "H", "d", "m", "y"] = "s",
 ) -> FrozenSeries:
-    """Time-derivative by finite differences with optional low-pass filtering.
+    """Time-derivative with optional low-pass filtering.
 
     Args:
-        time: Times corresponding to inputs.
+        time: Times corresponding to inputs, in seconds.
         input: Input values.
-        time_constant: Cutoff period of low-pass filtering.
+        time_constant: Cutoff period of low-pass filtering, in seconds.
+        unit: String specifying the time unit of the time derivative, and of
+            the time constant, if provided. Use "s" for seconds (default), "M"
+            for minute, "H" for hour, "d" for day, "m" for month and "y" for
+            year.
 
     Returns:
-        Finite-difference derivative of the time series. If the input as unit
-        [U], its time-derivative will be in [U] / [s].
+        Finite-difference derivative of the time series. If the input has unit
+        [U], its time-derivative will be in [U] / [T] where [T] is the time
+        unit specified by the `unit` argument (default: second).
     """
-    label = f"deriv(input={input._label}, T={time_constant})"
+    label = f"deriv(input={input._label}"
+    if unit != "s":
+        label += f", unit={unit}"
+    if time_constant > 1e-10:
+        label += f", T={time_constant} {unit}"
+    label += ")"
     nb_steps = len(time)
     filtered_output = None
     outputs = []
+    unit_to_secs = UNIT_TO_SECONDS[unit]
+    time_constant_s = unit_to_secs * time_constant
     for i in range(nb_steps - 1):
         dt = time._values[i + 1] - time._values[i]
         if dt < 0.0:
@@ -59,17 +82,17 @@ def deriv(
             outputs.append(np.nan)
             continue
         finite_diff = (input._values[i + 1] - input._values[i]) / dt
-        if time_constant < 2 * dt or filtered_output is None:
+        if time_constant_s < 2 * dt or filtered_output is None:
             # Nyquist-Shannon sampling theorem (again)
             filtered_output = finite_diff
             outputs.append(finite_diff)
         else:  # low-pass filtering
-            gamma = 1.0 - np.exp(-dt / time_constant)
+            gamma = 1.0 - np.exp(-dt / time_constant_s)
             filtered_output += gamma * (finite_diff - filtered_output)
             outputs.append(filtered_output)
     outputs.append(outputs[-1])
     assert len(outputs) == len(input._values) == len(time._values)
-    return FrozenSeries(label, np.array(outputs))
+    return FrozenSeries(label, unit_to_secs * np.array(outputs))
 
 
 def low_pass_filter(
