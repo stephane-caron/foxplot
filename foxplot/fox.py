@@ -120,9 +120,9 @@ class Fox:
             left_axis_unit: Unit label for the left axis.
             right_axis_unit: Unit label for the right axis.
         """
-        if isinstance(left, Series) or isinstance(left, Node):
+        if isinstance(left, (Node, Series)):
             left = [left]
-        if isinstance(right, Series) or isinstance(right, Node):
+        if isinstance(right, (Node, Series)):
             right = [right]
         if title is None:
             title = f"Plot from {self.__source}"
