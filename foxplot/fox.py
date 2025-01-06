@@ -108,8 +108,6 @@ class Fox:
         left: Union[Series, Node, List[Union[Series, Node]]],
         right: Optional[Union[Series, Node, List[Union[Series, Node]]]] = None,
         title: Optional[str] = None,
-        left_axis_unit: str = "",
-        right_axis_unit: str = "",
     ) -> None:
         """Plot a set of indexed series.
 
@@ -117,8 +115,6 @@ class Fox:
             left: Series to plot on the left axis.
             right: Series to plot on the right axis.
             title: Plot title.
-            left_axis_unit: Unit label for the left axis.
-            right_axis_unit: Unit label for the right axis.
         """
         if isinstance(left, (Node, Series)):
             left = [left]

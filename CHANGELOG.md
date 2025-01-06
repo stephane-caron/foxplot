@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove `Fox.labels` property
 - Remove `Fox.read_from_file` function (moved to constructor)
 - Remove `Fox.freeze` function
+- Remove `left_axis_unit` argument of `plot` function
+- Remove `right_axis_unit` argument of `plot` function
 
 ## [1.0.0] - 2024-10-30
 

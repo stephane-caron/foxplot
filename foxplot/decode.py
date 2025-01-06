@@ -6,7 +6,7 @@
 
 import sys
 from pathlib import PosixPath
-from typing import Union, Generator
+from typing import Generator, Union
 
 from .decoders.json import decode_json
 from .decoders.msgpack import decode_msgpack
