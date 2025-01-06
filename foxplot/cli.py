@@ -77,6 +77,11 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def get_function_description(f):
+    """Get the short description of a function as a string."""
+    return f.__doc__.split("\n")[0]
+
+
 def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
@@ -87,18 +92,37 @@ def main() -> None:
     fox.detect_time()
 
     nothing_to_plot = not args.left and not args.right
+    user_ns = {
+        "data": fox.data,
+        "fox": fox,
+    }
+    functions = {
+        "abs": abs_func,
+        "deriv": deriv_func,
+        "estimate_lag": estimate_lag_func,
+        "low_pass_filter": low_pass_filter_func,
+        "std": std_func,
+    }
+    user_ns.update(functions)
     if args.interactive or nothing_to_plot:
         usage = (
-            "-" * 68 + "\n\n\n"
-            "Welcome to foxplot!\n\n"
-            "Explore your time series in ``data`` (tab completion works).\n"
-            "When you know what you want, plot time series with:\n\n"
+            "Welcome to foxplot!\n"
+            "\n"
+            "Explore your time series in `data` (tab completion works).\n"
+            "When you know what you want, plot your time series with:\n"
+            "\n"
             "    fox.plot(\n"
             "        left=[data.foo.bar, data.other.bar],\n"
             "        right=[data.something.else],\n"
-            "        time=data.timestamp,\n"
             '        title="My awesome plot",\n'
-            "    )"
+            "    )\n"
+            "\n"
+            "You can also apply the following functions to time series:\n"
+            "\n"
+            + "\n".join(
+                f"- `{key}`: {get_function_description(func)}"
+                for key, func in functions.items()
+            )
         )
         __import__("IPython").embed(
             header=usage,
