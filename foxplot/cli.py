@@ -85,10 +85,11 @@ def main() -> None:
     """Entry point for command-line execution."""
     args = parse_command_line_arguments()
 
-    fox = Fox(from_file=args.file, time=args.time)
-    if args.file is None:
-        fox.read_from_file("stdin")
-    fox.detect_time()
+    fox = Fox(args.file or "stdin")
+    if args.time:
+        fox.set_time(getattr(fox.data, args.time))
+    else:  # not args.time:
+        fox.detect_time()
 
     nothing_to_plot = not args.left and not args.right
     user_ns = {

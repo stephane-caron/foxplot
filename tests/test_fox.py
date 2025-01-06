@@ -13,11 +13,12 @@ from foxplot.fox import Fox
 
 class TestFox(unittest.TestCase):
     def test_plot(self):
-        fox = Fox(time="time")
+        fox = Fox.empty()
         fox.unpack({"time": 0.0, "foo": 1.0})
         fox.unpack({"time": 1.0, "foo": 1.0})
         fox.unpack({"time": 2.0, "foo": 1.0})
         fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
         fox.plot(left=[fox.data.foo])
 
     def test_unpack(self):
@@ -156,7 +157,7 @@ class TestFox(unittest.TestCase):
             },
             "time": 1681318144.751641,
         }
-        fox = Fox(time="time")
+        fox = Fox.empty()
         fox.unpack(custom_dict)
         custom_dict["time"] += 1.0
         fox.unpack(custom_dict)
@@ -183,7 +184,7 @@ class TestFox(unittest.TestCase):
             },
             "time": 1681318144.751641,
         }
-        fox = Fox(time="time")
+        fox = Fox.empty()
         fox.unpack(custom_dict)
         custom_dict["time"] += 1.0
         fox.unpack(custom_dict)
@@ -198,14 +199,14 @@ class TestFox(unittest.TestCase):
         fox.unpack(custom_dict)
 
     def test_repeat_last_on_missing_1(self):
-        fox = Fox(time="time")
+        fox = Fox.empty()
         config_a = 12345
         fox.unpack({"config_a": config_a, "time": 0.0})
         fox.data._freeze(1)
         self.assertEqual(fox.data.config_a._values.tolist(), [config_a])
 
     def test_repeat_last_on_missing_2(self):
-        fox = Fox(time="time")
+        fox = Fox.empty()
         config_a = 12345
         fox.unpack({"config_a": config_a, "time": 0.0})
         fox.unpack({"x": 12, "time": 1.0})
@@ -215,7 +216,7 @@ class TestFox(unittest.TestCase):
         self.assertTrue(np.allclose(fox.data.x._values[1:], [12.0]))
 
     def test_repeat_last_on_missing_3(self):
-        fox = Fox(time="time")
+        fox = Fox.empty()
         config_a = 12345
         fox.unpack({"config_a": config_a, "time": 0.0})
         fox.unpack({"x": 12, "time": 1.0})
@@ -226,7 +227,7 @@ class TestFox(unittest.TestCase):
         self.assertTrue(np.allclose(fox.data.x._values[1:], [12.0, 22.0]))
 
     def test_repeat_last_on_missing_4(self):
-        fox = Fox(time="time")
+        fox = Fox.empty()
         config_a = 12345
         fox.unpack({"config_a": config_a, "time": 0.0})
         fox.unpack({"x": 12, "time": 1.0})

@@ -26,30 +26,30 @@ class Fox:
     Our main class to read, access and manipulate series of dictionary data.
     """
 
-    __filename: Optional[str]
+    __source: Union[str, PosixPath]
     __time_label: Optional[str]
     data: Node
     length: int
 
-    def __init__(
-        self,
-        from_file: Optional[str] = None,
-        time: Optional[FrozenSeries] = None,
-    ):
-        """Initialize series.
+    @staticmethod
+    def empty() -> "Fox":
+        return Fox(filename=None)
+
+    def __init__(self, filename: Union[str, PosixPath, None]) -> None:
+        """Initialize empty series.
 
         Args:
-            from_file: If set, read data from this path.
-            time: Label of time index in input dictionaries.
+            filename: Name (e.g. "stdin") or path of file to read time series
+                from, or ``None`` to start from an empty state.
         """
-        self.__filename = from_file
+        self.__source = filename or "custom data"
         self.__time_label = None
         self.data = Node("/")
         self.length = 0
-        if from_file:
-            self.read_from_file(from_file)
-        if time is not None:
-            self.set_time(time)
+        if filename is not None:
+            for unpacked in decode(filename):
+                self.unpack(unpacked)
+            self.data._freeze(self.length)
 
     def get_frozen_series(self, label: str) -> FrozenSeries:
         """Get time-series data from a given label.
@@ -124,7 +124,7 @@ class Fox:
         if isinstance(right, Series) or isinstance(right, Node):
             right = [right]
         if title is None:
-            title = f"Plot from {self.__filename}"
+            title = f"Plot from {self.__source}"
 
         times: NDArray[np.float64] = (
             self.get_frozen_series(self.__time_label)._values

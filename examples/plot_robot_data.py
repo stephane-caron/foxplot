@@ -10,7 +10,7 @@ from foxplot import Fox
 
 if __name__ == "__main__":
     curdir = os.path.dirname(os.path.abspath(__file__))
-    fox = Fox(from_file=f"{curdir}/data/robot.json", time="time")
+    fox = Fox(f"{curdir}/data/robot.json")
     action = fox.data.action
     observation = fox.data.observation
     fox.plot(

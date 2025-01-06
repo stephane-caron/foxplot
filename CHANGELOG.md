@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add a `Fox.empty()` method to start from an empty state
 - Allow products between series and scalar values
 - CLI: List available functions in the initial prompt
 - Function: add time derivative by finite differences
@@ -17,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Default constructor of `Fox` now requires a file name or path
 - Rename `FoxplotException` to `FoxplotError`
 - Update to latest uplot-python API
 
