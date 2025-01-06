@@ -140,7 +140,7 @@ class Fox:
             list(left_series.values()),
             list(right_series.values()),
             title=title,
-            time=self.__time_label is not None,
+            timestamped=self.__time_label is not None,
             left_labels=list(left_series.keys()),
             right_labels=list(right_series.keys()),
         )

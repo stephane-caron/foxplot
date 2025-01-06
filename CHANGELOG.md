@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Make sure time values are scalar timestamps
+- Use correct `timestamped` uPlot argument
 
 ### Removed
 
