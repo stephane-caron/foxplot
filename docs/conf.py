@@ -66,9 +66,6 @@ with open(f"{init_path}/__init__.py", "r") as fh:
 # for a list of supported languages.
 language = "en"
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "sphinx"
-
 # The theme to use for HTML and HTML Help pages.
 html_theme = "furo"
 
