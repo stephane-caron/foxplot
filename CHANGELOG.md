@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- CICD: Update checkout action to v4
 - Default constructor of `Fox` now requires a file name or path
 - Rename `FoxplotException` to `FoxplotError`
 - Update to latest uplot-python API
