@@ -4,139 +4,21 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-"""Functions that can be applied to frozen series."""
+"""Functions that can be applied to series."""
 
 import logging
 from typing import Dict, Literal
 
 import numpy as np
 
-from .frozen_series import FrozenSeries
 from .node import Node
-
-UNIT_TO_SECONDS: Dict[str, float] = {
-    "s": 1.0,
-    "M": 60.0,
-    "H": 3600.0,
-    "d": 3600.0 * 24.0,
-    "m": 3600.0 * 24.0 * 30.0,
-    "y": 3600.0 * 24.0 * 365.0,
-}
-
-
-def abs(series: FrozenSeries) -> FrozenSeries:
-    """Return the series of absolute values of another series.
-
-    Args:
-        series: Series to compute absolute values from.
-
-    Returns:
-        Array of windowed standard deviations along the series.
-    """
-    label = f"abs({series._label})"
-    values = np.abs(series._values)
-    return FrozenSeries(label, values)
-
-
-def deriv(
-    time: FrozenSeries,
-    input: FrozenSeries,
-    time_constant: float = 0.0,
-    unit: Literal["s", "M", "H", "d", "m", "y"] = "s",
-) -> FrozenSeries:
-    """Time-derivative with optional low-pass filtering.
-
-    Args:
-        time: Times corresponding to inputs, in seconds.
-        input: Input values.
-        time_constant: Cutoff period of low-pass filtering, in seconds.
-        unit: String specifying the time unit of the time derivative, and of
-            the time constant, if provided. Use "s" for seconds (default), "M"
-            for minute, "H" for hour, "d" for day, "m" for month and "y" for
-            year.
-
-    Returns:
-        Finite-difference derivative of the time series. If the input has unit
-        [U], its time-derivative will be in [U] / [T] where [T] is the time
-        unit specified by ``unit`` (default: second).
-    """
-    label = f"deriv(input={input._label}"
-    if unit != "s":
-        label += f", unit={unit}"
-    if time_constant > 1e-10:
-        label += f", T={time_constant} {unit}"
-    label += ")"
-    nb_steps = len(time)
-    filtered_output = None
-    outputs = []
-    unit_to_secs = UNIT_TO_SECONDS[unit]
-    time_constant_s = unit_to_secs * time_constant
-    for i in range(nb_steps - 1):
-        dt = time._values[i + 1] - time._values[i]
-        if dt < 0.0:
-            logging.warning(
-                "Invalid timestep dt=%f at time=%f",
-                dt,
-                time._values[i],
-            )
-            outputs.append(np.nan)
-            continue
-        finite_diff = (input._values[i + 1] - input._values[i]) / dt
-        if time_constant_s < 2 * dt or filtered_output is None:
-            # Nyquist-Shannon sampling theorem (again)
-            filtered_output = finite_diff
-            outputs.append(finite_diff)
-        else:  # low-pass filtering
-            gamma = 1.0 - np.exp(-dt / time_constant_s)
-            filtered_output += gamma * (finite_diff - filtered_output)
-            outputs.append(filtered_output)
-    outputs.append(outputs[-1])
-    assert len(outputs) == len(input._values) == len(time._values)
-    return FrozenSeries(label, unit_to_secs * np.array(outputs))
-
-
-def low_pass_filter(
-    time: FrozenSeries,
-    input: FrozenSeries,
-    time_constant: float,
-) -> FrozenSeries:
-    """Apply low-pass filter to a time series.
-
-    Args:
-        time: Times corresponding to inputs.
-        input: Input values.
-        time_constant: Cutoff period of the low-pass filter.
-
-    Returns:
-        Low-pass filtered time series.
-    """
-    label = f"low_pass_filter(input={input._label}, T={time_constant})"
-    nb_steps = len(time)
-    output = input._values[0]
-    outputs = [output]
-    for i in range(nb_steps - 1):
-        dt = time._values[i + 1] - time._values[i]
-        if time_constant < 2 * dt:
-            logging.warning(
-                "Nyquist-Shannon sampling theorem: "
-                "at time=%f, dt=%f but time_constant=%f",
-                time._values[i],
-                dt,
-                time_constant,
-            )
-            outputs.append(np.nan)
-            continue
-        forgetting_factor = np.exp(-dt / time_constant)
-        output += (1.0 - forgetting_factor) * (input._values[i] - output)
-        outputs.append(output)
-    assert len(outputs) == len(input._values) == len(time._values)
-    return FrozenSeries(label, np.array(outputs))
+from .series import Series
 
 
 def estimate_lag(
-    time: FrozenSeries,
-    input: FrozenSeries,
-    output: FrozenSeries,
+    time: Series,
+    input: Series,
+    output: Series,
     time_constant: float,
 ) -> Node:
     """Estimate input-output response as a first-order low-pass filter.
@@ -216,27 +98,8 @@ def estimate_lag(
     }
     node.__dict__.update(
         {
-            key: FrozenSeries(f"{label}/{key}", value)
+            key: Series(f"{label}/{key}", value)
             for key, value in children.items()
         }
     )
     return node
-
-
-def std(series: FrozenSeries, window_size: int) -> FrozenSeries:
-    """Return the rolling standard deviation of the series.
-
-    Args:
-        series: Series to compute standard deviations from.
-        window_size: Size of the rolling window in which to compute
-            standard deviations.
-
-    Returns:
-        Array of windowed standard deviations along the series.
-    """
-    label = f"std({series._label}, {window_size})"
-    values = np.std(
-        np.lib.stride_tricks.sliding_window_view(series._values, window_size),
-        axis=-1,
-    )
-    return FrozenSeries(label, values)
