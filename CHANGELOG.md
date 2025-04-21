@@ -10,17 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add a `Fox.empty()` method to start from an empty state
-- Allow products between series and scalar values
 - CLI: List available functions in the initial prompt
-- Function: add time derivative by finite differences
-- Function: include `unit` argument in time derivative
+- Internal: Add reference to time values in each series instance
+- Series: divisions between series and scalar values
+- Series: products between series and scalar values
+- Series: unitary minus operator
 - Top-level `decode` function to unpack dictionaries from files
 
 ### Changed
 
 - CICD: Update checkout action to v4
 - Default constructor of `Fox` now requires a file name or path
+- Function: absolute value moved to `Series`
+- Function: low-pass filter moved to `Series`
+- Function: standard deviation moved to `Series`
+- Function: time-derivative by finite differences moved to `Series`
 - Rename `FoxplotException` to `FoxplotError`
+- Rename `Series` to `LabeledSeries`
+- Rename the front class `FrozenSeries` to `Series`
 - Update to latest uplot-python API
 
 ### Fixed
