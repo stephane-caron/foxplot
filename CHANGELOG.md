@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2025-04-21
+
 ### Changed
 
 - CICD: Replace black by ruff format for linting
@@ -198,7 +200,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal: Logging with an spdlog-like format
 - Python interactive shell
 
-[unreleased]: https://github.com/stephane-caron/foxplot/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/stephane-caron/foxplot/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/stephane-caron/foxplot/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/stephane-caron/foxplot/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/stephane-caron/foxplot/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/stephane-caron/foxplot/compare/v0.6.0...v0.7.0
