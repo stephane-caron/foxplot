@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-04-21
+
 ### Added
 
 - Add a `Fox.empty()` method to start from an empty state
@@ -19,15 +21,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Function: absolute value moved to `Series`
+- **Breaking:** Function: low-pass filter moved to `Series`
+- **Breaking:** Function: standard deviation moved to `Series`
+- **Breaking:** Function: time-derivative by finite differences moved to `Series`
+- **Breaking:** Rename `FoxplotException` to `FoxplotError`
+- **Breaking:** Rename `Series` to `LabeledSeries`
+- **Breaking:** Rename the front class `FrozenSeries` to `Series`
 - CICD: Update checkout action to v4
 - Default constructor of `Fox` now requires a file name or path
-- Function: absolute value moved to `Series`
-- Function: low-pass filter moved to `Series`
-- Function: standard deviation moved to `Series`
-- Function: time-derivative by finite differences moved to `Series`
-- Rename `FoxplotException` to `FoxplotError`
-- Rename `Series` to `LabeledSeries`
-- Rename the front class `FrozenSeries` to `Series`
 - Update to latest uplot-python API
 
 ### Fixed
@@ -38,12 +40,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** Remove `Fox.freeze` function
+- **Breaking:** Remove `Fox.labels` property
+- **Breaking:** Remove `Fox.read_from_file` function (moved to constructor)
+- **Breaking:** Remove `left_axis_unit` argument of `plot` function
+- **Breaking:** Remove `right_axis_unit` argument of `plot` function
 - Clean up unused internal color picker
-- Remove `Fox.labels` property
-- Remove `Fox.read_from_file` function (moved to constructor)
-- Remove `Fox.freeze` function
-- Remove `left_axis_unit` argument of `plot` function
-- Remove `right_axis_unit` argument of `plot` function
 
 ## [1.0.0] - 2024-10-30
 
@@ -188,7 +190,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal: Logging with an spdlog-like format
 - Python interactive shell
 
-[unreleased]: https://github.com/stephane-caron/foxplot/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/stephane-caron/foxplot/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/stephane-caron/foxplot/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/stephane-caron/foxplot/compare/v0.7.0...v1.0.0
 [0.7.0]: https://github.com/stephane-caron/foxplot/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/stephane-caron/foxplot/compare/v0.5.0...v0.6.0
