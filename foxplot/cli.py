@@ -12,11 +12,7 @@ from datetime import datetime
 from typing import List, Union
 
 from .fox import Fox
-from .functions import abs as abs_func
-from .functions import deriv as deriv_func
 from .functions import estimate_lag as estimate_lag_func
-from .functions import low_pass_filter as low_pass_filter_func
-from .functions import std as std_func
 from .node import Node
 from .series import Series
 
@@ -83,11 +79,7 @@ def main() -> None:
         "fox": fox,
     }
     functions = {
-        "abs": abs_func,
-        "deriv": deriv_func,
         "estimate_lag": estimate_lag_func,
-        "low_pass_filter": low_pass_filter_func,
-        "std": std_func,
     }
     user_ns.update(functions)
     if args.interactive or nothing_to_plot:
@@ -113,13 +105,9 @@ def main() -> None:
         __import__("IPython").embed(
             header=usage,
             user_ns={
-                "abs": abs_func,
                 "data": fox.data,
-                "deriv": deriv_func,
                 "estimate_lag": estimate_lag_func,
                 "fox": fox,
-                "low_pass_filter": low_pass_filter_func,
-                "std": std_func,
             },
         )
     else:  # not args.interactive
