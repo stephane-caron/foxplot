@@ -7,7 +7,6 @@
 """Functions that can be applied to series."""
 
 import logging
-from typing import Dict, Literal
 
 import numpy as np
 

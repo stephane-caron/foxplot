@@ -26,7 +26,7 @@ class Fox:
     """
 
     __source: Union[str, PosixPath]
-    __time_label: Optional[str]
+    __times: Optional[NDArray[np.float64]]
     data: Node
     length: int
 
@@ -43,7 +43,7 @@ class Fox:
                 from, or ``None`` to start from an empty state.
         """
         self.__source = filename or "custom data"
-        self.__time_label = None
+        self.__times = None
         self.data = Node("/")
         self.length = 0
         if filename is not None:
@@ -134,9 +134,9 @@ class Fox:
         if title is None:
             title = f"Plot from {self.__source}"
 
+        timestamped: bool = self.__times is not None
         times: NDArray[np.float64] = (
-            self.get_frozen_series(self.__time_label)._values
-            if self.__time_label is not None
+            self.__times if timestamped
             else np.array(range(self.length), dtype=np.float64)
         )
 
@@ -149,7 +149,7 @@ class Fox:
             list(left_series.values()),
             list(right_series.values()),
             title=title,
-            timestamped=self.__time_label is not None,
+            timestamped=self.__times is not None,
             left_labels=list(left_series.keys()),
             right_labels=list(right_series.keys()),
         )
@@ -170,8 +170,7 @@ class Fox:
             time: Time index as a series.
         """
         time._values = time._values.astype(np.float64)
-        label = time._label if isinstance(time, Series) else time
-        self.__time_label = label
+        self.__times = time._values
 
         def set_series_times(series: Union[Series, Node]):
             if isinstance(series, Series):
