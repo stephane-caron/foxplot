@@ -136,8 +136,7 @@ class Fox:
 
         timestamped: bool = self.__times is not None
         times: NDArray[np.float64] = (
-            self.__times
-            if timestamped
+            self.__times if timestamped
             else np.array(range(self.length), dtype=np.float64)
         )
 

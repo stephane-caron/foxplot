@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Replace black by ruff format for linting
 
+### Fixed
+
+- Fix low-pass filter
+
 ## [2.0.0] - 2025-04-21
 
 ### Added
