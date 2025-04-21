@@ -8,11 +8,12 @@
 
 import logging
 from os.path import commonprefix
-from typing import Dict, Literal, Optional
+from typing import Dict, Literal, Optional, Union
 
 import numpy as np
 from numpy.typing import NDArray
 
+from .exceptions import FoxplotError
 from .labeled_series import LabeledSeries
 
 UNIT_TO_SECONDS: Dict[str, float] = {
@@ -70,21 +71,21 @@ class Series(LabeledSeries):
         """Length of the indexed series."""
         return self._values.shape[0]
 
-    def __mul__(self, other) -> "Series":
+    def __mul__(self, other: Union[float, "Series"]) -> "Series":
         """Elementwise product between two series.
 
         Args:
             other: Other series.
         """
-        if np.isscalar(other):
+        if isinstance(other, Series):
             return Series(
-                label=_operator_label("*", self._label, str(other)),
-                values=self._values * other,
+                label=_operator_label("*", self._label, other._label),
+                values=self._values * other._values,
                 times=self._times,
             )
         return Series(
-            label=_operator_label("*", self._label, other._label),
-            values=self._values * other._values,
+            label=_operator_label("*", self._label, str(other)),
+            values=self._values * other,  # type: ignore
             times=self._times,
         )
 
@@ -100,21 +101,21 @@ class Series(LabeledSeries):
         """String representation of the series."""
         return f"Time series with values: {self._values}"
 
-    def __truediv__(self, other) -> "Series":
+    def __truediv__(self, other: Union[float, "Series"]) -> "Series":
         """Elementwise ratio between two series.
 
         Args:
             other: Other series.
         """
-        if np.isscalar(other):
+        if isinstance(other, Series):
             return Series(
-                label=_operator_label("/", self._label, str(other)),
-                values=self._values / other,
+                label=_operator_label("/", self._label, other._label),
+                values=self._values / other._values,
                 times=self._times,
             )
         return Series(
-            label=_operator_label("/", self._label, other._label),
-            values=self._values / other._values,
+            label=_operator_label("/", self._label, str(other)),
+            values=self._values / other,
             times=self._times,
         )
 
@@ -149,6 +150,8 @@ class Series(LabeledSeries):
             unit [U], its time-derivative will be in [U] / [T] where [T] is the
             time unit specified by ``unit`` (default: second).
         """
+        if self._times is None:
+            raise FoxplotError(f"Unset time values for series '{self._label}'")
         nb_steps = len(self._times)
         filtered_output = None
         outputs = []
@@ -193,6 +196,8 @@ class Series(LabeledSeries):
         Returns:
             Low-pass filtered time series.
         """
+        if self._times is None:
+            raise FoxplotError(f"Unset time values for series '{self._label}'")
         nb_steps = len(self._times)
         output = self._values[0]
         outputs = [output]

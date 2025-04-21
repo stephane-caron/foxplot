@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix MyPy checks
 - Fix low-pass filter
 
 ## [2.0.0] - 2025-04-21
