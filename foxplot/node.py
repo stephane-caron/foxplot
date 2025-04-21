@@ -102,8 +102,7 @@ class Node:
         update = {}
         for key, child in self.__dict__.items():
             if isinstance(child, HotSeries):
-                frozen_series = child._freeze(max_index)
-                update[key] = frozen_series
+                update[key] = child._freeze(max_index)
             elif isinstance(child, Node):
                 child._freeze(max_index)
         self.__dict__.update(update)

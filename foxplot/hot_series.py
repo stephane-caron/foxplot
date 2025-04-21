@@ -10,11 +10,11 @@ from typing import Any, Dict
 
 import numpy as np
 
-from .frozen_series import FrozenSeries
+from .labeled_series import LabeledSeries
 from .series import Series
 
 
-class HotSeries(Series):
+class HotSeries(LabeledSeries):
     """Indexed time-series in which we can still insert values.
 
     Internally, this datastructure maps time indexes (the corresponding times
@@ -50,7 +50,7 @@ class HotSeries(Series):
         """
         self.__indexed_values[index] = value
 
-    def _freeze(self, max_index: int) -> FrozenSeries:
+    def _freeze(self, max_index: int) -> Series:
         """Get indexed series as a list of values.
 
         Args:
@@ -70,4 +70,4 @@ class HotSeries(Series):
             if isinstance(last_value, (int, float))
             else np.array(values)
         )
-        return FrozenSeries(self._label, array)
+        return Series(label=self._label, values=array, times=None)
