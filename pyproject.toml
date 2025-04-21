@@ -42,9 +42,6 @@ Source = "https://github.com/stephane-caron/foxplot"
 Tracker = "https://github.com/stephane-caron/foxplot/issues"
 Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
 
-[tool.black]
-line-length = 79
-
 [tool.pytype]
 inputs = ['foxplot']
 

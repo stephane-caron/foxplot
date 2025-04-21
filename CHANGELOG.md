@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- CICD: Replace black by ruff format for linting
+
 ## [2.0.0] - 2025-04-21
 
 ### Added
