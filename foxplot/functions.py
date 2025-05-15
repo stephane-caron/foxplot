@@ -97,7 +97,7 @@ def estimate_lag(
     }
     node.__dict__.update(
         {
-            key: Series(f"{label}/{key}", value)
+            key: Series(f"{label}/{key}", value, times=time._values)
             for key, value in children.items()
         }
     )
