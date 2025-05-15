@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fix lag estimation function
+- Fix series multiplication and division operators
 
 ## [2.0.1] - 2025-04-21
 
