@@ -81,42 +81,47 @@ msgpack-python = ">=1.0.4"
 numpy = ">=1.15.4"
 uplot-python = ">=1.0.0"
 
-[tool.pixi.feature.test]
-dependencies = { pytest = ">=7.1.2" }
-tasks.test = { cmd = "pytest tests" }
+[tool.pixi.feature.coverage.dependencies]
+coverage = ">=5.5"
 
-[tool.pixi.feature.coverage]
-dependencies = { coverage = ">=5.5" }
-tasks.coverage-erase = { cmd = "coverage erase" }
-tasks.coverage-run = { cmd = "coverage run -m unittest discover", depends-on = ["coverage-erase"] }
-tasks.coverage = { cmd = "coverage report --include=\"foxplot/**\"", depends-on = ["coverage-run"] }
+[tool.pixi.feature.coverage.tasks]
+coverage-erase = { cmd = "coverage erase" }
+coverage-run = { cmd = "coverage run -m unittest discover", depends-on = ["coverage-erase"] }
+coverage = { cmd = "coverage report --include=\"foxplot/**\"", depends-on = ["coverage-run"] }
 
-[tool.pixi.feature.lint]
-dependencies = { mypy = ">=1.10.0", pylint = ">=2.8.2", ruff = ">=0.4.3", types-setuptools = ">=65.6.0.2" }
-tasks.mypy = { cmd = "mypy foxplot --ignore-missing-imports" }
-tasks.pylint = { cmd = "pylint foxplot --exit-zero --rcfile=pyproject.toml" }
-tasks.ruff-check = { cmd = "ruff check foxplot" }
-tasks.ruff-format = { cmd = "ruff format --check foxplot" }
-tasks.lint = { depends-on = ["mypy", "pylint", "ruff-check", "ruff-format"] }
+[tool.pixi.feature.lint.dependencies]
+mypy = ">=1.10.0"
+pylint = ">=2.8.2"
+ruff = ">=0.4.3"
+types-setuptools = ">=65.6.0.2"
 
-[tool.pixi.feature.pytype]
-dependencies = { pytype = ">=2023.5.24" }
-tasks.pytype = { cmd = "pytype foxplot" }
+[tool.pixi.feature.lint.tasks]
+lint = { depends-on = ["mypy", "pylint", "ruff-check", "ruff-format"] }
+mypy = { cmd = "mypy foxplot --ignore-missing-imports" }
+pylint = { cmd = "pylint foxplot --exit-zero --rcfile=pyproject.toml" }
+ruff-check = { cmd = "ruff check foxplot" }
+ruff-format = { cmd = "ruff format --check foxplot" }
 
-[tool.pixi.feature.py38]
-dependencies = { python = "3.8.*" }
+[tool.pixi.feature.py38.dependencies]
+python = "3.8.*"
 
-[tool.pixi.feature.py39]
-dependencies = { python = "3.9.*" }
+[tool.pixi.feature.py39.dependencies]
+python = "3.9.*"
 
-[tool.pixi.feature.py310]
-dependencies = { python = "3.10.*" }
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
 
-[tool.pixi.feature.py311]
-dependencies = { python = "3.11.*" }
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
 
-[tool.pixi.feature.py312]
-dependencies = { python = "3.12.*" }
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.test.dependencies]
+pytest = ">=7.1.2"
+
+[tool.pixi.feature.test.tasks]
+test = { cmd = "pytest tests" }
 
 [tool.pixi.environments]
 test-py38 = { features = ["py38", "test"], solve-group = "py38" }
