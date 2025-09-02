@@ -75,7 +75,7 @@ jobs:
 
             - name: "Test with pixi"
               run: |
-                  pixi run -e test-py${{ matrix.python-version }} test
+                  pixi run -e test-py${{ matrix.python-version | replace('.', '') }} test
 
     ci_success:
         name: "CI success"
