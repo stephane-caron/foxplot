@@ -42,8 +42,10 @@ Source = "https://github.com/stephane-caron/foxplot"
 Tracker = "https://github.com/stephane-caron/foxplot/issues"
 Changelog = "https://github.com/stephane-caron/foxplot/blob/master/CHANGELOG.md"
 
-[tool.pytype]
-inputs = ['foxplot']
+[tool.pylint]
+disable = [
+    "W0212", # Access to a protected member _label of a client class
+]
 
 [tool.ruff]
 line-length = 79

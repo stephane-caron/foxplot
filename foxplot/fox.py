@@ -176,7 +176,7 @@ class Fox:
             if isinstance(series, Series):
                 series._times = self.__times
             if isinstance(series, Node):
-                for key, child in series._items():
+                for _, child in series._items():
                     set_series_times(child)
 
         set_series_times(self.data)
