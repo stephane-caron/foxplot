@@ -187,11 +187,11 @@ class Series(LabeledSeries):
             times=self._times,
         )
 
-    def low_pass_filter(self, T: float) -> "Series":
+    def low_pass_filter(self, cutoff_period: float) -> "Series":
         """Apply low-pass filter to a time series.
 
         Args:
-            T: Cutoff period of the low-pass filter.
+            cutoff_period: Cutoff period of the low-pass filter.
 
         Returns:
             Low-pass filtered time series.
@@ -203,22 +203,22 @@ class Series(LabeledSeries):
         outputs = [output]
         for i in range(nb_steps - 1):
             dt = self._times[i + 1] - self._times[i]
-            if T < 2 * dt:
+            if cutoff_period < 2 * dt:
                 logging.warning(
                     "Nyquist-Shannon sampling theorem: "
-                    "at time=%f, dt=%f but T=%f",
+                    "at time=%f, dt=%f but cutoff_period=%f",
                     self._times[i],
                     dt,
-                    T,
+                    cutoff_period,
                 )
                 outputs.append(np.nan)
                 continue
-            forgetting_factor = np.exp(-dt / T)
+            forgetting_factor = np.exp(-dt / cutoff_period)
             output += (1.0 - forgetting_factor) * (self._values[i] - output)
             outputs.append(output)
         assert len(outputs) == len(self._values) == len(self._times)
         return Series(
-            label=f"low_pass_filter({self._label}, {T=})",
+            label=f"low_pass_filter({self._label}, {cutoff_period=})",
             values=np.array(outputs),
             times=self._times,
         )
