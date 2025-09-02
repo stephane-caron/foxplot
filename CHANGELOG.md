@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-09-02
+
 ### Added
 
 - CICD: Improve unit test coverage
@@ -16,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix lag estimation function
 - Fix series multiplication and division operators
+
+### Removed
+
+- End support for Python 3.8
 
 ## [2.0.1] - 2025-04-21
 
@@ -211,7 +217,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal: Logging with an spdlog-like format
 - Python interactive shell
 
-[unreleased]: https://github.com/stephane-caron/foxplot/compare/v2.0.1...HEAD
+[unreleased]: https://github.com/stephane-caron/foxplot/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/stephane-caron/foxplot/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/stephane-caron/foxplot/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/stephane-caron/foxplot/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/stephane-caron/foxplot/compare/v0.7.0...v1.0.0
