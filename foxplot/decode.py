@@ -27,7 +27,7 @@ def decode(file_path: Union[str, PosixPath]) -> Generator[dict, None, None]:
     file_path = str(file_path)
     if file_path == "stdin":
         yield from decode_json(file=sys.stdin)
-    elif file_path.endswith(".json"):
+    elif file_path.endswith(".json") or file_path.endswith(".jsonl"):
         with open(file_path, "r", encoding="utf-8") as file:
             yield from decode_json(file=file)
     elif file_path.endswith(".mpack"):

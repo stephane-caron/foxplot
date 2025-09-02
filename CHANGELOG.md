@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support both `.json` and `.jsonl` extensions for JSON Lines files
+
 ### Fixed
 
 - Fix lag estimation function
