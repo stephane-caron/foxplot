@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add dependency on `mpacklog.py` and use its MessagePack decoder
+
+### Removed
+
+- Remove `foxplot.decoders` submodule
+
 ## [2.1.0] - 2025-09-02
 
 ### Added
