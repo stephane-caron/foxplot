@@ -32,8 +32,8 @@ Check out the [documentation](https://stephane-caron.github.io/foxplot/) for mor
 
 ## See also
 
-- [mpacklog.cpp](https://github.com/stephane-caron/mpacklog.cpp): library to log dictionaries to MessagePack files in C++.
-- [mpacklog.py](https://github.com/stephane-caron/mpacklog.py): library and command-line tools to log dictionaries to MessagePack files in Python.
+- [mpacklog.cpp](https://github.com/stephane-caron/mpacklog.cpp): C++ library to log dictionaries to MessagePack files in C++.
+- [mpacklog.py](https://github.com/stephane-caron/mpacklog.py): command-line tool and Python library to log dictionaries from/to MessagePack files.
 - [rq](https://github.com/dflemstr/rq/): command-line tool to manipulate streams of records in various formats.
-- [uplot-python](https://github.com/stephane-caron/uplot-python): plotting backend used in this project.
-- [µPlot](https://github.com/leeoniya/uPlot): time-series plotting library, whose performance was a key enabler for this project.
+- [µPlot](https://github.com/leeoniya/uPlot): time-series plotting library whose performance was a key enabler for Foxplot.
+- [uplot-python](https://github.com/stephane-caron/uplot-python): Python interface to µPlot used in this project.

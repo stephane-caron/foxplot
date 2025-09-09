@@ -4,11 +4,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+import json
+import os
+import tempfile
 import unittest
 
 import numpy as np
-
+from foxplot.exceptions import FoxplotError
 from foxplot.fox import Fox
+from foxplot.series import Series
 
 
 class TestFox(unittest.TestCase):
@@ -239,3 +243,154 @@ class TestFox(unittest.TestCase):
         self.assertTrue(
             np.allclose(fox.data.x._values[1:], [12.0, 22.0, 32.0])
         )
+
+    def test_constructor_with_file(self):
+        # Test loading from a file
+        data = [{"time": 0.0, "value": 1.0}, {"time": 1.0, "value": 2.0}]
+
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".jsonl", delete=False
+        ) as f:
+            for item in data:
+                f.write(json.dumps(item) + "\n")
+            temp_filename = f.name
+
+        try:
+            fox = Fox(temp_filename)
+            self.assertEqual(fox.length, 2)
+            self.assertTrue(hasattr(fox.data, "time"))
+            self.assertTrue(hasattr(fox.data, "value"))
+        finally:
+            os.unlink(temp_filename)
+
+    def test_detect_time_with_time_key(self):
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "foo": 1.0})
+        fox.unpack({"time": 1.0, "foo": 2.0})
+        fox.data._freeze(fox.length)
+
+        # Test detect_time finds 'time' key
+        fox.detect_time()
+        self.assertIsNotNone(fox._Fox__times)
+        self.assertEqual(len(fox._Fox__times), 2)
+
+    def test_detect_time_with_timestamp_key(self):
+        fox = Fox.empty()
+        fox.unpack({"timestamp": 0.0, "foo": 1.0})
+        fox.unpack({"timestamp": 1.0, "foo": 2.0})
+        fox.data._freeze(fox.length)
+
+        # Test detect_time finds 'timestamp' key
+        fox.detect_time()
+        self.assertIsNotNone(fox._Fox__times)
+        self.assertEqual(len(fox._Fox__times), 2)
+
+    def test_detect_time_no_time_key(self):
+        fox = Fox.empty()
+        fox.unpack({"foo": 1.0})
+        fox.data._freeze(fox.length)
+
+        # Test detect_time when no time key is found
+        fox.detect_time()
+        self.assertIsNone(fox._Fox__times)
+
+    def test_get_series_valid_label(self):
+        fox = Fox.empty()
+        fox.unpack({"nested": {"value": 1.0}})
+        fox.data._freeze(fox.length)
+
+        series = fox.get_series("/nested/value")
+        self.assertIsInstance(series, Series)
+        self.assertEqual(series._values[0], 1.0)
+
+    def test_get_series_invalid_label(self):
+        fox = Fox.empty()
+        fox.unpack({"nested": {"value": 1.0}})
+        fox.data._freeze(fox.length)
+
+        with self.assertRaises(FoxplotError):
+            fox.get_series("/nested")  # This is a Node, not a Series
+
+    def test_plot_with_right_axis(self):
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "left_val": 1.0, "right_val": 10.0})
+        fox.unpack({"time": 1.0, "left_val": 2.0, "right_val": 20.0})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+
+        # Test plotting with both left and right axes
+        fox.plot(left=[fox.data.left_val], right=[fox.data.right_val])
+
+    def test_plot_with_single_series(self):
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "value": 1.0})
+        fox.unpack({"time": 1.0, "value": 2.0})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+
+        # Test plotting with single series (not in list)
+        fox.plot(left=fox.data.value)
+        fox.plot(left=fox.data.value, right=fox.data.value)
+
+    def test_plot_with_custom_title(self):
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "value": 1.0})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+
+        fox.plot(left=[fox.data.value], title="Custom Title")
+
+    def test_plot_with_node_expansion(self):
+        fox = Fox.empty()
+        fox.unpack({"nested": {"a": 1.0, "b": 2.0}, "time": 0.0})
+        fox.unpack({"nested": {"a": 3.0, "b": 4.0}, "time": 1.0})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+
+        # Test plotting with Node (should expand to its children)
+        fox.plot(left=[fox.data.nested])
+
+    def test_list_to_dict_with_invalid_type(self):
+        fox = Fox.empty()
+        fox.unpack({"value": 1.0})
+        fox.data._freeze(fox.length)
+
+        # Test __list_to_dict with invalid type
+        with self.assertRaises(TypeError):
+            fox._Fox__list_to_dict(["invalid_type"])
+
+    def test_list_to_dict_with_nested_non_series(self):
+        fox = Fox.empty()
+        fox.unpack({"deep": {"nested": {"value": 1.0}}})
+        fox.data._freeze(fox.length)
+
+        # This should trigger the warning for non-series children
+        result = fox._Fox__list_to_dict([fox.data.deep])
+        # The warning should be logged, but we can't easily test that
+        self.assertIsInstance(result, dict)
+
+    def test_plot_without_time_index(self):
+        fox = Fox.empty()
+        fox.unpack({"value": 1.0})
+        fox.unpack({"value": 2.0})
+        fox.data._freeze(fox.length)
+
+        # Plot without setting time index (should use indices)
+        fox.plot(left=[fox.data.value])
+
+    def test_source_attribute(self):
+        fox = Fox.empty()
+        self.assertEqual(fox._Fox__source, "custom data")
+
+        # Test with filename
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".jsonl", delete=False
+        ) as f:
+            f.write('{"time": 0.0}\n')
+            temp_filename = f.name
+
+        try:
+            fox_with_file = Fox(temp_filename)
+            self.assertEqual(fox_with_file._Fox__source, temp_filename)
+        finally:
+            os.unlink(temp_filename)
