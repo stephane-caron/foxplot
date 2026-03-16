@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add dependency on `mpacklog.py` and use its MessagePack decoder
+- Plot legend labels for integer-valued series use k/M/B suffixes (e.g. `42k`, `108k`, `2M`) instead of engineering notation
 
 ### Removed
 

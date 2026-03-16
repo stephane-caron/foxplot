@@ -13,10 +13,29 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 import uplot
 from numpy.typing import NDArray
+from uplot.plot2 import add_series as _uplot_add_series
+from uplot.plot2 import prepare_data as _uplot_prepare_data
+from uplot.utils import js as _uplot_js
 
 from .decode import decode
 from .node import Node
 from .series import Series
+
+_INTEGER_VALUE_FMT = _uplot_js(
+    "(self, rawValue) => {"
+    "if (rawValue === null) return '--';"
+    "const v = rawValue;"
+    "const av = Math.abs(v);"
+    "if (av >= 1e9) return (v / 1e9).toFixed(0) + 'B';"
+    "if (av >= 1e6) return (v / 1e6).toFixed(0) + 'M';"
+    "if (av >= 1e3) return (v / 1e3).toFixed(0) + 'k';"
+    "return String(v);}"
+)
+
+
+def _is_integer_valued(values: NDArray[np.float64]) -> bool:
+    finite = values[np.isfinite(values)]
+    return len(finite) > 0 and bool(np.all(finite == np.floor(finite)))
 
 
 class Fox:
@@ -144,14 +163,29 @@ class Fox:
         right_series: Dict[str, NDArray[np.float64]] = {}
         if right is not None:
             right_series = self.__list_to_dict(right)
+
+        left_values = list(left_series.values())
+        right_values = list(right_series.values())
+        data = _uplot_prepare_data(times, left_values, right_values)
+        series_opts: Dict = {}
+        _uplot_add_series(
+            series_opts,
+            data,
+            len(left_series),
+            list(left_series.keys()),
+            list(right_series.keys()),
+        )
+        for i, values in enumerate(left_values + right_values):
+            if _is_integer_valued(values):
+                series_opts["series"][i + 1]["value"] = _INTEGER_VALUE_FMT
+
         uplot.plot2(
             times,
-            list(left_series.values()),
-            list(right_series.values()),
+            left_values,
+            right_values,
             title=title,
             timestamped=self.__times is not None,
-            left_labels=list(left_series.keys()),
-            right_labels=list(right_series.keys()),
+            series=series_opts["series"],
         )
 
     def unpack(self, unpacked: dict) -> None:
