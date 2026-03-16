@@ -8,10 +8,11 @@ import json
 import os
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 from foxplot.exceptions import FoxplotError
-from foxplot.fox import Fox
+from foxplot.fox import Fox, _INTEGER_VALUE_FMT, _is_integer_valued
 from foxplot.series import Series
 
 
@@ -377,6 +378,45 @@ class TestFox(unittest.TestCase):
 
         # Plot without setting time index (should use indices)
         fox.plot(left=[fox.data.value])
+
+    def test_is_integer_valued_true(self):
+        self.assertTrue(_is_integer_valued(np.array([1.0, 42.0, 1000.0])))
+
+    def test_is_integer_valued_false(self):
+        self.assertFalse(_is_integer_valued(np.array([1.0, 42.5, 1000.0])))
+
+    def test_is_integer_valued_with_nan(self):
+        # NaN values are ignored; finite values are all integers
+        self.assertTrue(_is_integer_valued(np.array([1.0, np.nan, 1000.0])))
+
+    def test_is_integer_valued_all_nan(self):
+        # No finite values → not considered integer-valued
+        self.assertFalse(_is_integer_valued(np.array([np.nan, np.nan])))
+
+    def test_plot_integer_series(self):
+        # Integer series should receive the k/M/B legend formatter
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "count": 42000})
+        fox.unpack({"time": 1.0, "count": 108000})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+        with patch("foxplot.fox.uplot.plot2") as mock_plot2:
+            fox.plot(left=[fox.data.count])
+        series = mock_plot2.call_args.kwargs["series"]
+        self.assertEqual(series[1]["value"], _INTEGER_VALUE_FMT)
+
+    def test_plot_mixed_integer_and_float_series(self):
+        # Integer series gets k/M/B formatter; float series keeps the default
+        fox = Fox.empty()
+        fox.unpack({"time": 0.0, "count": 45000, "rate": 1.23})
+        fox.unpack({"time": 1.0, "count": 90000, "rate": 4.56})
+        fox.data._freeze(fox.length)
+        fox.set_time(fox.data.time)
+        with patch("foxplot.fox.uplot.plot2") as mock_plot2:
+            fox.plot(left=[fox.data.count], right=[fox.data.rate])
+        series = mock_plot2.call_args.kwargs["series"]
+        self.assertEqual(series[1]["value"], _INTEGER_VALUE_FMT)
+        self.assertNotEqual(series[2]["value"], _INTEGER_VALUE_FMT)
 
     def test_source_attribute(self):
         fox = Fox.empty()
