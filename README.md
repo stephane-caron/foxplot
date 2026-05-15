@@ -16,7 +16,7 @@ Codeberg is a free and open-source code forge, maintained by a non-profit organi
 Nothing changes for users installing via pip:
 
 ```bash
-pip install foobar
+pip install foxplot
 ```
 
 ## For contributors
@@ -24,7 +24,7 @@ pip install foobar
 If you have a local clone of this repository, you can point it at the new remote:
 
 ```bash
-git remote set-url origin https://codeberg.org/<your-user>/foobar.git
+git remote set-url origin https://codeberg.org/stephane-caron/foxplot.git
 ```
 
 Issues and pull requests are welcome on [Codeberg](https://codeberg.org/<your-user>/foobar). This GitHub repository is archived and no longer receives updates.
