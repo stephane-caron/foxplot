@@ -27,4 +27,4 @@ If you have a local clone of this repository, you can point it at the new remote
 git remote set-url origin https://codeberg.org/stephane-caron/foxplot.git
 ```
 
-Issues and pull requests are welcome on [Codeberg](https://codeberg.org/<your-user>/foobar). This GitHub repository is archived and no longer receives updates.
+Issues and pull requests are welcome on Codeberg. This GitHub repository is archived and no longer receives updates.
